@@ -1,0 +1,261 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.hero {
+  position: relative;
+  margin: 0 30px;
+  padding: 80px 24px 120px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .title-hero {
+    max-width: 700px;
+
+    h3 {
+      font-size: $fs-hero;
+      font-weight: $fw-bold;
+      line-height: 1.4;
+      span{
+        color:$primary-color;
+      }
+    }
+
+    p {
+      margin-top: 40px;
+      position: relative;
+      z-index: 2;
+      top: -30px;
+      max-width: 700px;
+
+      font-size: $fs-base;
+      line-height: 2;
+
+      color: $text-color;
+    }
+  }
+
+  .trending-categories {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+
+    gap: 30px;
+
+    margin-top: 80px;
+
+    overflow: hidden;
+
+    .trend-text {
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      color: $text-color;
+
+      font-size: $fs-base;
+      font-weight: $fw-medium;
+
+      white-space: nowrap;
+
+      i {
+        font-size: 9px;
+        color: $primary-color;
+      }
+    }
+
+    .categories-wrapper {
+      width: min(1100px, 100%);
+
+      overflow: hidden;
+
+      position: relative;
+
+      direction: ltr;
+    }
+
+    .categories-box {
+      display: flex;
+
+      gap: 15px;
+
+      width: max-content;
+
+      animation: infiniteScroll 20s linear infinite;
+
+      &:hover {
+        animation-play-state: paused;
+      }
+    }
+
+    .cat {
+      direction: rtl;
+
+      padding: 10px 22px;
+
+      background: $primary-color;
+
+      border-radius: $radius-lg;
+
+      color: $text-color;
+
+      white-space: nowrap;
+
+      font-size: $fs-small;
+      font-weight: $fw-medium;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+
+    }
+
+    @keyframes infiniteScroll {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+  }
+}
+
+.Popular-Categories {
+  padding: 0 40px;
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+
+
+    .popular-text {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: $text-color;
+      font-size: $fs-section-title;
+      font-weight: $fw-bold;
+      margin-right: 10px;
+
+      //dot style
+      .ping {
+        @include ping;
+      }
+
+    }
+
+    h6 {
+
+      color: $primary-color;
+      font-size: $fs-small;
+      font-weight: $fw-bold;
+      cursor: pointer;
+
+      i {
+        color: $primary-color;
+        font-size: $fs-small;
+        font-weight: $fw-bold;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .Categories-cards {
+    margin-top: 40px;
+    justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 25px;
+
+
+    .card-Categories {
+      transition: 0.3s;
+      background-color: $secondary-color-box;
+      border: none;
+      border-radius: $radius-md;
+
+      width: 250px;
+      height: 250px;
+
+      .icon-cat {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        margin: 20px auto;
+        width: 85px;
+        height: 85px;
+
+        background-color: $glass-color;
+        border: none;
+        border-radius: $radius-sm;
+
+        i {
+          color: $primary-color;
+          font-size: $fs-section-title;
+          font-weight: $fw-bold;
+        }
+
+
+      }
+
+      .name-cat {
+        p {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: $text-color;
+          font-size: $fs-card-title;
+          font-weight: $fw-medium;
+          margin-top: 20px;
+          margin-bottom: 4px;
+        }
+
+
+      }
+
+      .project-stats {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+
+        .count {
+          color: $text-color;
+          font-size: 18px;
+          font-weight: $fw-regular;
+
+
+        }
+
+        .lable {
+          color: $gray-color;
+          font-size: $fs-small;
+          font-weight: $fw-regular;
+
+        }
+
+      }
+
+      &:hover {
+        border: 1px solid $primary-color;
+        transform: translateY(-5px);
+      }
+    }
+
+
+  }
+}
