@@ -610,7 +610,7 @@ footer .footer-bottom p {
   align-items: center;
   gap: 30px;
   margin-top: 80px;
-  overflow: hidden;
+  overflow: visible;
 }
 .hero .trending-categories .trend-text {
   display: flex;
@@ -620,28 +620,34 @@ footer .footer-bottom p {
   font-size: 16px;
   font-weight: 500;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .hero .trending-categories .trend-text i {
   font-size: 9px;
   color: #FF653F;
 }
 .hero .trending-categories .categories-wrapper {
-  width: min(1100px, 100%);
-  overflow: hidden;
   position: relative;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
   direction: ltr;
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
 }
 .hero .trending-categories .categories-box {
   display: flex;
+  align-items: center;
   gap: 15px;
   width: max-content;
-  animation: infiniteScroll 20s linear infinite;
+  animation: infiniteScroll 30s linear infinite;
 }
 .hero .trending-categories .categories-box:hover {
   animation-play-state: paused;
 }
 .hero .trending-categories .cat {
   direction: rtl;
+  flex-shrink: 0;
   padding: 10px 22px;
   background: #FF653F;
   border-radius: 32px;
@@ -657,7 +663,7 @@ footer .footer-bottom p {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-33.333%);
   }
 }
 
