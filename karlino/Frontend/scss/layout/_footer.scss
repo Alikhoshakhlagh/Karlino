@@ -1,0 +1,219 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+footer {
+  background-color: $secondary-color-box;
+  width: 100%;
+  min-height: 240px;
+  margin-top: 50px;
+  padding: 20px 20px 0 20px;
+  border-top: 2px solid $primary-color;
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+
+    .footer-about {
+      display: flex;
+      flex-direction: column;
+      margin-right: 20px;
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        img {
+          width: 45px;
+          height: 45px;
+          object-fit: contain;
+        }
+
+        .text-logo {
+          font-size: 24px;
+          font-weight: $fw-bold;
+          color: $primary-color;
+        }
+      }
+
+      p {
+        margin-top: 10px;
+        font-size: $fs-base;
+        color: $gray-color;
+      }
+
+      .card {
+        width: fit-content;
+        height: fit-content;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+
+        padding: 25px;
+
+        background-color: transparent;
+
+        .socialContainer {
+          width: 52px;
+          height: 52px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          overflow: hidden;
+
+          border-radius: 50%;
+          background-color: $secondary-color-box;
+
+          transition: 0.3s;
+
+          &:active {
+            transform: scale(0.9);
+          }
+
+          &:hover {
+            .socialSvg {
+              animation: slide-in-top 0.3s both;
+            }
+          }
+
+          .socialSvg {
+            font-size: 22px;
+            color: white;
+          }
+        }
+
+        .containerOne {
+          &:hover {
+            background-color: #d62976;
+          }
+        }
+
+        .containerTwo {
+          &:hover {
+            background-color: #00acee;
+          }
+        }
+
+        .containerThree {
+          &:hover {
+            background-color: #0072b1;
+          }
+        }
+
+        .containerFour {
+          &:hover {
+            background-color: #128c7e;
+          }
+        }
+      }
+
+      @keyframes slide-in-top {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    }
+
+    .footer-links,
+    .footer-account {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+
+      h3 {
+        font-size: $fs-card-title;
+        color: $primary-color;
+      }
+
+      a {
+        margin-top: 10px;
+        font-size: $fs-base;
+        color: $gray-color;
+        font-weight: $fw-medium;
+        transition: 0.3s;
+
+        &:hover {
+          transform: translateX(-5px);
+          color: $primary-color;
+        }
+      }
+    }
+
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+
+      h3 {
+        font-size: $fs-card-title;
+        color: $primary-color;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: $gray-color;
+        transition: 0.3s;
+
+        i {
+
+          color: $primary-color;
+
+          font-size: 16px;
+
+        }
+
+        span {
+          direction: ltr;
+          color: $gray-color;
+          font-size: $fs-base;
+          font-weight: $fw-medium;
+
+        }
+
+        &:hover {
+
+          transform: translateX(-5px);
+
+          span {
+
+            color: $primary-color;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  .footer-bottom {
+    direction: ltr;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -20px;
+    p {
+      color: $gray-color;
+      font-size: $fs-small;
+      font-weight: $fw-medium;
+    }
+  }
+}
