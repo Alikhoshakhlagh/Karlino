@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ساخت حساب کاربری</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+
+<section class="card-reg">
+    <form class="form" id="register-form"  novalidate >
+        <div class="top-reg">
+            <div class="creat-acc">
+                <div class="ping"></div>
+                <h2>ساخت حساب کاربری</h2>
+            </div>
+            <p class="message">حساب کاربری بساز و همکاری را آغاز کن.</p>
+        </div>
+        
+        <div class="fullname-flex">
+            <label>
+                <input class="input" type="text" placeholder="" required="" id="first-name">
+                <span>نام</span>
+            </label>
+            
+            <label>
+                <input class="input" type="text" placeholder="" required="" id="last-name">
+                <span>نام خانوادگی</span>
+            </label>
+        </div>
+        <!-- email -->
+        <label>
+            <input class="input" type="email" placeholder="" required="" id="email">
+            <span>ایمیل</span>
+        </label>
+        <!-- pasword -->
+        <label>
+            <input class="input" type="password" placeholder="" required="" id="password">
+            <span>پسورد</span>
+        </label>
+        <!-- repasword -->
+        <label>
+            <input class="input" type="password" placeholder="" required="" id="confirm-password">
+            <span>تکرار رمز عبور</span>
+        </label>
+        
+        <div class="gender">
+            <span class="title">جنسیت</span>
+            
+            <div class="gender-options">
+                <label class="radio-box">
+                    <input type="radio" name="gender" value="male">
+                    <span>مرد</span>
+                </label>
+                
+                <label class="radio-box">
+                    <input type="radio" name="gender" value="female">
+                    <span>زن</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="bottom-reg">
+            <button class="submit" type="submit">ثبت‌نام</button>
+            <p class="signin">
+                از قبل حساب کاربری دارید؟
+                
+                <a href="login.html">ورود</a>
+            </p>
+        </div>
+    
+    </form>
+</section>
+
+<script src="js/auth/register.js"></script>
 
 </body>
 </html>

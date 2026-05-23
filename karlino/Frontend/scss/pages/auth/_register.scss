@@ -1,0 +1,205 @@
+@use '../../variables' as *;
+@use '../../mixins' as *;
+
+.card-reg {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+
+  .form {
+    @include form;
+
+    .top-reg {
+      display: flex;
+      justify-content: right;
+      align-items: flex-start;
+      flex-direction: column;
+      position: relative;
+
+
+      .creat-acc {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+
+
+
+        h2 {
+          color: $text-color;
+          font-size: $fs-section-title;
+          font-weight: $fw-bold;
+
+        }
+
+        .ping {
+          @include ping;
+        }
+
+
+      }
+
+      .message {
+        font-size: $fs-small;
+        color: $gray-color;
+        margin-right: 25px;
+        margin-bottom: 10px;
+        text-align: right;
+
+      }
+    }
+
+    .fullname-flex {
+      display: flex;
+      width: 100%;
+      gap: 6px;
+    }
+
+    .email-input {
+      direction: ltr;
+      text-align: left;
+    }
+
+    label {
+      position: relative;
+      width: 100%;
+
+      .input {
+        background-color: $glass-color;
+        color: $text-color;
+        width: 100%;
+        padding: 20px 10px 5px 5px;
+        outline: 0;
+        border: 1px solid rgba(105, 105, 105, 0.397);
+        border-radius: $radius-sm;
+        text-align: right;
+        font-size: medium;
+
+        & + span {
+          color: $text-color;
+          position: absolute;
+          right: 10px;
+          top: 0;
+          font-size: $fs-small;
+          cursor: text;
+          transition: 0.3s ease;
+        }
+
+        &:placeholder-shown + span {
+          top: 12.5px;
+          font-size: $fs-small;
+        }
+
+        &:focus + span,
+        &:not(:placeholder-shown) + span {
+          padding-top: 6px;
+          color: $primary-color;
+          top: 0;
+          font-size: 0.7em;
+          font-weight: $fw-bold;
+        }
+
+      }
+    }
+
+    .gender {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+
+      .title {
+        margin-right: 10px;
+        color: $text-color;
+        font-size: $fs-card-title;
+
+      }
+
+      .gender-options {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .radio-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 10px 14px;
+        border-radius: $radius-sm;
+
+        background: $glass-color;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        cursor: pointer;
+        transition: 0.3s;
+
+        span {
+          color: $text-color;
+          font-size: $fs-small;
+        }
+
+        &:hover {
+          border-color: $primary-color;
+        }
+
+        input[type="radio"] {
+          accent-color: $primary-color;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .bottom-reg {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .submit {
+        text-align: center;
+        border: none;
+        outline: none;
+        padding: 12px;
+        border-radius: $radius-sm;
+        color: $text-color;
+        font-size: $fs-base;
+        cursor: pointer;
+        transition: 0.3s ease;
+        background-color: $primary-color;
+        margin-top: 10px;
+        width: 50%;
+
+        &:hover {
+          transform: scale(1.03);
+          box-shadow: $primary-color 0px 15px 10px -20px;
+        }
+
+        &:active {
+          transform: scale(0.95);
+          box-shadow: $primary-color 0px 15px 10px -20px;
+        }
+      }
+
+      .signin {
+        margin-top: 20px;
+        text-align: center;
+        font-size: $fs-small;
+        color: $gray-color;
+
+        a {
+          color: $primary-color;
+
+          &:hover {
+            border-bottom: 2px solid $primary-color;
+          }
+        }
+
+      }
+    }
+  }
+}

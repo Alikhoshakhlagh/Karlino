@@ -660,4 +660,194 @@ footer .footer-bottom p {
   border-bottom: 2px solid #FF653F;
 }
 
+.card-reg {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.card-reg .form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: max-content;
+  width: max-content;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+  background-color: rgba(20, 51, 106, 0.44);
+  color: #F8FAFC;
+  border: 1px solid #0d204b;
+  direction: rtl;
+  margin: auto;
+}
+.card-reg .form .top-reg {
+  display: flex;
+  justify-content: right;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+}
+.card-reg .form .top-reg .creat-acc {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.card-reg .form .top-reg .creat-acc h2 {
+  color: #F8FAFC;
+  font-size: 34px;
+  font-weight: 700;
+}
+.card-reg .form .top-reg .creat-acc .ping {
+  --uib-size: 50px;
+  --uib-speed: 1s;
+  --uib-color: #ff653f;
+  position: relative;
+  width: var(--uib-size);
+  height: var(--uib-size);
+}
+.card-reg .form .top-reg .creat-acc .ping::before, .card-reg .form .top-reg .creat-acc .ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  animation: pulse7132 var(--uib-speed) linear infinite;
+  transform: scale(0);
+  opacity: 0;
+}
+.card-reg .form .top-reg .creat-acc .ping::after {
+  animation-delay: calc(var(--uib-speed) / -2);
+}
+.card-reg .form .top-reg .message {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+  margin-right: 25px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+.card-reg .form .fullname-flex {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+}
+.card-reg .form .email-input {
+  direction: ltr;
+  text-align: left;
+}
+.card-reg .form label {
+  position: relative;
+  width: 100%;
+}
+.card-reg .form label .input {
+  background-color: rgba(217, 217, 217, 0.14);
+  color: #F8FAFC;
+  width: 100%;
+  padding: 20px 10px 5px 5px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 12px;
+  text-align: right;
+  font-size: medium;
+}
+.card-reg .form label .input + span {
+  color: #F8FAFC;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  font-size: 14px;
+  cursor: text;
+  transition: 0.3s ease;
+}
+.card-reg .form label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 14px;
+}
+.card-reg .form label .input:focus + span, .card-reg .form label .input:not(:placeholder-shown) + span {
+  padding-top: 6px;
+  color: #FF653F;
+  top: 0;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+.card-reg .form .gender {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+.card-reg .form .gender .title {
+  margin-right: 10px;
+  color: #F8FAFC;
+  font-size: 20px;
+}
+.card-reg .form .gender .gender-options {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.card-reg .form .gender .radio-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(217, 217, 217, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.card-reg .form .gender .radio-box span {
+  color: #F8FAFC;
+  font-size: 14px;
+}
+.card-reg .form .gender .radio-box:hover {
+  border-color: #FF653F;
+}
+.card-reg .form .gender .radio-box input[type=radio] {
+  accent-color: #FF653F;
+  cursor: pointer;
+}
+.card-reg .form .bottom-reg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card-reg .form .bottom-reg .submit {
+  text-align: center;
+  border: none;
+  outline: none;
+  padding: 12px;
+  border-radius: 12px;
+  color: #F8FAFC;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background-color: #FF653F;
+  margin-top: 10px;
+  width: 50%;
+}
+.card-reg .form .bottom-reg .submit:hover {
+  transform: scale(1.03);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+.card-reg .form .bottom-reg .submit:active {
+  transform: scale(0.95);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+.card-reg .form .bottom-reg .signin {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+}
+.card-reg .form .bottom-reg .signin a {
+  color: #FF653F;
+}
+.card-reg .form .bottom-reg .signin a:hover {
+  border-bottom: 2px solid #FF653F;
+}
+
 /*# sourceMappingURL=main.css.map */
