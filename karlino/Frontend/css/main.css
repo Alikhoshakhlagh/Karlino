@@ -824,14 +824,20 @@ footer .footer-bottom p {
 .Popular-Categories .title .popular-text .ping::after {
   animation-delay: calc(var(--uib-speed) / -2);
 }
-.Popular-Categories .title h6 {
-  color: #FF653F;
+.Popular-Categories .title .more-categories {
+  color: #F8FAFC;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  background-color: #FF653F;
+  border-radius: 12px;
+  border: none;
+  width: max-content;
+  height: max-content;
+  padding: 10px;
 }
-.Popular-Categories .title h6 i {
-  color: #FF653F;
+.Popular-Categories .title .more-categories i {
+  color: #F8FAFC;
   font-size: 14px;
   font-weight: 700;
   margin-right: 5px;

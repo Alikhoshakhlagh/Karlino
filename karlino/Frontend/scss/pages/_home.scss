@@ -399,15 +399,21 @@
 
     }
 
-    h6 {
-
-      color: $primary-color;
+    .more-categories {
+      color: $text-color;
       font-size: $fs-small;
       font-weight: $fw-bold;
       cursor: pointer;
+      background-color:$primary-color;
+      border-radius: $radius-sm;
+      border: none;
+      width: max-content;
+      height: max-content;
+      padding: 10px;
+
 
       i {
-        color: $primary-color;
+        color:$text-color;
         font-size: $fs-small;
         font-weight: $fw-bold;
         margin-right: 5px;
