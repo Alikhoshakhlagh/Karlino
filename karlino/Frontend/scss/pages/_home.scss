@@ -225,3 +225,149 @@
     }
   }
 }
+
+.different {
+  position: relative;
+  top: -30px;
+
+  .section-title {
+    text-align: center;
+    font-size: $fs-section-title;
+    font-weight: $fw-bold;
+    color: $text-color;
+    margin-bottom: 60px;
+  }
+
+  .cards {
+    margin: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px;
+    border-radius: $radius-md;
+    background-color: $secondary-color-box;
+    border: 1px solid $primary-color;
+    gap: 20px;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        i {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 45px;
+          height: 45px;
+          border-radius: $radius-sm;
+          background: $glass-color;
+          color: $primary-color;
+          font-size: $fs-card-title;
+          flex-shrink: 0;
+
+        }
+
+      }
+
+      .text {
+        display: flex;
+        flex-direction: column;
+        padding-right: 15px;
+
+        h4 {
+
+          font-size: $fs-card-title;
+
+          font-weight: $fw-bold;
+
+          color: $primary-color;
+          padding-top: 5px;
+          padding-right: 10px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          top: -15px;
+
+          font-size: $fs-base;
+          line-height: 1.8;
+          color: $text-color;
+        }
+
+      }
+
+    }
+
+
+  }
+
+  .buttons {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 140px;
+      height: 50px;
+      white-space: nowrap;
+      border-radius: $radius-md;
+      background-color: $primary-color;
+      border: none;
+      color: $text-color;
+      text-align: center;
+      font-size: $fs-base;
+      font-weight: $fw-bold;
+      padding: 16px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+
+    button span:after {
+      content: '»';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -15px;
+      transition: 0.5s;
+    }
+
+    button:hover span {
+      padding-right: 15px;
+    }
+
+    button:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+  }
+}

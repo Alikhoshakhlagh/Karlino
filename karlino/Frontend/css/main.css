@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @keyframes pulse7132 {
   0% {
     transform: scale(0);
@@ -665,6 +666,122 @@ footer .footer-bottom p {
   to {
     transform: translateX(-33.333%);
   }
+}
+
+.different {
+  position: relative;
+  top: -30px;
+}
+.different .section-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 700;
+  color: #F8FAFC;
+  margin-bottom: 60px;
+}
+.different .cards {
+  margin: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+.different .card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(20, 51, 106, 0.44);
+  border: 1px solid #FF653F;
+  gap: 20px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.different .card:hover {
+  transform: translateY(-5px);
+}
+.different .card .title {
+  display: flex;
+  align-items: center;
+}
+.different .card .title .icon i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: rgba(217, 217, 217, 0.14);
+  color: #FF653F;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.different .card .title .text {
+  display: flex;
+  flex-direction: column;
+  padding-right: 15px;
+}
+.different .card .title .text h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FF653F;
+  padding-top: 5px;
+  padding-right: 10px;
+  margin-bottom: 10px;
+}
+.different .card .title .text p {
+  top: -15px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #F8FAFC;
+}
+.different .buttons {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.different .buttons button {
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 50px;
+  white-space: nowrap;
+  border-radius: 20px;
+  background-color: #FF653F;
+  border: none;
+  color: #F8FAFC;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+.different .buttons button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.different .buttons button span:after {
+  content: "»";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -15px;
+  transition: 0.5s;
+}
+.different .buttons button:hover span {
+  padding-right: 15px;
+}
+.different .buttons button:hover span:after {
+  opacity: 1;
+  right: 0;
 }
 
 .card-login {
