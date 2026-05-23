@@ -502,4 +502,162 @@ footer .footer-bottom p {
   font-weight: 500;
 }
 
+.card-login {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.card-login .form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: max-content;
+  width: max-content;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+  background-color: rgba(20, 51, 106, 0.44);
+  color: #F8FAFC;
+  border: 1px solid #0d204b;
+  direction: rtl;
+  margin: auto;
+}
+.card-login .form .top-login {
+  display: flex;
+  justify-content: right;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+}
+.card-login .form .top-login .creat-acc {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.card-login .form .top-login .creat-acc h2 {
+  color: #F8FAFC;
+  font-size: 34px;
+  font-weight: 700;
+}
+.card-login .form .top-login .creat-acc .ping {
+  --uib-size: 50px;
+  --uib-speed: 1s;
+  --uib-color: #ff653f;
+  position: relative;
+  width: var(--uib-size);
+  height: var(--uib-size);
+}
+.card-login .form .top-login .creat-acc .ping::before, .card-login .form .top-login .creat-acc .ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  animation: pulse7132 var(--uib-speed) linear infinite;
+  transform: scale(0);
+  opacity: 0;
+}
+.card-login .form .top-login .creat-acc .ping::after {
+  animation-delay: calc(var(--uib-speed) / -2);
+}
+.card-login .form .top-login .message {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+  margin-right: 25px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+.card-login .form label {
+  position: relative;
+  width: 100%;
+}
+.card-login .form label .input {
+  background-color: rgba(217, 217, 217, 0.14);
+  color: #F8FAFC;
+  width: 100%;
+  padding: 20px 10px 5px 5px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 12px;
+  text-align: right;
+  font-size: medium;
+}
+.card-login .form label .input + span {
+  color: #F8FAFC;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  font-size: 14px;
+  cursor: text;
+  transition: 0.3s ease;
+}
+.card-login .form label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 14px;
+}
+.card-login .form label .input:focus + span, .card-login .form label .input:not(:placeholder-shown) + span {
+  padding-top: 6px;
+  color: #FF653F;
+  top: 0;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+.card-login .form .forgetpasword2 {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+}
+.card-login .form .forgetpasword2 .forget {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+}
+.card-login .form a {
+  color: #FF653F;
+}
+.card-login .form a:hover {
+  border-bottom: 2px solid #FF653F;
+}
+.card-login .form .bottom-reg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card-login .form .bottom-reg .submit {
+  text-align: center;
+  border: none;
+  outline: none;
+  padding: 12px;
+  border-radius: 12px;
+  color: #F8FAFC;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background-color: #FF653F;
+  margin-top: 10px;
+  width: 50%;
+}
+.card-login .form .bottom-reg .submit:hover {
+  transform: scale(1.03);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+.card-login .form .bottom-reg .submit:active {
+  transform: scale(0.95);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+.card-login .form .bottom-reg .signin {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+}
+.card-login .form .bottom-reg .signin a {
+  color: #FF653F;
+}
+.card-login .form .bottom-reg .signin a:hover {
+  border-bottom: 2px solid #FF653F;
+}
+
 /*# sourceMappingURL=main.css.map */
