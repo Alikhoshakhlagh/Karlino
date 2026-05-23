@@ -404,7 +404,7 @@
       font-size: $fs-small;
       font-weight: $fw-bold;
       cursor: pointer;
-      background-color:$primary-color;
+      background-color: $primary-color;
       border-radius: $radius-sm;
       border: none;
       width: max-content;
@@ -413,7 +413,7 @@
 
 
       i {
-        color:$text-color;
+        color: $text-color;
         font-size: $fs-small;
         font-weight: $fw-bold;
         margin-right: 5px;
@@ -544,7 +544,7 @@
       font-size: $fs-small;
       font-weight: $fw-bold;
       cursor: pointer;
-      background-color:$primary-color;
+      background-color: $primary-color;
       border-radius: $radius-sm;
       border: none;
       width: max-content;
@@ -553,7 +553,7 @@
 
 
       i {
-        color:$text-color;
+        color: $text-color;
         font-size: $fs-small;
         font-weight: $fw-bold;
         margin-right: 5px;
@@ -563,28 +563,32 @@
 
   .projects-cards {
     margin-top: 40px;
-    //justify-content: space-between;
-    //display: grid;
-    //grid-template-columns: repeat(4, 1fr);
     display: grid;
-    flex-direction: row;
-    //justify-content: space-between;
     grid-template-columns: repeat(4, 1fr);
-    //gap: 50px;
     column-gap: 50px;
     row-gap: 25px;
+    padding-bottom: 20px;
 
     .card-project {
       overflow: hidden;
       transition: 0.3s;
       background-color: $secondary-color-box;
-      border: none;
+      border: 1px solid transparent;
       border-radius: $radius-md;
-
-
+      cursor: pointer;
       width: 300px;
       height: max-content;
 
+      &:hover {
+        border: 1px solid $primary-color;
+        transform: translateY(-5px);
+      }
+
+      &:has(.button:hover),
+      &:has(.bookmark:hover) {
+        transform: translateY(0);
+        border: 1px solid transparent;
+      }
 
       .card-top {
         display: flex;
@@ -592,7 +596,6 @@
         justify-content: space-between;
         align-items: center;
 
-        //for save
         #checkboxInput {
           display: none;
         }
@@ -621,14 +624,13 @@
           display: none;
         }
 
-        .bookmark input:checked + .svgIcon path {
+        .bookmark input:checked + .svgIcon path,
+        #checkboxInput:checked ~ .svgIcon path {
           fill: $primary-color;
           animation: bookmark 0.5s linear;
         }
 
         #checkboxInput:checked ~ .svgIcon path {
-          fill: $primary-color;
-          animation: bookmark 0.5s linear;
           transition-delay: 0.5s;
         }
 
@@ -645,16 +647,13 @@
         .icon-project {
           position: relative;
           left: 60px;
-          top: 0px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-
           margin: 20px auto;
           width: 85px;
           height: 85px;
-
           background-color: $glass-color;
           border: none;
           border-radius: $radius-sm;
@@ -671,19 +670,15 @@
         display: flex;
         flex-direction: column;
         justify-content: right;
-        margin-right: 20px;
-        margin-left: 20px;
+        margin: 0 20px;
 
         .owner {
           position: relative;
           top: -4px;
           margin-top: 3px;
-
           font-size: 12px;
           font-weight: $fw-regular;
-
           padding-right: 4px;
-
           display: flex;
           align-items: center;
           gap: 5px;
@@ -697,7 +692,6 @@
         h3 {
           font-size: $fs-card-title;
           font-weight: $fw-bold;
-
         }
 
         .card-pro-cat {
@@ -716,23 +710,17 @@
             white-space: nowrap;
             width: max-content;
           }
-
         }
-
 
         .price {
           margin-top: 10px;
           display: flex;
           justify-content: space-between;
 
-          .number {
-            font-size: $fs-small;
-          }
-
+          .number,
           span {
             font-size: $fs-small;
           }
-
         }
       }
 
@@ -741,17 +729,13 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-right: 20px;
-        margin-left: 20px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin: 10px 20px;
 
         .daysAgo {
           font-size: $fs-small;
           color: $gray-color;
         }
 
-        //for but
         .button {
           display: block;
           position: relative;
@@ -763,44 +747,45 @@
           background-color: transparent;
           cursor: pointer;
           border: 0;
-        }
 
-        .button:before,
-        .button:after {
-          content: "";
-          position: absolute;
-          border-radius: 50%;
-          inset: 7px;
-        }
+          &:before,
+          &:after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            inset: 7px;
+          }
 
-        .button:before {
-          border: 4px solid $primary-color;
-          transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
-          transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
-        }
+          &:before {
+            border: 4px solid $primary-color;
+            transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+            transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+          }
 
-        .button:after {
-          border: 4px solid $primary-color;
-          transform: scale(1.3);
-          transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-          transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          opacity: 0;
-        }
+          &:after {
+            border: 4px solid $primary-color;
+            transform: scale(1.3);
+            transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+            transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+          }
 
-        .button:hover:before,
-        .button:focus:before {
-          opacity: 0;
-          transform: scale(0.7);
-          transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-          transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
+          &:hover,
+          &:focus {
+            &:before {
+              opacity: 0;
+              transform: scale(0.7);
+              transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+              transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
 
-        .button:hover:after,
-        .button:focus:after {
-          opacity: 1;
-          transform: scale(1);
-          transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
-          transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+            &:after {
+              opacity: 1;
+              transform: scale(1);
+              transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
+              transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
+            }
+          }
         }
 
         .button-box {
@@ -818,22 +803,7 @@
           transform: rotate(180deg);
           fill: $primary-color;
         }
-
-        .button:hover .button-box,
-        .button:focus .button-box {
-          transition: 0.4s;
-          transform: translateX(-56px);
-        }
-
-
       }
-
-      &:hover {
-        border: 1px solid $primary-color;
-        transform: translateY(-5px);
-      }
-
     }
-
   }
 }
