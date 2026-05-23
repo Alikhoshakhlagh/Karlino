@@ -850,4 +850,139 @@ footer .footer-bottom p {
   border-bottom: 2px solid #FF653F;
 }
 
+.forgot-password {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.forgot-password .form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: max-content;
+  width: max-content;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+  background-color: rgba(20, 51, 106, 0.44);
+  color: #F8FAFC;
+  border: 1px solid #0d204b;
+  direction: rtl;
+  margin: auto;
+}
+.forgot-password .form .top-pass {
+  display: flex;
+  justify-content: right;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+}
+.forgot-password .form .top-pass .creat-acc {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+.forgot-password .form .top-pass .creat-acc h2 {
+  color: #F8FAFC;
+  font-size: 34px;
+  font-weight: 700;
+}
+.forgot-password .form .top-pass .creat-acc .ping {
+  --uib-size: 50px;
+  --uib-speed: 1s;
+  --uib-color: #ff653f;
+  position: relative;
+  width: var(--uib-size);
+  height: var(--uib-size);
+}
+.forgot-password .form .top-pass .creat-acc .ping::before, .forgot-password .form .top-pass .creat-acc .ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  animation: pulse7132 var(--uib-speed) linear infinite;
+  transform: scale(0);
+  opacity: 0;
+}
+.forgot-password .form .top-pass .creat-acc .ping::after {
+  animation-delay: calc(var(--uib-speed) / -2);
+}
+.forgot-password .form .top-pass .message {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+  margin-right: 25px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+.forgot-password .form .email-input {
+  direction: ltr;
+  text-align: left;
+}
+.forgot-password .form label {
+  position: relative;
+  width: 100%;
+}
+.forgot-password .form label .input {
+  background-color: rgba(217, 217, 217, 0.14);
+  color: #F8FAFC;
+  width: 100%;
+  padding: 20px 10px 5px 5px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 12px;
+  text-align: right;
+  font-size: medium;
+}
+.forgot-password .form label .input + span {
+  color: #F8FAFC;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  font-size: 14px;
+  cursor: text;
+  transition: 0.3s ease;
+}
+.forgot-password .form label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 14px;
+}
+.forgot-password .form label .input:focus + span, .forgot-password .form label .input:not(:placeholder-shown) + span {
+  padding-top: 6px;
+  color: #FF653F;
+  top: 0;
+  font-size: 0.7em;
+  font-weight: 700;
+}
+.forgot-password .form .but-confrim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.forgot-password .form .but-confrim .submit {
+  text-align: center;
+  border: none;
+  outline: none;
+  padding: 12px;
+  border-radius: 12px;
+  color: #F8FAFC;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background-color: #FF653F;
+  margin-top: 10px;
+  width: 50%;
+}
+.forgot-password .form .but-confrim .submit:hover {
+  transform: scale(1.03);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+.forgot-password .form .but-confrim .submit:active {
+  transform: scale(0.95);
+  box-shadow: #FF653F 0px 15px 10px -20px;
+}
+
 /*# sourceMappingURL=main.css.map */
