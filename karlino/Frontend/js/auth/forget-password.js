@@ -1,9 +1,46 @@
+// js/forgot.js
+
+
+// ── یوزر فیک برای تست ─────────────────────────────
+const fakeUsers = [
+    {
+        first_name: 'علی',
+        last_name: 'رضایی',
+        email: 'ali.rezaei@gmail.com',
+        password: 'Ali@12345',
+        gender: 'male',
+        isLoggedIn: false
+    },
+    {
+        first_name: 'سارا',
+        last_name: 'محمدی',
+        email: 'sara.mohammadi@yahoo.com',
+        password: 'Sara#2024',
+        gender: 'female',
+        isLoggedIn: false
+    },
+    {
+        first_name: 'محمد',
+        last_name: 'حسینی',
+        email: 'm.hosseini@outlook.com',
+        password: 'Mhmd@5678',
+        gender: 'male',
+        isLoggedIn: false
+    }
+];
+
+// اگه localStorage خالی بود، یوزر اول رو بذار
+if (!localStorage.getItem('user')) {
+    localStorage.setItem('user', JSON.stringify(fakeUsers[0]));
+}
+
+
 // ── گرفتن المنت‌ها ─────────────────────────────
-const form            = document.getElementById('forgot-form');
-const emailInput      = document.getElementById('email');
-const passwordInput   = document.getElementById('password');
-const confirmInput    = document.getElementById('confirm-password');
-const submitBtn       = document.querySelector('.submit');
+const form          = document.getElementById('forgot-form');
+const emailInput    = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const confirmInput  = document.getElementById('confirm-password');
+const submitBtn     = document.querySelector('.submit');
 
 
 // ── نمایش ارور ─────────────────────────────
@@ -54,14 +91,14 @@ function setLoading(isLoading) {
 
     if (isLoading) {
 
-        submitBtn.disabled    = true;
-        submitBtn.textContent = 'در حال ذخیره...';
+        submitBtn.disabled      = true;
+        submitBtn.textContent   = 'در حال ذخیره...';
         submitBtn.style.opacity = '0.7';
 
     } else {
 
-        submitBtn.disabled    = false;
-        submitBtn.textContent = 'ثبت رمز جدید';
+        submitBtn.disabled      = false;
+        submitBtn.textContent   = 'ثبت رمز جدید';
         submitBtn.style.opacity = '1';
     }
 }
@@ -138,7 +175,6 @@ form.addEventListener('submit', function (e) {
 
         setLoading(false);
 
-        // نمایش پیام موفقیت و redirect به login
         alert('رمز عبور با موفقیت تغییر کرد!');
 
         window.location.href = 'login.html';

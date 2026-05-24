@@ -1,7 +1,35 @@
-// js/login.js
+const fakeUsers = [
+    {
+        first_name: 'علی',
+        last_name: 'رضایی',
+        email: 'ali.rezaei@gmail.com',
+        password: 'Ali@12345',
+        gender: 'male',
+        isLoggedIn: false
+    },
+    {
+        first_name: 'سارا',
+        last_name: 'محمدی',
+        email: 'sara.mohammadi@yahoo.com',
+        password: 'Sara#2024',
+        gender: 'female',
+        isLoggedIn: false
+    },
+    {
+        first_name: 'محمد',
+        last_name: 'حسینی',
+        email: 'm.hosseini@outlook.com',
+        password: 'Mhmd@5678',
+        gender: 'male',
+        isLoggedIn: false
+    }
+];
+
+if (!localStorage.getItem('user')) {
+    localStorage.setItem('user', JSON.stringify(fakeUsers[0]));
+}
 
 
-// ── گرفتن المنت‌ها ─────────────────────────────
 const form = document.getElementById('login-form');
 
 const emailInput = document.getElementById('email');
@@ -11,7 +39,7 @@ const passwordInput = document.getElementById('password');
 const submitBtn = document.querySelector('.submit');
 
 
-// ── نمایش ارور ─────────────────────────────
+
 function showError(inputEl, message) {
 
     inputEl.style.borderColor = '#ff4444';
@@ -39,7 +67,6 @@ function showError(inputEl, message) {
 }
 
 
-// ── پاک کردن ارور ─────────────────────────────
 function clearError(inputEl) {
 
     inputEl.style.borderColor = '';
@@ -54,7 +81,6 @@ function clearError(inputEl) {
 }
 
 
-// ── loading ─────────────────────────────
 function setLoading(isLoading) {
 
     if (isLoading) {
@@ -76,111 +102,65 @@ function setLoading(isLoading) {
 }
 
 
-// ── submit ─────────────────────────────
 form.addEventListener('submit', function (e) {
 
     e.preventDefault();
-
 
     const email = emailInput.value.trim();
 
     const password = passwordInput.value;
 
-
-    // پاک کردن ارورها
     clearError(emailInput);
 
     clearError(passwordInput);
 
-
     let hasError = false;
 
-
-    // validation ایمیل
     if (!email.includes('@') || !email.includes('.')) {
 
-        showError(
-            emailInput,
-            'ایمیل معتبر نیست'
-        );
+        showError(emailInput, 'ایمیل معتبر نیست');
 
         hasError = true;
     }
 
-
-    // validation رمز
     if (password.length < 8) {
 
-        showError(
-            passwordInput,
-            'رمز عبور باید حداقل ۸ کاراکتر باشد'
-        );
+        showError(passwordInput, 'رمز عبور باید حداقل ۸ کاراکتر باشد');
 
         hasError = true;
     }
-
 
     if (hasError) return;
 
+    const savedUser = JSON.parse(localStorage.getItem('user'));
 
-    // گرفتن کاربر ذخیره شده
-    const savedUser = JSON.parse(
-        localStorage.getItem('user')
-    );
-
-
-    // چک وجود کاربر
     if (!savedUser) {
 
-        showError(
-            emailInput,
-            'حساب کاربری پیدا نشد'
-        );
+        showError(emailInput, 'حساب کاربری پیدا نشد');
 
         return;
     }
 
-
-    // چک ایمیل
     if (savedUser.email !== email) {
 
-        showError(
-            emailInput,
-            'ایمیل اشتباه است'
-        );
+        showError(emailInput, 'ایمیل اشتباه است');
 
         return;
     }
 
-
-    // چک رمز
     if (savedUser.password !== password) {
 
-        showError(
-            passwordInput,
-            'رمز عبور اشتباه است'
-        );
+        showError(passwordInput, 'رمز عبور اشتباه است');
 
         return;
     }
 
-
-    // لاگین موفق
     savedUser.isLoggedIn = true;
 
+    localStorage.setItem('user', JSON.stringify(savedUser));
 
-    // ذخیره دوباره
-    localStorage.setItem(
-        'user',
-        JSON.stringify(savedUser)
-    );
-
-
-    // loading
     setLoading(true);
 
-
-    // redirect
     setTimeout(function () {
 
         window.location.href = 'index.html';
