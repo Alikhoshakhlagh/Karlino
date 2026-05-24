@@ -64,28 +64,21 @@
   .trending-categories {
     position: relative;
     z-index: 2;
-
     display: flex;
     align-items: center;
-
     gap: 30px;
-
-    margin-top: 150px;
-
-    overflow: hidden;
+    margin-top: 155px;
+    overflow: visible; // ← از hidden به visible تغییر بده
 
     .trend-text {
       display: flex;
       align-items: center;
-
       gap: 10px;
-
       color: $text-color;
-
       font-size: $fs-base;
       font-weight: $fw-medium;
-
       white-space: nowrap;
+      flex-shrink: 0;
 
       i {
         font-size: 9px;
@@ -94,23 +87,28 @@
     }
 
     .categories-wrapper {
-      width: min(1100px, 100%);
-
-      overflow: hidden;
 
       position: relative;
 
+      overflow: hidden;
+
+      flex: 1;
+
+      min-width: 0;
+
       direction: ltr;
+
+
+      -webkit-mask-image: unquote("linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%)");
+      mask-image: unquote("linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%)");
     }
 
     .categories-box {
       display: flex;
-
+      align-items: center;
       gap: 15px;
-
       width: max-content;
-
-      animation: infiniteScroll 20s linear infinite;
+      animation: infiniteScroll 30s linear infinite;
 
       &:hover {
         animation-play-state: paused;
@@ -119,22 +117,15 @@
 
     .cat {
       direction: rtl;
-
+      flex-shrink: 0;
       padding: 10px 22px;
-
       background: $primary-color;
-
       border-radius: $radius-lg;
-
       color: $text-color;
-
       white-space: nowrap;
-
       font-size: $fs-small;
       font-weight: $fw-medium;
-
       cursor: pointer;
-
       transition: 0.3s;
 
     }
@@ -143,10 +134,10 @@
       from {
         transform: translateX(0);
       }
-
       to {
-        transform: translateX(-50%);
+        transform: translateX(-33.333%);
       }
+      // ← چون 3 ست داری، نه 2
     }
   }
 }
