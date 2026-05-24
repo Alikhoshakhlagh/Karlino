@@ -1,0 +1,53 @@
+@use '../variables' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: $text-color;
+  font-family: Vazirmatn;
+}
+
+
+body {
+  font-family: 'Satoshi', sans-serif;
+  background: $main-background;
+  color: $text-color;
+  min-height: 100vh;
+}
+
+//font
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/Vazirmatn-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/Vazirmatn-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../assets/fonts/Vazirmatn-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

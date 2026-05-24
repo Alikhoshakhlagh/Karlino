@@ -1,0 +1,19 @@
+@use './variables';
+@use './mixins';
+
+@use './base/global';
+
+@use './layout/header';
+@use './layout/footer';
+
+@use './pages/home';
+@use './pages/projects';
+@use './pages/project-detail';
+@use './pages/Categories';
+
+
+
+@use 'pages/auth/login';
+@use 'pages/auth/register';
+@use 'pages/auth/forgot-password';
+@use 'pages/auth/reset-password';
