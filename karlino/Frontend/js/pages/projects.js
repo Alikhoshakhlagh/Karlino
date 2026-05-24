@@ -1,33 +1,30 @@
-const selectedOption =
-    document.querySelector(".selected-option");
-
-const optionsContainer =
-    document.querySelector(".options-container");
-
-const options =
-    document.querySelectorAll(".option");
 
 
-selectedOption.addEventListener("click", () => {
+// ─── Sort Box ───────────────────────────────────────────────
+const selectedOption = document.querySelector(".selected-option");
+const optionsContainer = document.querySelector(".options-container");
+const options = document.querySelectorAll(".option");
 
+selectedOption.addEventListener("click", (e) => {
+    e.stopPropagation(); // جلوگیری از bubble شدن به document
     optionsContainer.classList.toggle("show");
-
 });
 
-
 options.forEach(option => {
-
     option.addEventListener("click", () => {
-
         selectedOption.innerHTML = `
             ${option.innerText}
             <i class="fa-solid fa-angle-down"></i>
         `;
-
         optionsContainer.classList.remove("show");
-
     });
+});
 
+// بسته شدن با کلیک بیرون از باکس
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".sort-box")) {
+        optionsContainer.classList.remove("show");
+    }
 });
 
 ///////pagination
