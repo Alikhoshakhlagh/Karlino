@@ -1173,7 +1173,7 @@ footer .footer-bottom p {
 
 .hero-project-page {
   position: relative;
-  margin: 50px 30px 30px;
+  margin: 50px 30px 0px 30px;
   padding: 80px 24px 120px;
   overflow: hidden;
   display: flex;
@@ -1209,7 +1209,7 @@ footer .footer-bottom p {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 .hero-project-page .hero-stats .stat-box {
   display: flex;
@@ -1225,7 +1225,7 @@ footer .footer-bottom p {
 
 .project-layout {
   direction: ltr;
-  margin: 40px;
+  margin: 0 40px 0 40px;
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 30px;
@@ -1359,25 +1359,29 @@ footer .footer-bottom p {
   gap: 20px;
 }
 .project-layout .project-main .project-grid .projects-cards {
-  position: relative;
-  top: -28px;
-  transition: none;
-  cursor: move;
-  margin-top: 40px;
   display: grid;
-  flex-direction: row;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 50px;
-  row-gap: 30px;
+  row-gap: 25px;
+  padding-bottom: 20px;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project {
   overflow: hidden;
   transition: 0.3s;
   background-color: rgba(20, 51, 106, 0.44);
-  border: none;
+  border: 1px solid transparent;
   border-radius: 20px;
+  cursor: pointer;
   width: 300px;
   height: max-content;
+}
+.project-layout .project-main .project-grid .projects-cards .card-project:hover {
+  border: 1px solid #FF653F;
+  transform: translateY(-5px);
+}
+.project-layout .project-main .project-grid .projects-cards .card-project:has(.button:hover), .project-layout .project-main .project-grid .projects-cards .card-project:has(.bookmark:hover) {
+  transform: translateY(0);
+  border: 1px solid transparent;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top {
   display: flex;
@@ -1409,13 +1413,12 @@ footer .footer-bottom p {
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .bookmark input {
   display: none;
 }
-.project-layout .project-main .project-grid .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path {
+.project-layout .project-main .project-grid .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path,
+.project-layout .project-main .project-grid .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
   fill: #FF653F;
   animation: bookmark 0.5s linear;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
-  fill: #FF653F;
-  animation: bookmark 0.5s linear;
   transition-delay: 0.5s;
 }
 @keyframes bookmark {
@@ -1430,7 +1433,6 @@ footer .footer-bottom p {
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .icon-project {
   position: relative;
   left: 60px;
-  top: 0px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1451,8 +1453,7 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   justify-content: right;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin: 0 20px;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .owner {
   position: relative;
@@ -1494,9 +1495,7 @@ footer .footer-bottom p {
   display: flex;
   justify-content: space-between;
 }
-.project-layout .project-main .project-grid .projects-cards .card-project .card-content .price .number {
-  font-size: 14px;
-}
+.project-layout .project-main .project-grid .projects-cards .card-project .card-content .price .number,
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .price span {
   font-size: 14px;
 }
@@ -1505,10 +1504,7 @@ footer .footer-bottom p {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-right: 20px;
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px 20px;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .daysAgo {
   font-size: 14px;
@@ -1526,8 +1522,7 @@ footer .footer-bottom p {
   cursor: pointer;
   border: 0;
 }
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:before,
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:after {
+.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:before, .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:after {
   content: "";
   position: absolute;
   border-radius: 50%;
@@ -1543,14 +1538,12 @@ footer .footer-bottom p {
   transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   opacity: 0;
 }
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:hover:before,
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:focus:before {
+.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:hover:before, .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:focus:before {
   opacity: 0;
   transform: scale(0.7);
   transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:hover:after,
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:focus:after {
+.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:hover:after, .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:focus:after {
   opacity: 1;
   transform: scale(1);
   transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms, transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
@@ -1568,15 +1561,6 @@ footer .footer-bottom p {
   margin: 17px 18px 0 18px;
   transform: rotate(180deg);
   fill: #FF653F;
-}
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:hover .button-box,
-.project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:focus .button-box {
-  transition: 0.4s;
-  transform: translateX(-56px);
-}
-.project-layout .project-main .project-grid .projects-cards .card-project:hover {
-  border: 1px solid #FF653F;
-  transform: translateY(-5px);
 }
 .project-layout .project-sidebar {
   direction: rtl;
