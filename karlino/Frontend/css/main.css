@@ -1322,12 +1322,13 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-toolbar .sort-box .options-container {
   position: absolute;
-  top: 60px;
+  top: 50px;
   right: 0;
   width: 100%;
   padding: 10px;
   border-radius: 12px;
-  background-color: rgba(20, 51, 106, 0.44);
+  background-color: #0d204b;
+  border: 1px solid rgba(255, 255, 255, 0.51);
   display: none;
   flex-direction: column;
   gap: 8px;

@@ -183,12 +183,13 @@
         .options-container {
 
           position: absolute;
-          top: 60px;
+          top: 50px;
           right: 0;
           width: 100%;
           padding: 10px;
           border-radius: $radius-sm;
-          background-color: $secondary-color-box;
+          background-color: $secondary-color;
+          border: 1px solid $gray-color;
           display: none;
           flex-direction: column;
           gap: 8px;
