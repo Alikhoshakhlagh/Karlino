@@ -1171,7 +1171,7 @@ footer .footer-bottom p {
   fill: #FF653F;
 }
 
-.hero {
+.hero-cat {
   position: relative;
   margin: 0 30px;
   padding: 80px 24px 120px;
@@ -1180,7 +1180,7 @@ footer .footer-bottom p {
   flex-direction: column;
   justify-content: center;
 }
-.hero .image {
+.hero-cat .image {
   margin-top: 20px;
   position: absolute;
   left: -180px;
@@ -1188,7 +1188,7 @@ footer .footer-bottom p {
   top: -30px;
   z-index: 1;
 }
-.hero .image .hero-img {
+.hero-cat .image .hero-img {
   width: 550px;
   height: 350px;
   transform: translate(-111px, 0px);
@@ -1200,18 +1200,18 @@ footer .footer-bottom p {
   max-width: 100%;
   opacity: 0.95;
 }
-.hero .title-hero {
+.hero-cat .title-hero {
   max-width: 700px;
 }
-.hero .title-hero h3 {
+.hero-cat .title-hero h3 {
   font-size: 56px;
   font-weight: 700;
   line-height: 1.4;
 }
-.hero .title-hero h3 span {
+.hero-cat .title-hero h3 span {
   color: #FF653F;
 }
-.hero .title-hero p {
+.hero-cat .title-hero p {
   margin-top: 40px;
   position: relative;
   z-index: 2;
@@ -1221,7 +1221,7 @@ footer .footer-bottom p {
   line-height: 2;
   color: #F8FAFC;
 }
-.hero .trending-categories {
+.hero-cat .trending-categories {
   position: relative;
   z-index: 2;
   display: flex;
@@ -1230,7 +1230,7 @@ footer .footer-bottom p {
   margin-top: 150px;
   overflow: hidden;
 }
-.hero .trending-categories .trend-text {
+.hero-cat .trending-categories .trend-text {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1239,26 +1239,26 @@ footer .footer-bottom p {
   font-weight: 500;
   white-space: nowrap;
 }
-.hero .trending-categories .trend-text i {
+.hero-cat .trending-categories .trend-text i {
   font-size: 9px;
   color: #FF653F;
 }
-.hero .trending-categories .categories-wrapper {
+.hero-cat .trending-categories .categories-wrapper {
   width: min(1100px, 100%);
   overflow: hidden;
   position: relative;
   direction: ltr;
 }
-.hero .trending-categories .categories-box {
+.hero-cat .trending-categories .categories-box {
   display: flex;
   gap: 15px;
   width: max-content;
   animation: infiniteScroll 20s linear infinite;
 }
-.hero .trending-categories .categories-box:hover {
+.hero-cat .trending-categories .categories-box:hover {
   animation-play-state: paused;
 }
-.hero .trending-categories .cat {
+.hero-cat .trending-categories .cat {
   direction: rtl;
   padding: 10px 22px;
   background: #FF653F;
