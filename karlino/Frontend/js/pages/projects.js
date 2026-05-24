@@ -86,7 +86,6 @@ const projects = [
 ];
 
 
-
 /*
 برای تست:
 پروژه‌ها را زیاد میکنیم
@@ -94,7 +93,6 @@ const projects = [
 */
 
 const fakeProjects = [];
-
 
 
 for (let i = 0; i < 9; i++) {
@@ -106,16 +104,13 @@ for (let i = 0; i < 9; i++) {
 }
 
 
-
 const projectsContainer =
     document.getElementById(
         "projectsContainer"
     );
 
 
-
 projectsContainer.innerHTML = "";
-
 
 
 fakeProjects.forEach((project, index) => {
@@ -229,5 +224,14 @@ fakeProjects.forEach((project, index) => {
 
     `;
 
+});
+
+// ─── Clear Filter ────────────────────────────────────────────
+const clearFilterBtn = document.querySelector(".clear-filter");
+
+clearFilterBtn.addEventListener("click", () => {
+    document.querySelectorAll(".items-container input[type='checkbox']").forEach(checkbox => {
+        checkbox.checked = false;
+    });
 });
 
