@@ -1,10 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>پروژه ها</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+<div id="header-placeholder"></div>
+
+<section class="hero-project-page">
+    
+    <div class="title-hero-pro">
+        <h3>
+            <span>مسیر حرفه‌ای‌ات</span>
+            <br>
+            را با پروژه‌های واقعی بساز
+        
+        </h3>
+        <p>در چند قدم ساده پروژه مناسب خودت را پیدا کن، پیشنهاد همکاری بفرست،
+            <br>
+            با تیم‌ها و کارفرماها ارتباط بگیر و تجربه‌های واقعی بساز که مسیر حرفه‌ای تو را به سطح بالاتری می‌رسانند.</p>
+    </div>
+    
+    <div class="hero-stats">
+        <div class="stat-box">
+            <h2>+12K</h2>
+            <p>پروژه فعال</p>
+        </div>
+        
+        
+        <div class="stat-box">
+            <h2>+8K</h2>
+            <p>فریلنسر حرفه‌ای</p>
+        </div>
+        
+        
+        <div class="stat-box">
+            <h2>+3K</h2>
+            <p>شرکت و کارفرما</p>
+        </div>
+        
+        
+        <div class="stat-box">
+            <h2>+25K</h2>
+            <p>همکاری موفق</p>
+        </div>
+    
+    </div>
+
+</section>
+
+<section class="project-layout">
+    <div class="project-main">
+        <section class="project-toolbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input id="query" class="input" type="search" placeholder="جستجو..." name="searchbar"/>
+            </div>
+            <div class="sort-box">
+                
+                <div class="selected-option">جدیدترین ها
+                    <i class="fa-solid fa-angle-down"></i>
+                </div>
+                
+                <div class="options-container">
+                    
+                    <div class="option">جدیدترین ها</div>
+                    <div class="option">محبوب ترین ها</div>
+                    <div class="option">بالاترین قیمت</div>
+                    <div class="option">کمترین قیمت</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="project-grid">
+            <div class="projects-cards" id="projectsContainer">
+            
+            </div>
+        </section>
+    
+    
+    </div>
+    <aside class="project-sidebar">
+        
+        <h2 class="sidebar-title">فیلتر پروژه‌ها</h2>
+        
+        <div class="filter-box">
+            <h3>دسته‌بندی‌ها</h3>
+            
+            <div class="items-container">
+                <div class="item">
+                    
+                    <input type="checkbox" id="web-dev" hidden/>
+                    
+                    <label for="web-dev" class="check">
+                        <i class="fa-solid fa-check"></i>
+                    </label>
+                    
+                    <span>توسعه وب</span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="uiux"
+                            hidden
+                    />
+                    
+                    <label
+                            for="uiux"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    طراحی UI/UX
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="graphic"
+                            hidden
+                    />
+                    
+                    <label
+                            for="graphic"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    طراحی گرافیک
+                </span>
+                
+                </div>
+            </div>
+        
+        </div>
+        
+        <div class="filter-box">
+            <h3>مهارت‌ها</h3>
+            <div class="items-container scrollable">
+                <div class="item">
+                    <input type="checkbox" id="react" hidden/>
+                    <label for="react" class="check">
+                        <i class="fa-solid fa-check"></i>
+                    </label>
+                    <span>React</span>
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="nextjs"
+                            hidden
+                    />
+                    
+                    <label
+                            for="nextjs"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    Next.js
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="figma"
+                            hidden
+                    />
+                    
+                    <label
+                            for="figma"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    Figma
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="django"
+                            hidden
+                    />
+                    
+                    <label
+                            for="django"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    Django
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="seo"
+                            hidden
+                    />
+                    
+                    <label
+                            for="seo"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    SEO
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="node"
+                            hidden
+                    />
+                    
+                    <label
+                            for="node"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    Node.js
+                </span>
+                
+                </div>
+                <div class="item">
+                    
+                    <input
+                            type="checkbox"
+                            id="vue"
+                            hidden
+                    />
+                    
+                    <label
+                            for="vue"
+                            class="check"
+                    >
+                        
+                        <i class="fa-solid fa-check"></i>
+                    
+                    </label>
+                    
+                    <span>
+                    Vue.js
+                </span>
+                
+                </div>
+            </div>
+        
+        </div>
+        <div class="filter-actions">
+            
+            <button class="confirm-filter">
+                <span>اعمال فیلتر</span>
+            </button>
+            
+            <button class="clear-filter">
+                <span>پاک کردن</span>
+            </button>
+        </div>
+    </aside>
+</section>
+
+<section class="project-pagination">
+    
+    <button class="page-btn arrow-btn">
+        <i class="fa-solid fa-angle-right"></i>
+    </button>
+    
+    
+    <button class="page-btn active">1</button>
+    
+    <button class="page-btn">2</button>
+    <button class="page-btn">3
+    </button>
+    
+    <button class="page-btn">
+        4
+    </button>
+    
+    <button class="page-btn">
+        5
+    </button>
+    
+    
+    <button class="page-btn arrow-btn">
+        <i class="fa-solid fa-angle-left"></i>
+    </button>
+
+</section>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/pages/projects.js"></script>
+<script src="js/layout.js"></script>
 
 </body>
 </html>
