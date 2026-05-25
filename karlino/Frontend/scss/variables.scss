@@ -1,0 +1,30 @@
+//for color
+$primary-color:#FF653F;
+//$secondary-color: #14336A;
+$secondary-color: #0d204b;
+$secondary-color-box:rgba(20, 51, 106, 0.44);
+$text-color: #F8FAFC;
+$gray-color: rgba(255, 255, 255, 0.51);
+$glass-color: rgba(217, 217, 217, 0.14);
+
+//bacground
+//$main-background:linear-gradient(177.6deg, rgba(20, 0, 113, 1) 15.3%, rgba(1, 0, 62, 1) 91.3%);
+$main-background:linear-gradient(177.6deg, rgb(16, 16, 40) 15.3%, rgb(3, 3, 24) 91.3%);
+
+//for radius
+$radius-sm: 12px;
+$radius-md: 20px;
+$radius-lg: 32px;
+
+// Font Sizes
+$fs-hero: 56px;
+$fs-section-title: 34px;
+$fs-card-title: 20px;
+$fs-base: 16px;
+$fs-small: 14px;
+
+// Font Weights
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-bold: 700;
+
