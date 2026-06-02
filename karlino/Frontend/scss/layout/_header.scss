@@ -95,11 +95,11 @@
           .dropdown {
             position: absolute;
             top: calc(100% + 14px);
-            right: 0;
+            right: -250px;
 
             // چیدمان شبکه‌ای ۲ ستونه
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 4px;
 
             min-width: 340px;
