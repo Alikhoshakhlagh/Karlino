@@ -127,35 +127,73 @@ img {
 }
 #header-placeholder header .navbar ul li a i {
   font-size: 12px;
+  transition: transform 0.3s;
 }
 #header-placeholder header .navbar ul li .dropdown {
   position: absolute;
-  top: 130%;
+  top: calc(100% + 14px);
   right: 0;
-  min-width: 180px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  min-width: 340px;
+  padding: 10px;
   background: #0d204b;
-  border-radius: 12px;
-  padding: 10px 0;
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
   z-index: 100;
+}
+#header-placeholder header .navbar ul li .dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 24px;
+  width: 12px;
+  height: 12px;
+  background: #0d204b;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+  transform: rotate(45deg);
 }
 #header-placeholder header .navbar ul li .dropdown li {
   width: 100%;
 }
 #header-placeholder header .navbar ul li .dropdown li a {
-  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #F8FAFC;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
 }
 #header-placeholder header .navbar ul li .dropdown li a::after {
   display: none;
 }
+#header-placeholder header .navbar ul li .dropdown li a i {
+  font-size: 15px;
+  color: #FF653F;
+  width: 18px;
+  text-align: center;
+}
 #header-placeholder header .navbar ul li .dropdown li a:hover {
   background: rgba(217, 217, 217, 0.14);
+  color: #FF653F;
 }
 #header-placeholder header .navbar ul li:hover .dropdown {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+#header-placeholder header .navbar ul li:hover > a i {
+  transform: rotate(180deg);
 }
 #header-placeholder header .left .guest-header {
   display: flex;

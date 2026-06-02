@@ -46,12 +46,10 @@
     }
 
     .navbar {
-
       ul {
         display: flex;
         align-items: center;
         gap: 25px;
-
         list-style: none;
 
         li {
@@ -59,17 +57,13 @@
 
           a {
             position: relative;
-
             display: flex;
             align-items: center;
             gap: 6px;
-
             text-decoration: none;
             color: $text-color;
-
             font-size: $fs-base;
             font-weight: $fw-medium;
-
             transition: 0.3s;
 
             &:hover {
@@ -78,17 +72,12 @@
 
             &::after {
               content: "";
-
               position: absolute;
-
               right: 0;
               bottom: -6px;
-
               width: 0;
               height: 2px;
-
               background: $primary-color;
-
               transition: 0.3s;
             }
 
@@ -98,51 +87,96 @@
 
             i {
               font-size: 12px;
+              transition: transform 0.3s;
             }
           }
 
+          // ───── دراپ‌داون ─────
           .dropdown {
             position: absolute;
-
-            top: 130%;
+            top: calc(100% + 14px);
             right: 0;
 
-            min-width: 180px;
+            // چیدمان شبکه‌ای ۲ ستونه
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+
+            min-width: 340px;
+            padding: 10px;
 
             background: $secondary-color;
+            border-radius: $radius-md;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.05);
 
-            border-radius: $radius-sm;
-
-            padding: 10px 0;
-
-            display: none;
-            flex-direction: column;
-
-            gap: 5px;
-
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-
+            // مخفی + انیمیشن
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
             z-index: 100;
+
+            // فلش کوچک بالای منو
+            &::before {
+              content: "";
+              position: absolute;
+              top: -6px;
+              right: 24px;
+              width: 12px;
+              height: 12px;
+              background: $secondary-color;
+              border-top: 1px solid rgba(0, 0, 0, 0.05);
+              border-left: 1px solid rgba(0, 0, 0, 0.05);
+              transform: rotate(45deg);
+            }
 
             li {
               width: 100%;
 
               a {
-                padding: 10px 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                padding: 10px 12px;
+                border-radius: $radius-sm;
+
+                font-size:$fs-small;
+                color: $text-color;
+
+                white-space: nowrap;
+                transition: background 0.2s, color 0.2s;
 
                 &::after {
                   display: none;
                 }
 
+                i {
+                  font-size: 15px;
+                  color: $primary-color;
+                  width: 18px;
+                  text-align: center;
+                }
+
                 &:hover {
                   background: $glass-color;
+                  color: $primary-color;
                 }
               }
             }
           }
 
+          // نمایش هنگام hover
           &:hover .dropdown {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+          }
+
+          // چرخش فلش هنگام باز شدن
+          &:hover > a i {
+            transform: rotate(180deg);
           }
         }
       }
