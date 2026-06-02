@@ -1,6 +1,6 @@
-export const BASE_URL = "http://localhost:8000"; // آدرس بک‌اند خودت
+const BASE_URL = "http://127.0.0.1:8000";
 
-export const ENDPOINTS = {
+const ENDPOINTS = {
   // auth
   login: "/api/auth/login/",
   register: "/api/auth/register/",
