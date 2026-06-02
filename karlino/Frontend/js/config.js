@@ -1,15 +1,25 @@
-// config.js
-const API_BASE = 'http://109.122.253.161:8000';
+export const BASE_URL = "http://localhost:8000"; // آدرس بک‌اند خودت
 
-export const API = {
-  REGISTER: `${API_BASE}/api/auth/register/`,
-  LOGIN: `${API_BASE}/api/auth/login/`,
-  REFRESH_TOKEN: `${API_BASE}/api/auth/token/refresh/`,
-  FORGOT_PASSWORD: `${API_BASE}/api/auth/forgot-password/`,
-  VERIFY_OTP: `${API_BASE}/api/auth/verify-otp/`,
-  ME: `${API_BASE}/api/auth/profile/`,
-  PROJECTS: `${API_BASE}/api/projects/`,
-  PROJECT: (id) => `${API_BASE}/api/projects/${id}/`,
-  CATEGORIES: `${API_BASE}/api/categories/`,
-  SKILLS: `${API_BASE}/api/skills/`,
+export const ENDPOINTS = {
+  // auth
+  login: "/api/auth/login/",
+  register: "/api/auth/register/",
+  refresh: "/api/auth/token/refresh/",
+  profile: "/api/auth/profile/",
+  forgotPassword: "/api/auth/forgot-password/",
+  verifyOtp: "/api/auth/verify-otp/",
+
+  // projects
+  projects: "/api/projects/",
+  myPosted: "/api/projects/my_posted/",
+
+  // applications
+  myApplications: "/api/applications/me/",
+  incomingApplications: "/api/applications/incoming/",
+
+  // others
+  categories: "/api/categories/",
+  skills: "/api/skills/",
+  company: "/api/company/",
+  favorites: "/api/favorites/",
 };
