@@ -73,7 +73,7 @@ const categories = [
 
 const container = document.getElementById("categoriesContainer");
 
-categories.slice(0, 9).forEach(category => {
+categories.slice(0, 10).forEach(category => {
 
     container.innerHTML += `
 

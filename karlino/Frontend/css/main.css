@@ -890,7 +890,7 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: red;
+  color: hsl(221, 100%, 99%);
   font-size: 34px;
   font-weight: 700;
   margin-right: 10px;
@@ -944,8 +944,8 @@ footer .footer-bottom p {
 .Popular-Categories .Categories-cards .card-Categories {
   transition: 0.3s;
   background-color: hsla(224, 61%, 6%, 0.44);
-  border: none;
   border-radius: 20px;
+  border: 1px solid hsl(223, 41%, 21%);
   width: 250px;
   height: 250px;
 }
@@ -2004,123 +2004,6 @@ footer .footer-bottom p {
   to {
     transform: translateX(-33.333%);
   }
-}
-
-.Popular-Categories {
-  padding: 0 40px;
-}
-.Popular-Categories .title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 50px;
-}
-.Popular-Categories .title .popular-text {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: hsl(221, 100%, 99%);
-  font-size: 34px;
-  font-weight: 700;
-  margin-right: 10px;
-}
-.Popular-Categories .title .popular-text .ping {
-  --uib-size: 50px;
-  --uib-speed: 1s;
-  --uib-color: $forth-color;
-  position: relative;
-  width: var(--uib-size);
-  height: var(--uib-size);
-}
-.Popular-Categories .title .popular-text .ping::before, .Popular-Categories .title .popular-text .ping::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background-color: oklch(76% 0.1 84deg);
-  animation: pulse7132 var(--uib-speed) linear infinite;
-  transform: scale(0);
-  opacity: 0;
-}
-.Popular-Categories .title .popular-text .ping::after {
-  animation-delay: calc(var(--uib-speed) / -2);
-}
-.Popular-Categories .title h6 {
-  color: #fd653c;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.Popular-Categories .title h6 i {
-  color: #fd653c;
-  font-size: 14px;
-  font-weight: 700;
-  margin-right: 5px;
-}
-.Popular-Categories .Categories-cards {
-  margin-top: 40px;
-  justify-items: center;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 25px;
-}
-.Popular-Categories .Categories-cards .card-Categories {
-  transition: 0.3s;
-  background-color: hsla(224, 61%, 6%, 0.44);
-  border: none;
-  border-radius: 20px;
-  width: 250px;
-  height: 250px;
-}
-.Popular-Categories .Categories-cards .card-Categories .icon-cat {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
-  width: 85px;
-  height: 85px;
-  background-color: hsl(222, 39%, 10%);
-  border: none;
-  border-radius: 12px;
-}
-.Popular-Categories .Categories-cards .card-Categories .icon-cat i {
-  color: #fd653c;
-  font-size: 34px;
-  font-weight: 700;
-}
-.Popular-Categories .Categories-cards .card-Categories .name-cat p {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: hsl(221, 100%, 99%);
-  font-size: 20px;
-  font-weight: 500;
-  margin-top: 20px;
-  margin-bottom: 4px;
-}
-.Popular-Categories .Categories-cards .card-Categories .project-stats {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-.Popular-Categories .Categories-cards .card-Categories .project-stats .count {
-  color: hsl(221, 100%, 99%);
-  font-size: 18px;
-  font-weight: 400;
-}
-.Popular-Categories .Categories-cards .card-Categories .project-stats .lable {
-  color: oklch(76% 0.05 264deg);
-  font-size: 14px;
-  font-weight: 400;
-}
-.Popular-Categories .Categories-cards .card-Categories:hover {
-  border: 1px solid #fd653c;
-  transform: translateY(-5px);
 }
 
 .card-login {
