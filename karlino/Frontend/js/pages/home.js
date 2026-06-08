@@ -73,7 +73,7 @@ const categories = [
 
 const container = document.getElementById("categoriesContainer");
 
-categories.slice(0, 10).forEach(category => {
+categories.slice(0, 9).forEach(category => {
 
     container.innerHTML += `
 
@@ -209,7 +209,9 @@ projects.slice(0, 8).forEach((project, index) => {
                     <i class="${project.icon}"></i>
                 </span>
             </div>
-
+<div class="status-project">
+                    <span class="active">فعال</span>
+            </div>
             <label for="checkbox-${index}" class="bookmark">
 
                 <input 
@@ -232,7 +234,7 @@ projects.slice(0, 8).forEach((project, index) => {
                 </svg>
 
             </label>
-
+            
         </div>
 
         <div class="card-content">

@@ -74,6 +74,7 @@ function initializeHeader() {
 
     }
     loadcategory_list();
+
 }
 
 
@@ -104,5 +105,6 @@ async function loadcategory_list() {
         list.innerHTML = "<li>خطا در بارگذاری</li>";
     }
 }
+
 
 loadcategory_list();
