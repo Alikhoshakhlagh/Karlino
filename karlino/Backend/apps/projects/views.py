@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from apps.applications.serializers import ApplicationSerializer
+from ..applications.serializers import ApplicationSerializer
 from .models import Project
 from .permissions import IsProjectOwnerOrCompanyOwner
 from .serializers import ProjectSerializer
