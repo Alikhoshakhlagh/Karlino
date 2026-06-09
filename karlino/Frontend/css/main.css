@@ -1405,6 +1405,7 @@ footer .footer-bottom p {
   width: 100%;
   padding: 20px;
   border-radius: 20px;
+  border: 1px solid hsl(223, 41%, 21%);
   background-color: hsla(224, 61%, 6%, 0.44);
   gap: 20px;
 }
@@ -1421,7 +1422,7 @@ footer .footer-bottom p {
 .project-layout .project-main .project-toolbar .search-box .search-icon {
   position: absolute;
   left: 1rem;
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
   width: 1rem;
   height: 1rem;
   pointer-events: none;
@@ -1434,13 +1435,14 @@ footer .footer-bottom p {
   padding-right: 20px;
   box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
   border-radius: 12px;
+  border: 1px solid hsl(223, 41%, 21%);
   background-color: hsl(222, 39%, 10%);
   outline: none;
   color: hsl(221, 100%, 99%);
   transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
   cursor: text;
   z-index: 0;
-  border: 1px solid #fd653c;
+  border: 1px solid hsl(222, 23%, 43%);
 }
 .project-layout .project-main .project-toolbar .search-box input::placeholder {
   padding-right: 5px;
@@ -1464,18 +1466,18 @@ footer .footer-bottom p {
   height: 45px;
   padding: 0 18px;
   border-radius: 12px;
-  border: 1px solid #fd653c;
+  border: 1px solid hsl(222, 23%, 43%);
   background-color: hsl(222, 39%, 10%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: hsl(221, 100%, 99%);
+  color: oklch(76% 0.05 264deg);
   cursor: pointer;
   transition: 0.3s;
   font-size: 14px;
 }
 .project-layout .project-main .project-toolbar .sort-box .selected-option i {
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
   font-size: 14px;
   transition: 0.3s;
 }
@@ -1508,7 +1510,8 @@ footer .footer-bottom p {
   font-size: 16px;
 }
 .project-layout .project-main .project-toolbar .sort-box .option:hover {
-  background-color: hsl(222, 39%, 10%);
+  padding-right: 5px;
+  background-color: hsla(224, 61%, 6%, 0.44);
   color: #fd653c;
 }
 .project-layout .project-main .project-toolbar .sort-box:active {
@@ -1607,7 +1610,7 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .icon-project {
   position: relative;
-  left: 30px;
+  left: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1749,9 +1752,12 @@ footer .footer-bottom p {
   padding: 25px;
   border-radius: 20px;
   background-color: hsla(224, 61%, 6%, 0.44);
+  border: 1px solid hsl(223, 41%, 21%);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
+  top: -10px;
 }
 .project-layout .project-sidebar .sidebar-title {
   font-size: 20px;
@@ -1764,10 +1770,11 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  border: 1px solid hsl(222, 23%, 43%);
 }
 .project-layout .project-sidebar .filter-box h3 {
   font-size: 16px;
-  color: #fd653c;
+  color: oklch(76% 0.1 84deg);
   font-weight: 700;
 }
 .project-layout .project-sidebar .items-container {
@@ -1784,7 +1791,7 @@ footer .footer-bottom p {
   width: 6px;
 }
 .project-layout .project-sidebar .scrollable::-webkit-scrollbar-thumb {
-  background-color: #fd653c;
+  background-color: oklch(76% 0.1 84deg);
   border-radius: 20px;
 }
 .project-layout .project-sidebar .scrollable::-webkit-scrollbar-track {
@@ -1812,17 +1819,17 @@ footer .footer-bottom p {
 }
 .project-layout .project-sidebar .check i {
   font-size: 11px;
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
   opacity: 0;
   transform: scale(0.5);
   transition: 0.2s;
 }
 .project-layout .project-sidebar .check:hover {
-  border-color: #fd653c;
+  border-color: hsl(222, 77%, 76%);
 }
 .project-layout .project-sidebar input:checked + .check {
-  border-color: #fd653c;
-  background-color: rgba(255, 119, 64, 0.08);
+  border-color: hsl(222, 77%, 76%);
+  background-color: hsla(222, 23%, 43%, 0.3);
 }
 .project-layout .project-sidebar input:checked + .check i {
   opacity: 1;

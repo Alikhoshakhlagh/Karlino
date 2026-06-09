@@ -82,6 +82,7 @@
       width: 100%;
       padding: 20px;
       border-radius: $radius-md;
+      border: 1px solid $border-muted;
       background-color: $secondary-color-box;
       gap: 20px;
 
@@ -99,7 +100,7 @@
         .search-icon {
           position: absolute;
           left: 1rem;
-          color: $primary-color;
+          color: $third-color;
           width: 1rem;
           height: 1rem;
           pointer-events: none;
@@ -114,13 +115,14 @@
           box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
           //border: 0;
           border-radius: $radius-sm;
+          border: 1px solid $border-muted;
           background-color: $glass-color;
           outline: none;
           color: $text-color;
           transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
           cursor: text;
           z-index: 0;
-          border: 1px solid $primary-color;
+          border: 1px solid $highlight;
 
           &::placeholder {
             padding-right: 5px;
@@ -153,19 +155,19 @@
           height: 45px;
           padding: 0 18px;
           border-radius: $radius-sm;
-          border: 1px solid $primary-color;
+          border: 1px solid $highlight;
           background-color: $glass-color;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          color: $text-color;
+          color: $gray-color;
           cursor: pointer;
           transition: 0.3s;
           font-size: $fs-small;
 
           i {
 
-            color: $primary-color;
+            color: $third-color;
             font-size: 14px;
             transition: 0.3s;
           }
@@ -182,6 +184,7 @@
           padding: 10px;
           border-radius: $radius-sm;
           background-color: $secondary-color;
+
           border: 1px solid $gray-color;
           display: none;
           flex-direction: column;
@@ -206,8 +209,11 @@
           transition: 0.3s;
           font-size: $fs-base;
 
+
           &:hover {
-            background-color: $glass-color;
+            padding-right: 5px;
+            background-color: $secondary-color-box;
+
             color: $primary-color;
 
           }
@@ -330,7 +336,7 @@
 
             .icon-project {
               position: relative;
-              left: 30px;
+              left: 60px;
               display: flex;
               flex-direction: column;
               justify-content: center;
@@ -510,9 +516,12 @@
     padding: 25px;
     border-radius: $radius-md;
     background-color: $secondary-color-box;
+    border: 1px solid $border-muted;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    position: relative;
+    top: -10px;
 
     .sidebar-title {
       font-size: $fs-card-title;
@@ -528,13 +537,14 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
+      border: 1px solid $highlight;
 
 
       h3 {
 
         font-size: $fs-base;
 
-        color: $primary-color;
+        color: $forth-color;
 
         font-weight: $fw-bold;
 
@@ -572,7 +582,7 @@
 
       &::-webkit-scrollbar-thumb {
 
-        background-color: $primary-color;
+        background-color: $forth-color;
 
         border-radius: 20px;
 
@@ -633,7 +643,7 @@
 
         font-size: 11px;
 
-        color: $primary-color;
+        color: $third-color;
 
         opacity: 0;
 
@@ -646,7 +656,7 @@
 
       &:hover {
 
-        border-color: $primary-color;
+        border-color: $third-color;
 
       }
 
@@ -655,9 +665,10 @@
 
     input:checked + .check {
 
-      border-color: $primary-color;
+      border-color: $third-color;
 
-      background-color: rgba(255, 119, 64, 0.08);
+      background-color: $glass-border;
+
 
 
       i {
