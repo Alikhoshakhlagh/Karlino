@@ -1347,31 +1347,16 @@ footer .footer-bottom p {
   padding: 80px 24px 120px;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.hero-project-page .image-project-page {
-  margin-top: 20px;
-  position: absolute;
-  left: -180px;
-  margin-left: 80px;
-  top: -30px;
-  z-index: 1;
-}
-.hero-project-page .image-project-page .hero-img-project {
-  width: 493px;
-  height: 316px;
-  transform: translate(-166.5px, -36px);
-  left: 357px;
-  top: 58px;
-  transition: none;
-  cursor: pointer;
-  position: relative;
-  max-width: 100%;
-  opacity: 0.95;
+  margin-top: 100px;
 }
 .hero-project-page .title-hero-pro {
-  max-width: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  left: -200px;
 }
 .hero-project-page .title-hero-pro h3 {
   position: relative;
@@ -1394,24 +1379,6 @@ footer .footer-bottom p {
   line-height: 2;
   color: hsl(221, 100%, 99%);
 }
-.hero-project-page .hero-stats {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 50px;
-}
-.hero-project-page .hero-stats .stat-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: hsla(224, 61%, 6%, 0.44);
-  border-radius: 20px;
-  width: 140px;
-  height: 140px;
-}
 
 .project-layout {
   direction: ltr;
@@ -1425,6 +1392,8 @@ footer .footer-bottom p {
   direction: rtl;
 }
 .project-layout .project-main {
+  position: relative;
+  top: -10px;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -1560,7 +1529,7 @@ footer .footer-bottom p {
   overflow: hidden;
   transition: 0.3s;
   background-color: hsla(224, 61%, 6%, 0.44);
-  border: 1px solid transparent;
+  border: 1px solid hsl(223, 41%, 21%);
   border-radius: 20px;
   cursor: pointer;
   width: 300px;
@@ -1596,7 +1565,7 @@ footer .footer-bottom p {
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .svgIcon path {
   stroke-dasharray: 200 0;
   stroke-dashoffset: 0;
-  stroke: #fd653c;
+  stroke: hsl(9, 31%, 55%);
   fill: rgba(221, 221, 221, 0);
   transition-delay: 0s;
   transition-duration: 0.5s;
@@ -1606,7 +1575,7 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path,
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
-  fill: #fd653c;
+  fill: hsl(9, 31%, 55%);
   animation: bookmark 0.5s linear;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
@@ -1621,9 +1590,24 @@ footer .footer-bottom p {
     stroke-dasharray: 200 0;
   }
 }
+.project-layout .project-main .project-grid .projects-cards .card-project .card-top .status-project .active {
+  color: #2DD4A7;
+  position: relative;
+  right: -70px;
+  font-size: 10px;
+  background-color: hsla(224, 61%, 6%, 0.44);
+  border: 1px solid hsl(147, 21%, 58%);
+  width: max-content;
+  height: max-content;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  border-radius: 12px;
+}
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .icon-project {
   position: relative;
-  left: 60px;
+  left: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1636,7 +1620,7 @@ footer .footer-bottom p {
   border-radius: 12px;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .icon-project i {
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
   font-size: 34px;
   font-weight: 700;
 }
@@ -1659,9 +1643,10 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .owner i {
   font-size: 12px;
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content h3 {
+  margin-right: 5px;
   font-size: 20px;
   font-weight: 700;
 }
@@ -1673,9 +1658,9 @@ footer .footer-bottom p {
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .card-pro-cat p {
   margin-top: 10px;
   margin-bottom: 5px;
-  background-color: #fd653c;
+  border: 1.5px solid oklch(76% 0.1 84deg);
   font-size: 9px;
-  color: hsl(221, 100%, 99%);
+  color: oklch(76% 0.1 84deg);
   border-radius: 12px;
   padding: 5px 10px;
   white-space: nowrap;
@@ -1689,6 +1674,11 @@ footer .footer-bottom p {
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .price .number,
 .project-layout .project-main .project-grid .projects-cards .card-project .card-content .price span {
   font-size: 14px;
+  color: hsl(221, 100%, 99%);
+}
+.project-layout .project-main .project-grid .projects-cards .card-project .card-content {
+  padding-bottom: 20px;
+  border-bottom: 1px solid hsl(222, 23%, 43%);
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer {
   display: flex;
@@ -1699,7 +1689,7 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .daysAgo {
   font-size: 14px;
-  color: oklch(76% 0.05 264deg);
+  color: rgba(255, 255, 255, 0.51);
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button {
   display: block;
@@ -1720,11 +1710,11 @@ footer .footer-bottom p {
   inset: 7px;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:before {
-  border: 4px solid #fd653c;
+  border: 4px solid hsl(217, 34%, 65%);
   transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms, transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-footer .button:after {
-  border: 4px solid #fd653c;
+  border: 4px solid hsl(217, 34%, 65%);
   transform: scale(1.3);
   transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   opacity: 0;
@@ -1751,7 +1741,7 @@ footer .footer-bottom p {
   height: 20px;
   margin: 17px 18px 0 18px;
   transform: rotate(180deg);
-  fill: #fd653c;
+  fill: hsl(217, 34%, 65%);
 }
 .project-layout .project-sidebar {
   direction: rtl;
