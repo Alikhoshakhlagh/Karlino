@@ -89,10 +89,7 @@ categories.slice(0, 10).forEach(category => {
                 <p>${category.title}</p>
             </div>
 
-            <div class="project-stats">
-                <h3 class="count">${category.projects}</h3>
-                <p class="lable">پروژه</p>
-            </div>
+            
 
         </div>
 

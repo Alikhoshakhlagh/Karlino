@@ -346,6 +346,7 @@
 .Popular-Categories {
   padding: 0 40px;
 
+
   .title {
     display: flex;
     flex-direction: row;
@@ -407,7 +408,8 @@
       border-radius: $radius-md;
       border: 1px solid $border-muted;
       width: 250px;
-      height: 250px;
+      height:max-content;
+
 
       .icon-cat {
         display: flex;
@@ -442,7 +444,7 @@
           font-size: $fs-card-title;
           font-weight: $fw-medium;
           margin-top: 20px;
-          margin-bottom: 4px;
+          margin-bottom: 30px;
         }
 
 
@@ -485,11 +487,11 @@
 
 .post_job {
   //background-color: $third-color;
- background: linear-gradient(
-  135deg,
-  #8fa2dd,
-  #a2b0e8
-);
+  background: linear-gradient(
+                  135deg,
+                  #8fa2dd,
+                  #a2b0e8
+  );
   opacity: .8;
   border: 2px solid $highlight;
   border-radius: $radius-md;
@@ -497,9 +499,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
- box-shadow: inset 15px 15px 20px rgba(24, 23, 23, 0.18),
-   inset -15px -15px 20px rgba(24, 23, 23, 0.18)
-;
+  box-shadow: inset 15px 15px 20px rgba(24, 23, 23, 0.18),
+  inset -15px -15px 20px rgba(24, 23, 23, 0.18);
 
   .right {
     margin-right: 20px;
@@ -530,7 +531,7 @@
         margin-top: 5px;
 
         font-size: $fs-base;
-        color:$glass-color;
+        color: $glass-color;
 
       }
     }
@@ -543,12 +544,12 @@
       position: relative;
       left: -350px;
       top: 20px;
-     background-color: $secondary-color;
+      background-color: $secondary-color;
       border-radius: $radius-md;
       width: max-content;
       height: max-content;
       padding: 10px 40px;
-font-size: $fs-card-title;
+      font-size: $fs-card-title;
       color: $text-color;
       border: 1px solid $highlight;
 

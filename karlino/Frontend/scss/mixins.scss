@@ -97,7 +97,7 @@
   flex-wrap: $wrap;
 }
 @mixin hover-underline(
-  $color:$forth-color,
+  $color:$primary-color,
   $height: 2px,
   $bottom: -6px,
   $duration: 0.3s

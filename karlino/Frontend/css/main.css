@@ -135,7 +135,7 @@ img {
   transition: 0.3s;
 }
 #header-placeholder header .navbar ul li a:hover {
-  color: oklch(76% 0.1 84deg);
+  color: #fd653c;
 }
 #header-placeholder header .navbar ul li a::after {
   content: "";
@@ -144,7 +144,7 @@ img {
   bottom: -6px;
   width: 0;
   height: 2px;
-  background: oklch(76% 0.1 84deg);
+  background: #fd653c;
   transition: 0.3s;
 }
 #header-placeholder header .navbar ul li a:hover::after {
@@ -204,7 +204,7 @@ img {
 }
 #header-placeholder header .navbar ul li .dropdown li a i {
   font-size: 14px;
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
   width: 18px;
   text-align: center;
 }
@@ -947,7 +947,7 @@ footer .footer-bottom p {
   border-radius: 20px;
   border: 1px solid hsl(223, 41%, 21%);
   width: 250px;
-  height: 250px;
+  height: max-content;
 }
 .Popular-Categories .Categories-cards .card-Categories .icon-cat {
   display: flex;
@@ -975,7 +975,7 @@ footer .footer-bottom p {
   font-size: 20px;
   font-weight: 500;
   margin-top: 20px;
-  margin-bottom: 4px;
+  margin-bottom: 30px;
 }
 .Popular-Categories .Categories-cards .card-Categories .project-stats {
   display: flex;
