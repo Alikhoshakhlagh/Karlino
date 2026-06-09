@@ -711,7 +711,7 @@ footer .footer-bottom p {
 }
 .hero-index .trending-categories .trend-text i {
   font-size: 9px;
-  color: #fd653c;
+  color: hsl(222, 77%, 76%);
 }
 .hero-index .trending-categories .categories-wrapper {
   position: relative;
@@ -997,6 +997,58 @@ footer .footer-bottom p {
 .Popular-Categories .Categories-cards .card-Categories:hover {
   border: 1px solid #fd653c;
   transform: translateY(-5px);
+}
+
+.post_job {
+  background: linear-gradient(135deg, #8fa2dd, #a2b0e8);
+  opacity: 0.8;
+  border: 2px solid hsl(222, 23%, 43%);
+  border-radius: 20px;
+  margin: 100px 40px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 15px 15px 20px rgba(24, 23, 23, 0.18), inset -15px -15px 20px rgba(24, 23, 23, 0.18);
+}
+.post_job .right {
+  margin-right: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: max-content;
+}
+.post_job .right i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 30px;
+  font-size: 55px;
+  color: hsl(222, 39%, 10%);
+}
+.post_job .right .text-post h2 {
+  font-size: 25px;
+  color: hsl(222, 39%, 10%);
+}
+.post_job .right .text-post p {
+  margin-top: 5px;
+  font-size: 16px;
+  color: hsl(222, 39%, 10%);
+}
+.post_job .right .post {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  left: -350px;
+  top: 20px;
+  background-color: hsl(222, 39%, 10%);
+  border-radius: 20px;
+  width: max-content;
+  height: max-content;
+  padding: 10px 40px;
+  font-size: 20px;
+  color: hsl(221, 100%, 99%);
+  border: 1px solid hsl(222, 23%, 43%);
 }
 
 .popular-projects {

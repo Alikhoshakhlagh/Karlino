@@ -174,7 +174,7 @@
 
       i {
         font-size: 9px;
-        color: $primary-color;
+        color: $third-color;
       }
     }
 
@@ -479,6 +479,80 @@
     }
 
 
+  }
+
+}
+
+.post_job {
+  //background-color: $third-color;
+ background: linear-gradient(
+  135deg,
+  #8fa2dd,
+  #a2b0e8
+);
+  opacity: .8;
+  border: 2px solid $highlight;
+  border-radius: $radius-md;
+  margin: 100px 40px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+ box-shadow: inset 15px 15px 20px rgba(24, 23, 23, 0.18),
+   inset -15px -15px 20px rgba(24, 23, 23, 0.18)
+;
+
+  .right {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: max-content;
+
+    i {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-left: 30px;
+      font-size: 55px;
+      color: $glass-color;
+
+    }
+
+    .text-post {
+
+      h2 {
+        font-size: 25px;
+        color: $secondary-color;
+
+      }
+
+      p {
+        margin-top: 5px;
+
+        font-size: $fs-base;
+        color:$glass-color;
+
+      }
+    }
+
+    .post {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      position: relative;
+      left: -350px;
+      top: 20px;
+     background-color: $secondary-color;
+      border-radius: $radius-md;
+      width: max-content;
+      height: max-content;
+      padding: 10px 40px;
+font-size: $fs-card-title;
+      color: $text-color;
+      border: 1px solid $highlight;
+
+    }
   }
 
 }
