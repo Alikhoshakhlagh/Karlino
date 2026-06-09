@@ -4,11 +4,12 @@ from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema_field
 
-from apps.skills.models import Skill
-from apps.categories.models import Category
-from apps.categories.serializers import CategorySerializer
+from ..skills.models import Skill
+from ..categories.models import Category
+from ..categories.serializers import CategorySerializer
+from ..companies.models import Company
 
-from .models import Project
+from .models import Project, ProjectReview
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -80,6 +81,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         read_only=True,
         default=0,
     )
+    can_resubmit = serializers.SerializerMethodField()
 
     class Meta:
 
@@ -114,6 +116,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             'deadline',
 
             'status',
+            'review_status',
+            'project_mode',
 
             'skills',
             'skill_ids',
@@ -184,19 +188,19 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         user = request.user
 
+        try:
+            user_company = user.company
+
+        except Company.DoesNotExist:
+            user_company = None
+
         owner_type = attrs.get('owner_type') or (
             Project.OwnerType.COMPANY
-            if hasattr(user, 'company')
+            if user_company
             else Project.OwnerType.PERSONAL
         )
 
         company = attrs.get('company')
-
-        user_company = getattr(
-            user,
-            'company',
-            None,
-        )
 
         if owner_type == Project.OwnerType.COMPANY:
 
@@ -292,3 +296,76 @@ class ProjectSerializer(serializers.ModelSerializer):
             instance,
             validated_data,
         )
+
+    def get_can_resubmit(self, obj):
+
+        return (
+                obj.review_status == Project.ReviewStatus.NEEDS_REVISION
+        )
+
+
+class ExpertProjectSerializer(serializers.ModelSerializer):
+    creator_name = serializers.SerializerMethodField()
+    review_status = serializers.CharField(
+        read_only=True
+    )
+
+    project_mode = serializers.CharField(
+        read_only=True
+    )
+
+    class Meta:
+        model = Project
+
+        fields = (
+            'id',
+            'title',
+            'description',
+            'budget_min',
+            'budget_max',
+            'review_status',
+            'project_mode',
+            'creator_name',
+            'created_at',
+        )
+
+    def get_creator_name(self, obj) -> str:
+        return obj.creator.full_name
+
+class ProjectReviewSerializer(
+    serializers.Serializer
+):
+    status = serializers.ChoiceField(
+        choices=ProjectReview.Status.choices
+    )
+
+    comment = serializers.CharField(
+        required=False,
+        allow_blank=True,
+    )
+
+    def validate(self, attrs):
+
+        status = attrs['status']
+
+        comment = attrs.get(
+            'comment',
+            ''
+        ).strip()
+
+        if (
+            status in (
+                ProjectReview.Status.REJECTED,
+                ProjectReview.Status.NEEDS_REVISION,
+            )
+            and not comment
+        ):
+            raise serializers.ValidationError(
+                {
+                    'comment': (
+                        'Comment is required.'
+                    )
+                }
+            )
+
+        return attrs

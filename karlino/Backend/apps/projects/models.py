@@ -3,7 +3,6 @@ from django.db import models
 from .. import accounts, companies, categories, skills, projects
 from ..core.models import TimeStampedUUIDModel
 
-
 class Project(TimeStampedUUIDModel):
     class OwnerType(models.TextChoices):
         PERSONAL = 'personal', 'Personal'

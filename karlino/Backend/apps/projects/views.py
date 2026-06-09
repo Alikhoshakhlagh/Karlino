@@ -1,19 +1,25 @@
+from datetime import datetime
+
 from django.db.models import Q, Count
 
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from ..applications.serializers import ApplicationSerializer
-from .models import Project
+from .models import Project, ProjectReview
 from .permissions import IsProjectOwnerOrCompanyOwner
-from .serializers import ProjectSerializer
+from .serializers import ProjectSerializer, ExpertProjectSerializer, ProjectReviewSerializer
 
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiParameter,
 )
+
+from ..core.permissions import IsExpert
+
 
 class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
@@ -23,7 +29,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         qs = (
             Project.objects
             .select_related('creator', 'company', 'primary_category')
-            .prefetch_related('skills')
+            .prefetch_related('skills','categories',)
             .all()
         )
 
@@ -31,17 +37,23 @@ class ProjectViewSet(viewsets.ModelViewSet):
         action = getattr(self, 'action', None)
 
         if action == 'list':
-            qs = qs.filter(status=Project.Status.ACTIVE)
+            qs = qs.filter(
+                status=Project.Status.ACTIVE,
+                review_status=Project.ReviewStatus.APPROVED,
+            )
 
         elif action == 'retrieve':
             if user.is_authenticated:
                 qs = qs.filter(
-                    Q(status=Project.Status.ACTIVE)
+                    Q(status=Project.Status.ACTIVE,review_status=Project.ReviewStatus.APPROVED,)
                     | Q(creator=user)
                     | Q(company__owner=user)
                 ).distinct()
             else:
-                qs = qs.filter(status=Project.Status.ACTIVE)
+                qs = qs.filter(
+                    status=Project.Status.ACTIVE,
+                    review_status=Project.ReviewStatus.APPROVED,
+                )
 
         elif action in ('update', 'partial_update', 'destroy'):
             if user.is_authenticated:
@@ -62,7 +74,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         search = self.request.query_params.get('search')
         if search:
             qs = qs.filter(
-                Q(category__name__icontains=search)
+                Q(categories__name__icontains=search)
                 | Q(primary_category__name__icontains=search)
                 | Q(skills__name__icontains=search)
                 | Q(company__name__icontains=search)
@@ -88,7 +100,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             qs = qs.filter(location__icontains=location)
 
         status_param = self.request.query_params.get('status')
-        if status_param:
+        if action == 'my_posted' and status_param:
             qs = qs.filter(status=status_param)
 
         min_budget = self.request.query_params.get('min_budget')
@@ -155,7 +167,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return qs
 
     def perform_create(self, serializer):
-        serializer.save()
+
+        serializer.save(
+            status=Project.Status.DRAFT,
+            review_status=Project.ReviewStatus.PENDING,
+        )
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def my_posted(self, request):
@@ -163,7 +179,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         qs = (
             Project.objects
             .select_related('creator', 'company', 'primary_category')
-            .prefetch_related('skills')
+            .prefetch_related('skills','categories')
             .filter(
                 Q(creator=request.user)
                 | Q(company__owner=request.user)
@@ -171,6 +187,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
             .distinct()
             .order_by('-created_at')
         )
+
+        status_param = request.query_params.get('status')
+
+        if status_param:
+            qs = qs.filter(status=status_param)
 
         serializer = self.get_serializer(qs, many=True)
 
@@ -207,11 +228,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         description='Get most popular projects.',
     )
-    @action(
-        detail=False,
-        methods=['get'],
-        url_path='popular',
-    )
+    @action(detail=False,methods=['get'],url_path='popular',)
     def popular(self, request):
 
         limit = request.query_params.get(
@@ -236,7 +253,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 'categories',
             )
             .filter(
-                status=Project.Status.ACTIVE
+                status=Project.Status.ACTIVE,
+                review_status=Project.ReviewStatus.APPROVED,
             )
             .annotate(
                 favorites_count=Count(
@@ -262,3 +280,216 @@ class ProjectViewSet(viewsets.ModelViewSet):
         )
 
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+
+    def resubmit(self, request, pk=None):
+
+        project = self.get_object()
+
+        if (
+                project.creator != request.user
+                and
+                (
+                        not project.company
+                        or
+                        project.company.owner != request.user
+                )
+        ):
+            return Response(
+                {
+                    'detail': 'Permission denied.'
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if project.review_status != Project.ReviewStatus.NEEDS_REVISION:
+            return Response(
+                {
+                    'detail': (
+                        'Only projects needing revision '
+                        'can be resubmitted.'
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        project.review_status = (
+            Project.ReviewStatus.PENDING
+        )
+
+        project.reviewed_by = None
+        project.reviewed_at = None
+
+        project.save(
+            update_fields=[
+                'review_status',
+                'reviewed_by',
+                'reviewed_at',
+            ]
+        )
+
+        return Response(
+            {
+                'detail': (
+                    'Project submitted for review.'
+                )
+            }
+        )
+
+    @action(
+        detail=True,
+        methods=['post'],
+        url_path='expert/review',
+        permission_classes=[
+            IsAuthenticated,
+            IsExpert,
+        ],
+    )
+    def review(self, request, pk=None):
+        project = self.get_object()
+
+        serializer = ProjectReviewSerializer(
+            data=request.data
+        )
+
+        serializer.is_valid(
+            raise_exception=True
+        )
+
+        review_status = serializer.validated_data[
+            'status'
+        ]
+
+        comment = serializer.validated_data.get(
+            'comment',
+            ''
+        )
+
+        if (
+                project.review_status
+                !=
+                Project.ReviewStatus.PENDING
+        ):
+            return Response(
+                {
+                    'detail':
+                        'Project is already reviewed.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if project.review_status != Project.ReviewStatus.PENDING:
+            return Response(
+                {
+                    'detail':
+                        'Project is already reviewed.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if project.creator == request.user:
+            return Response(
+                {
+                    'detail':
+                        'You cannot review your own project.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if(
+                project.primary_category
+                not in
+                request.user.expert_categories.all()
+        ):
+            return Response(
+                {
+                    'detail':
+                        'You cannot review this category.'
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        ProjectReview.objects.create(
+            project=project,
+            expert=request.user,
+            status=review_status,
+            comment=comment,
+        )
+
+        project.review_status = review_status
+        project.reviewed_by = request.user
+        project.reviewed_at = datetime.now()
+
+        if (
+                review_status
+                ==
+                ProjectReview.Status.APPROVED
+        ):
+
+            project.status = (
+                Project.Status.ACTIVE
+            )
+
+        elif (
+                review_status
+                ==
+                ProjectReview.Status.REJECTED
+        ):
+
+            project.status = (
+                Project.Status.ARCHIVED
+            )
+
+        elif (
+                review_status
+                ==
+                ProjectReview.Status.NEEDS_REVISION
+        ):
+
+            project.status = (
+                Project.Status.DRAFT
+            )
+
+        project.save()
+
+        return Response(
+            {
+                'detail':
+                    'Review submitted successfully.'
+            }
+        )
+
+
+#REVIEW
+class PendingProjectsAPIView(APIView):
+    permission_classes = [
+        IsAuthenticated,
+        IsExpert,
+    ]
+    def get(self, request):
+        expert_categories = (
+            request.user.expert_categories.all()
+        )
+
+        qs = (
+            Project.objects.select_related(
+                'creator',
+                'company',
+                'primary_category',
+            )
+            .prefetch_related(
+                'skills',
+                'categories',
+            )
+            .filter(
+                review_status=Project.ReviewStatus.PENDING,
+                primary_category__in=expert_categories,
+            )
+        )
+
+        serializer = ExpertProjectSerializer(
+            qs,
+            many=True,
+        )
+
+        return Response(serializer.data)
+
