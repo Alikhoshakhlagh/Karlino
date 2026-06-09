@@ -1912,17 +1912,17 @@ footer .footer-bottom p {
 }
 .project-pagination .page-btn:hover {
   background-color: hsl(222, 39%, 10%);
-  border-color: #fd653c;
-  color: #fd653c;
+  border-color: hsl(222, 23%, 43%);
+  color: hsl(222, 77%, 76%);
   transform: translateY(-2px);
 }
 .project-pagination .page-btn:active {
   transform: scale(0.95);
 }
 .project-pagination .page-btn.active {
-  background-color: #fd653c;
+  background-color: hsl(222, 77%, 76%);
   color: white;
-  border-color: #fd653c;
+  border-color: hsl(222, 77%, 76%);
   box-shadow: 0 0 20px rgba(255, 119, 64, 0.25);
 }
 .project-pagination .arrow-btn {

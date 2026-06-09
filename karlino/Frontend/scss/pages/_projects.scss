@@ -778,8 +778,8 @@
 
     &:hover {
       background-color: $glass-color;
-      border-color: $primary-color;
-      color: $primary-color;
+      border-color: $highlight;
+      color: $third-color;
       transform: translateY(-2px);
     }
 
@@ -788,9 +788,9 @@
     }
 
     &.active {
-      background-color: $primary-color;
+      background-color:$third-color;
       color: white;
-      border-color: $primary-color;
+      border-color: $third-color;
       box-shadow: 0 0 20px rgba(255, 119, 64, 0.25);
     }
 
