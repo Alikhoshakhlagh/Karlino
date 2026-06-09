@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.applications',
     'apps.favorites',
     'apps.auth_api',
+    'apps.bids',
 
     #swagger
     'drf_spectacular',
