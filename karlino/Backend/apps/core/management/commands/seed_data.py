@@ -48,43 +48,93 @@ class Command(BaseCommand):
 
         category_data = [
             {
-                'name': 'هوش مصنوعی',
-                'icon': 'fa-solid fa-robot',
-            },
-
-            {
-                'name': 'طراحی وب',
-                'icon': 'fa-solid fa-globe',
-            },
-
-            {
-                'name': 'بک‌اند',
-                'icon': 'fa-solid fa-server',
-            },
-
-            {
-                'name': 'فرانت‌اند',
+                'name': 'برنامه‌نویسی و توسعه وب',
                 'icon': 'fa-solid fa-code',
             },
 
             {
-                'name': 'اپلیکیشن موبایل',
-                'icon': 'fa-solid fa-mobile-screen',
-            },
-
-            {
-                'name': 'DevOps و زیرساخت',
-                'icon': 'fa-solid fa-cloud',
-            },
-
-            {
-                'name': 'رابط کاربری و تجربه کاربری',
+                'name': 'طراحی رابط کاربری و تجربه کاربری',
                 'icon': 'fa-solid fa-palette',
             },
 
             {
-                'name': 'علم داده و تحلیل',
+                'name': 'توسعه اپلیکیشن موبایل',
+                'icon': 'fa-solid fa-mobile-screen',
+            },
+
+            {
+                'name': 'هوش مصنوعی و یادگیری ماشین',
+                'icon': 'fa-solid fa-robot',
+            },
+
+            {
+                'name': 'علم داده و تحلیل داده',
                 'icon': 'fa-solid fa-chart-line',
+            },
+
+            {
+                'name': 'بک‌اند و پایگاه داده',
+                'icon': 'fa-solid fa-server',
+            },
+
+            {
+                'name': 'DevOps و زیرساخت ابری',
+                'icon': 'fa-solid fa-cloud',
+            },
+
+            {
+                'name': 'امنیت سایبری',
+                'icon': 'fa-solid fa-shield-halved',
+            },
+
+            {
+                'name': 'طراحی گرافیک',
+                'icon': 'fa-solid fa-pen-ruler',
+            },
+
+            {
+                'name': 'تولید محتوا و کپی‌رایتینگ',
+                'icon': 'fa-solid fa-pen-to-square',
+            },
+
+            {
+                'name': 'ترجمه و زبان',
+                'icon': 'fa-solid fa-language',
+            },
+
+            {
+                'name': 'دیجیتال مارکتینگ و سئو',
+                'icon': 'fa-solid fa-bullhorn',
+            },
+
+            {
+                'name': 'تدوین ویدئو و موشن گرافیک',
+                'icon': 'fa-solid fa-video',
+            },
+
+            {
+                'name': 'عکاسی و ویرایش تصویر',
+                'icon': 'fa-solid fa-camera',
+            },
+
+            {
+                'name': 'ورود داده و امور اداری',
+                'icon': 'fa-solid fa-keyboard',
+            },
+
+            {
+                'name': 'حسابداری و امور مالی',
+                'icon': 'fa-solid fa-calculator',
+            },
+
+            {
+                'name': 'مشاوره کسب‌وکار',
+                'icon': 'fa-solid fa-briefcase',
+            },
+
+            {
+                'name': 'پشتیبانی و خدمات مشتریان',
+                'icon': 'fa-solid fa-headset',
             },
         ]
 

@@ -21,7 +21,7 @@
 @mixin ping {
   --uib-size: 50px;
   --uib-speed: 1s;
-  --uib-color: #ff653f;
+  --uib-color: $forth-color;
 
   position: relative;
   width: var(--uib-size);
@@ -33,7 +33,7 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background-color: var(--uib-color);
+    background-color: $forth-color;
 
     animation: pulse7132 var(--uib-speed) linear infinite;
 
@@ -84,5 +84,87 @@
     75% {
       transform: rotateZ(2deg);
     }
+  }
+}
+
+@mixin flex($justify: center,$align: center,$direction: row,$gap: 0,$wrap: nowrap
+) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $direction;
+  gap: $gap;
+  flex-wrap: $wrap;
+}
+@mixin hover-underline(
+  $color:$primary-color,
+  $height: 2px,
+  $bottom: -6px,
+  $duration: 0.3s
+) {
+  &:hover {
+    color: $color;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: $bottom;
+    width: 0;
+    height: $height;
+    background: $color;
+    transition: $duration;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+@mixin animated-button(
+  $bg-color,
+  $text-color,
+  $width: 140px,
+  $height: 50px
+) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $width;
+  height: $height;
+  white-space: nowrap;
+  border: none;
+  border-radius: $radius-md;
+  background-color: $bg-color;
+  color: $text-color;
+  font-size: $fs-base;
+  font-weight: $fw-bold;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  span {
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+
+    &::after {
+      content: "»";
+      position: absolute;
+      top: 0;
+      right: -15px;
+      opacity: 0;
+      transition: 0.5s;
+    }
+  }
+
+  &:hover span {
+    padding-right: 15px;
+  }
+
+  &:hover span::after {
+    opacity: 1;
+    right: 0;
   }
 }
