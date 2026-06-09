@@ -14,35 +14,39 @@
 <div id="header-placeholder"></div>
 
 <section class="hero-index">
-    <div class="image">
-        <img src="assets/images/charecter.png" class="hero-img">
-    </div>
-    <h1 class="hero-text">
-        <span class="build">ایده‌هات</span>
-        رو واقعی کن.
-        <br>
-        با آدم‌های حرفه‌ای همکاری کن.
-    </h1>
-    
-    <p class="intro">
-        با افراد حرفه‌ای همکاری کن، پروژه‌های واقعی بساز و فرصت‌هایی پیدا کن که با مهارت، خلاقیت و مسیر رشدت هماهنگن —
-        همه در یک پلتفرم مدرن برای کار و همکاری.
-    </p>
-    
-    <div class="search-input">
+    <!--    <div class="image">-->
+    <!--        <img src="assets/images/charecter.png" class="hero-img">-->
+    <!--    </div>-->
+    <div class="center">
+        <h1 class="hero-text">
+            <span class="build">ایده‌هات</span>
+            رو واقعی کن.
+            <br>
+            با آدم‌های حرفه‌ای همکاری کن.
+        </h1>
         
-        <input
-                type="search"
-                class="search"
-                name="search"
-                placeholder="جستجوی پروژه، مهارت یا تخصص..."
-        >
+        <p class="intro">
+            با افراد حرفه‌ای همکاری کن، پروژه‌های واقعی بساز و فرصت‌هایی پیدا کن که با مهارت، خلاقیت و مسیر رشدت هماهنگن
+            —
+            همه در یک پلتفرم مدرن برای کار و همکاری.
+        </p>
         
-        <button class="find-talent">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    
+        <div class="search-input">
+            
+            <input
+                    type="search"
+                    class="search"
+                    name="search"
+                    placeholder="جستجوی پروژه، مهارت یا تخصص..."
+            >
+            
+            <button class="find-talent">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        
+        </div>
     </div>
+    
     
     <div class="trending-categories">
         
@@ -189,20 +193,38 @@
             مشاهده همه مهارت‌ها
             <i class="fa-solid fa-arrow-left"></i>
         </a>
-    
     </div>
     
     <div class="Categories-cards" id="categoriesContainer">
     
+    </div>
+</section>
+
+<section class="post_job">
+    <div class="right">
+        <i class="fa-solid fa-rocket"></i>
+        <div class="text-post">
+            <h2 class="title">به دنبال نیروی متخصص هستید؟</h2>
+            <p>
+                ایده یا پروژه‌ای در ذهن دارید؟ تنها در چند دقیقه پروژه خود را ثبت کنید،
+                <br>
+                پیشنهادهای فریلنسرهای متخصص را دریافت کنید و مناسب‌ترین فرد را برای همکاری انتخاب کنید
+            </p>
+        </div>
+        <span class="post">ثبت پروژه</span>
     
     </div>
+<!--    <div class="left">-->
+<!--            <span class="post">ثبت پروژه</span>-->
+<!--        </div>-->
+
 </section>
 
 <section class="popular-projects">
     <div class="title-projects">
         <h2 class="project-text">
             <div class="ping"></div>
-            پروژه ها
+            پرطرفدارترین پروژه ها
         </h2>
         
         <a href="projects.html" class="more-project">
@@ -288,6 +310,8 @@
 
 <div id="footer-placeholder"></div>
 
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
 
 <script src="js/layout.js"></script>
 <script src="js/pages/home.js"></script>

@@ -89,10 +89,7 @@ categories.slice(0, 10).forEach(category => {
                 <p>${category.title}</p>
             </div>
 
-            <div class="project-stats">
-                <h3 class="count">${category.projects}</h3>
-                <p class="lable">پروژه</p>
-            </div>
+            
 
         </div>
 
@@ -209,7 +206,9 @@ projects.slice(0, 8).forEach((project, index) => {
                     <i class="${project.icon}"></i>
                 </span>
             </div>
-
+<div class="status-project">
+                    <span class="active">فعال</span>
+            </div>
             <label for="checkbox-${index}" class="bookmark">
 
                 <input 
@@ -232,7 +231,7 @@ projects.slice(0, 8).forEach((project, index) => {
                 </svg>
 
             </label>
-
+            
         </div>
 
         <div class="card-content">
