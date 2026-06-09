@@ -1,15 +1,48 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import ProjectViewSet, PendingProjectsAPIView
+from .views import (
+    ProjectViewSet,
+    PendingProjectsAPIView,
+)
+
+from ..bids.views import (
+    CreateOrUpdateBidAPIView,
+    ProjectBidListAPIView,
+)
 
 router = DefaultRouter()
-router.register(r"", ProjectViewSet, basename="projects")
+router.register(
+    r'',
+    ProjectViewSet,
+    basename='projects',
+)
 
 urlpatterns = [
-    path('expert/pending/',
-         PendingProjectsAPIView.as_view(),
-         name='expert-pending-projects'
-         ),
-    path("", include(router.urls)),
+
+    # Expert
+    path(
+        'expert/pending/',
+        PendingProjectsAPIView.as_view(),
+        name='expert-pending-projects',
+    ),
+
+    # Tender / Bids
+    path(
+        '<uuid:project_id>/bid/',
+        CreateOrUpdateBidAPIView.as_view(),
+        name='project-bid',
+    ),
+
+    path(
+        '<uuid:project_id>/bids/',
+        ProjectBidListAPIView.as_view(),
+        name='project-bids',
+    ),
+
+    # Project ViewSet
+    path(
+        '',
+        include(router.urls),
+    ),
 ]

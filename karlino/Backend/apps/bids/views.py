@@ -1,3 +1,171 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
-# Create your views here.
+from ..projects.models import Project
+
+from .models import Bid
+from .serializers import BidSerializer
+
+class CreateOrUpdateBidAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, project_id):
+
+        project = Project.objects.get(
+            pk=project_id
+        )
+
+        if (
+                project.project_mode
+                !=
+                Project.ProjectMode.TENDER
+        ):
+            return Response(
+                {
+                    'detail':
+                        'This project is not tender based.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if (
+                project.status
+                !=
+                Project.Status.ACTIVE
+        ):
+            return Response(
+                {
+                    'detail':
+                        'Project is not active.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if (
+            project.status
+            !=
+            Project.Status.APPROVED
+        ):
+            return Response(
+                {
+                    'detail':
+                        'Project is not approved.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if (
+                project.creator == request.user
+        ):
+            return Response(
+                {
+                    'detail':
+                        'You cannot bid on your own project.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        bid, created = Bid.objects.update_or_create(
+            project=project,
+            freelancer=request.user,
+
+            defaults={
+                'amount': request.data.get('amount'),
+                'delivery_days': request.data.get(
+                    'delivery_days'
+                ),
+                'cover_letter': request.data.get(
+                    'cover_letter'
+                ),
+            }
+        )
+
+        return Response(
+            BidSerializer(bid).data,
+            status=(
+                status.HTTP_201_CREATED
+                if created
+                else status.HTTP_200_OK
+            )
+        )
+
+
+class ProjectBidListAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request, project_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        is_owner = (
+            project.creator_id
+            ==
+            request.user.id
+        )
+
+        is_company_owner = (
+
+            project.company
+
+            and
+
+            project.company.owner_id
+            ==
+            request.user.id
+        )
+
+        if not (
+
+            is_owner
+
+            or
+
+            is_company_owner
+
+            or
+
+            request.user.is_superuser
+
+        ):
+
+            return Response(
+                {
+                    'detail':
+                        'Permission denied.'
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        bids = (
+
+            Bid.objects
+
+            .select_related(
+                'freelancer',
+            )
+
+            .filter(
+                project=project,
+            )
+
+            .order_by(
+                'amount',
+                'delivery_days',
+            )
+        )
+
+        serializer = BidSerializer(
+            bids,
+            many=True,
+        )
+
+        return Response(
+            serializer.data
+        )

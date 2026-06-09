@@ -29,10 +29,10 @@ from drf_spectacular.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('apps.auth_api.urls')),
-    path("api/company/", include("apps.companies.urls")),
-    path("api/projects/", include("apps.projects.urls")),
-    path("api/applications/", include("apps.applications.urls")),
-    path("api/favorites/", include("apps.favorites.urls")),
+    path('api/company/', include('apps.companies.urls')),
+    path('api/projects/', include('apps.projects.urls')),
+    path('api/applications/', include('apps.applications.urls')),
+    path('api/favorites/', include('apps.favorites.urls')),
     path('api/categories/', include('apps.categories.urls')),
     path('api/skills/', include('apps.skills.urls')),
 
@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/schema/',SpectacularAPIView.as_view(),name='schema',),
     path('api/docs/',SpectacularSwaggerView.as_view(url_name='schema'),name='swagger-ui',),
     path('api/redoc/',SpectacularRedocView.as_view(url_name='schema'),name='redoc',),
+    
 ]
 
 urlpatterns += static(
