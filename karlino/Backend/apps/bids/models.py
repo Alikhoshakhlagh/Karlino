@@ -41,6 +41,11 @@ class Bid(TimeStampedUUIDModel):
         db_index=True,
     )
 
+    accepted_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
     class Meta:
 
         constraints = [

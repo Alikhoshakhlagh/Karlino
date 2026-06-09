@@ -9,6 +9,10 @@ from ..projects.models import Project
 from .models import Bid
 from .serializers import BidSerializer
 
+from django.utils import timezone
+from django.db import transaction
+
+
 class CreateOrUpdateBidAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -168,4 +172,105 @@ class ProjectBidListAPIView(APIView):
 
         return Response(
             serializer.data
+        )
+
+
+class AcceptBidAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(
+        self,
+        request,
+        project_id,
+        bid_id,
+    ):
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+        bid = get_object_or_404(
+            Bid,
+            pk=bid_id,
+            project=project,
+        )
+        is_owner = (
+            project.creator_id
+            ==
+            request.user.id
+        )
+
+        is_company_owner = (
+
+            project.company
+
+            and
+
+            project.company.owner_id
+            ==
+            request.user.id
+        )
+
+        if not (
+            is_owner
+            or
+            is_company_owner
+            or
+            request.user.is_superuser
+        ):
+            return Response(
+                {
+                    'detail':
+                        'Permission denied.'
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if (
+            project.status
+            ==
+            Project.Status.CLOSED
+        ):
+            return Response(
+                {
+                    'detail':
+                        'Project already closed.'
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        with transaction.atomic():
+            bid.status = (
+                Bid.Status.ACCEPTED
+            )
+
+            bid.accepted_at = (
+                timezone.now()
+            )
+
+            bid.save()
+        Bid.objects.filter(
+            project=project,
+        ).exclude(
+            pk=bid.pk,
+        ).update(
+            status=Bid.Status.REJECTED,
+        )
+        project.status = (
+            Project.Status.CLOSED
+        )
+
+        project.save(
+            update_fields=[
+                'status',
+            ]
+        )
+
+        return Response(
+            {
+                'detail':
+                    'Bid accepted successfully.'
+            }
         )
