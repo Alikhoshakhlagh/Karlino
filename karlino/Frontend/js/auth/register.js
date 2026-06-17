@@ -6,7 +6,7 @@ const passwordInput = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirm-password');
 const submitBtn = document.querySelector('.submit');
 
-const API_BASE = 'http://localhost:8000'; // ← آدرس سرور خودت رو بذار
+const API_BASE = 'http://127.0.0.1:8000'; // ← آدرس سرور خودت رو بذار
 
 // ── ترجمه ارورهای سرور به فارسی ──
 function translateError(msg) {
