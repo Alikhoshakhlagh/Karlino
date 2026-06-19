@@ -3,13 +3,13 @@ import random
 from django.core.management.base import BaseCommand
 from faker import Faker
 
-from apps.accounts.models import User
-from apps.categories.models import Category
-from apps.skills.models import Skill
-from apps.companies.models import Company
-from apps.projects.models import Project
-from apps.applications.models import Application
-from apps.favorites.models import Favorite
+from ....accounts.models import User
+from ....categories.models import Category
+from ....skills.models import Skill
+from ....companies.models import Company
+from ....projects.models import Project
+from ....applications.models import Application
+from ....favorites.models import Favorite
 from django.utils.text import slugify
 
 

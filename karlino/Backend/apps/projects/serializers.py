@@ -1,14 +1,17 @@
 from datetime import date
+from django.utils import timezone
 
 from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema_field
 
-from apps.skills.models import Skill
-from apps.categories.models import Category
-from apps.categories.serializers import CategorySerializer
+from ..skills.models import Skill
+from ..categories.models import Category
+from ..categories.serializers import CategorySerializer
+from ..companies.models import Company
+from ..core.messages import *
 
-from .models import Project
+from .models import Project, ProjectReview
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -81,6 +84,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         default=0,
     )
 
+    project_age_days = serializers.SerializerMethodField()
+
+    budget_display = serializers.SerializerMethodField()
+
     class Meta:
 
         model = Project
@@ -108,12 +115,15 @@ class ProjectSerializer(serializers.ModelSerializer):
 
             'budget_min',
             'budget_max',
+            'budget_display',
 
             'location',
 
             'deadline',
 
             'status',
+            'review_status',
+            'project_mode',
 
             'skills',
             'skill_ids',
@@ -124,6 +134,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'display_owner_name',
             'is_company_project',
 
+            'project_age_days',
             'created_at',
             'updated_at',
         )
@@ -178,38 +189,69 @@ class ProjectSerializer(serializers.ModelSerializer):
             for skill in obj.skills.all()
         ]
 
+    @extend_schema_field(serializers.CharField)
+    def get_project_age(self, obj):
+
+        days = (
+                timezone.now().date()
+                -
+                obj.created_at.date()
+        ).days
+
+        if days == 0:
+            return "امروز"
+
+        if days == 1:
+            return "دیروز"
+
+        return f"{days} روز پیش"
+
+
+    @extend_schema_field(serializers.CharField)
+    def get_budget_display(self, obj):
+
+        if obj.budget_min and obj.budget_max:
+            return (
+                f"{int(obj.budget_min):,}"
+                f" تا "
+                f"{int(obj.budget_max):,}"
+                f" تومان"
+            )
+
+        return None
+
     def validate(self, attrs):
 
         request = self.context['request']
 
         user = request.user
 
+        try:
+            user_company = user.company
+
+        except Company.DoesNotExist:
+            user_company = None
+
         owner_type = attrs.get('owner_type') or (
             Project.OwnerType.COMPANY
-            if hasattr(user, 'company')
+            if user_company
             else Project.OwnerType.PERSONAL
         )
 
         company = attrs.get('company')
-
-        user_company = getattr(
-            user,
-            'company',
-            None,
-        )
 
         if owner_type == Project.OwnerType.COMPANY:
 
             if not user_company and not company:
 
                 raise serializers.ValidationError(
-                    'You do not have a company profile yet.'
+                    COMPANY_REQUIRED
                 )
 
             if company and company.owner_id != user.id:
 
                 raise serializers.ValidationError(
-                    'You can only post using your own company.'
+                    COMPANY_NOT_OWNED
                 )
 
             attrs['company'] = company or user_company
@@ -219,7 +261,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             if company is not None:
 
                 raise serializers.ValidationError(
-                    'Personal projects must not have a company.'
+                    COMPANY_ON_PERSONAL
                 )
 
             attrs['company'] = None
@@ -235,10 +277,26 @@ class ProjectSerializer(serializers.ModelSerializer):
         ):
 
             raise serializers.ValidationError(
-                'budget_min cannot be greater than budget_max.'
+                INVALID_BUDGET_RANGE
             )
 
         deadline = attrs.get('deadline')
+
+        if (
+                budget_min is not None
+                and budget_min < 100000
+        ):
+            raise serializers.ValidationError(
+                MIN_BUDGET_TOO_LOW
+            )
+
+        if (
+                budget_max is not None
+                and budget_max > 10000000000
+        ):
+            raise serializers.ValidationError(
+                MAX_BUDGET_TOO_HIGH
+            )
 
         if (
             deadline is not None
@@ -246,7 +304,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         ):
 
             raise serializers.ValidationError(
-                'deadline cannot be in the past.'
+                DEADLINE_IN_PAST
             )
 
         primary_category = attrs.get(
@@ -292,3 +350,70 @@ class ProjectSerializer(serializers.ModelSerializer):
             instance,
             validated_data,
         )
+
+
+class ExpertProjectSerializer(serializers.ModelSerializer):
+    creator_name = serializers.SerializerMethodField()
+    review_status = serializers.CharField(
+        read_only=True
+    )
+
+    project_mode = serializers.CharField(
+        read_only=True
+    )
+
+    class Meta:
+        model = Project
+
+        fields = (
+            'id',
+            'title',
+            'description',
+            'budget_min',
+            'budget_max',
+            'review_status',
+            'project_mode',
+            'creator_name',
+            'created_at',
+        )
+
+    def get_creator_name(self, obj) -> str:
+        return obj.creator.full_name
+
+class ProjectReviewSerializer(
+    serializers.Serializer
+):
+    status = serializers.ChoiceField(
+        choices=ProjectReview.Status.choices
+    )
+
+    comment = serializers.CharField(
+        required=False,
+        allow_blank=True,
+    )
+
+    def validate(self, attrs):
+
+        status = attrs['status']
+
+        comment = attrs.get(
+            'comment',
+            ''
+        ).strip()
+
+        if (
+            status in (
+                ProjectReview.Status.REJECTED,
+                ProjectReview.Status.NEEDS_REVISION,
+            )
+            and not comment
+        ):
+            raise serializers.ValidationError(
+                {
+                    'comment': (
+                        COMMENT_REQUIRED
+                    )
+                }
+            )
+
+        return attrs

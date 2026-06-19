@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Application
+from ..core.messages import *
 
 from drf_spectacular.utils import extend_schema_field
 
@@ -49,16 +50,16 @@ class ApplicationSerializer(serializers.ModelSerializer):
         project = self.context.get('project')
 
         if project is None:
-            raise serializers.ValidationError('Project is required.')
+            raise serializers.ValidationError(PROJECT_REQUIRED)
 
         if project.creator_id == request.user.id:
-            raise serializers.ValidationError('You cannot apply to your own project.')
+            raise serializers.ValidationError(OWN_PROJECT_BID_REVIEWED)
 
         if project.company and project.company.owner_id == request.user.id:
-            raise serializers.ValidationError("You cannot apply to your own company's project.")
+            raise serializers.ValidationError(OWN_COMPANY_BID_REVIEWED)
 
         if Application.objects.filter(project=project, applicant=request.user).exists():
-            raise serializers.ValidationError('You have already applied to this project.')
+            raise serializers.ValidationError(ALREADY_APPLIED)
 
         return attrs
 

@@ -1,7 +1,10 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.db.models import ManyToManyField
 
+from .. import categories
 from ..core.models import TimeStampedUUIDModel
+from ..categories.models import Category
 from .managers import UserManager
 
 
@@ -24,6 +27,12 @@ class User(TimeStampedUUIDModel, AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_expert = models.BooleanField(default=False)
+    expert_categories = models.ManyToManyField(
+        'categories.Category',
+        blank=True,
+        related_name='experts',
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
