@@ -1,139 +1,72 @@
-const API_BASE = 'http://localhost:8000'; // ← آدرس سرور خودت رو بذار
+const form = document.getElementById("forgot-form");
 
-// ── گرفتن المنت‌ها ──
-const form          = document.getElementById('forgot-form');
-const emailInput    = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const confirmInput  = document.getElementById('confirm-password');
-const submitBtn     = document.querySelector('.submit');
+// جعبه‌های خطا (id ها دقیقاً مطابق HTML خودت)
+const emailError = document.getElementById("error-email");
+const passwordError = document.getElementById("error-password");
+const confirmError = document.getElementById("error-confirmPassword"); // ← مطابق HTML تو
+const formError = document.getElementById("error-form");
 
-// ── ترجمه ارورهای سرور به فارسی ──
-function translateError(msg) {
-    const map = {
-        'user with this email already exists.': 'کاربری با این ایمیل قبلاً ثبت‌نام کرده است',
-        'This field may not be blank.': 'این فیلد نمی‌تواند خالی باشد',
-        'This field is required.': 'این فیلد الزامی است',
-        'Enter a valid email address.': 'ایمیل معتبر وارد کنید',
-        'No active account found with the given credentials': 'حسابی با این مشخصات پیدا نشد',
-        'User not found.': 'کاربری با این ایمیل پیدا نشد',
-        'Not found.': 'کاربری با این ایمیل پیدا نشد',
-    };
-    return map[msg] || msg;
-}
+form.addEventListener("submit", async function (event) {
 
-// ── نمایش ارور ──
-function showError(inputEl, message) {
-    inputEl.style.borderColor = '#ff4444';
-    const label = inputEl.closest('label');
-    let errorEl = label.querySelector('.error-msg');
-    if (!errorEl) {
-        errorEl = document.createElement('p');
-        errorEl.className = 'error-msg';
-        errorEl.style.cssText = 'color:#ff4444; font-size:12px; margin-top:4px;';
-        label.appendChild(errorEl);
-    }
-    errorEl.textContent = message;
-}
+    event.preventDefault(); // جلوی رفرش صفحه
 
-// ── پاک کردن ارور ──
-function clearError(inputEl) {
-    inputEl.style.borderColor = '';
-    const label = inputEl.closest('label');
-    const errorEl = label.querySelector('.error-msg');
-    if (errorEl) errorEl.textContent = '';
-}
+    // پاک‌کردن خطاهای قبلی
+    emailError.textContent = "";
+    passwordError.textContent = "";
+    confirmError.textContent = "";
+    formError.textContent = "";
 
-// ── نمایش ارور کلی فرم ──
-function showFormError(message) {
-    let errorEl = document.querySelector('.form-error');
-    if (!errorEl) {
-        errorEl = document.createElement('p');
-        errorEl.className = 'form-error';
-        errorEl.style.cssText = 'color:#ff4444; font-size:13px; margin-top:10px; text-align:center;';
-        form.appendChild(errorEl);
-    }
-    errorEl.textContent = message;
-}
-
-function clearFormError() {
-    const errorEl = document.querySelector('.form-error');
-    if (errorEl) errorEl.textContent = '';
-}
-
-// ── loading ──
-function setLoading(isLoading) {
-    if (isLoading) {
-        submitBtn.disabled      = true;
-        submitBtn.textContent   = 'در حال ذخیره...';
-        submitBtn.style.opacity = '0.7';
-    } else {
-        submitBtn.disabled      = false;
-        submitBtn.textContent   = 'ثبت رمز جدید';
-        submitBtn.style.opacity = '1';
-    }
-}
-
-// ── submit ──
-form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const email    = emailInput.value.trim();
-    const password = passwordInput.value;
-    const confirm  = confirmInput.value;
-
-    clearError(emailInput);
-    clearError(passwordInput);
-    clearError(confirmInput);
-    clearFormError();
-
-    let hasError = false;
-
-    if (!email.includes('@') || !email.includes('.')) {
-        showError(emailInput, 'ایمیل معتبر نیست');
-        hasError = true;
-    }
-    if (password.length < 8) {
-        showError(passwordInput, 'رمز عبور باید حداقل ۸ کاراکتر باشد');
-        hasError = true;
-    }
-    if (password !== confirm) {
-        showError(confirmInput, 'رمز عبور و تکرار آن یکسان نیستند');
-        hasError = true;
-    }
-
-    if (hasError) return;
-
-    setLoading(true);
+    // خواندن مقادیر (.value تا متن را بگیرد، نه خود المنت)
+    const email = document.getElementById("email").value;
+    const newPassword = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
 
     try {
-        const res = await fetch(`${API_BASE}/api/auth/forgot-password/`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("http://127.0.0.1:8000/api/auth/resetpassword/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            // اسم فیلدها طبق /api/docs/ خودت — درست هستند
             body: JSON.stringify({
                 email: email,
-                new_password: password,
-                confirm_password: confirm,
-            }),
+                new_password: newPassword,
+                confirm_password: confirmPassword
+            })
         });
 
-        const data = await res.json().catch(() => ({}));
+        const data = await response.json();
 
-        if (res.ok) {
-            setLoading(false);
-            alert('رمز عبور با موفقیت تغییر کرد!');
-            window.location.href = 'login.html';
-        } else {
-            if (data.email) showError(emailInput, translateError(Array.isArray(data.email) ? data.email[0] : data.email));
-            if (data.new_password) showError(passwordInput, translateError(Array.isArray(data.new_password) ? data.new_password[0] : data.new_password));
-            if (data.detail) showFormError(translateError(data.detail));
-            if (!data.email && !data.new_password && !data.detail) {
-                showFormError('تغییر رمز ناموفق بود. دوباره تلاش کنید.');
-            }
-            setLoading(false);
+        // موفق → رمز عوض شد، برو صفحه‌ی ورود
+        if (response.ok) {
+            window.location.href = "login.html";
+            return;
         }
 
-    } catch (err) {
-        showFormError('ارتباط با سرور برقرار نشد. اتصال اینترنت یا آدرس سرور را بررسی کنید.');
-        setLoading(false);
+        // ── خطاها از بک‌اند ──
+        if (data.email) {
+            emailError.textContent = data.email[0];
+
+        }
+        if (data.new_password) {
+            passwordError.textContent = data.new_password[0];
+
+        }
+        if (data.confirm_password) {
+            confirmError.textContent = data.confirm_password[0];
+
+        }
+        if (data.non_field_errors) {
+            formError.textContent = data.non_field_errors[0];
+
+        }
+        if (data.detail) {
+            formError.textContent = data.detail;
+
+        }
+
+    } catch (error) {
+        // این حالت یعنی اصلاً به سرور وصل نشدیم، پس سرور هیچ پیامی نفرستاده
+        // برای همین این یک پیام خودمان است، نه از بک‌اند
+        document.getElementById("error-form").textContent = "ارتباط با سرور برقرار نشد";
     }
+
 });
