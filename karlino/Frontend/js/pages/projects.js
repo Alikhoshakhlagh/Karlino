@@ -459,11 +459,29 @@ async function init() {
         renderCategoryFilters();
         renderSkillFilters();
 
-        applyAll();
+        // ── اگر کاربر از هدر روی یک دسته‌بندی زده، از آدرس بخوان ──
+        const params = new URLSearchParams(window.location.search);
+        const categoryFromUrl = params.get("category");
+
+        if (categoryFromUrl) {
+            // چک‌باکس آن دسته‌بندی را تیک بزن
+            const checkbox = categoryFiltersContainer.querySelector(
+                `input[data-id="${categoryFromUrl}"]`
+            );
+            if (checkbox) {
+                checkbox.checked = true;
+                activeCategoryFilters = [categoryFromUrl]; // فیلتر را فعال کن (بدون زدن دکمه)
+            }
+        }
+
+        applyAll(); // خودکار فیلتر و نمایش
+
     } catch (error) {
         console.error("خطا:", error);
         projectsContainer.innerHTML = "<p class='field-error'>خطا در دریافت اطلاعات.</p>";
     }
 }
+
+init();
 
 init();
