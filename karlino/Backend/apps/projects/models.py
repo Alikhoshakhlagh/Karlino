@@ -58,7 +58,7 @@ class Project(TimeStampedUUIDModel):
     )
 
     title = models.CharField(
-        max_length=200,
+        max_length=27,
         db_index=True
     )
 

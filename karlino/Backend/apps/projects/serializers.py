@@ -1,4 +1,5 @@
 from datetime import date
+from django.utils import timezone
 
 from rest_framework import serializers
 
@@ -83,6 +84,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         default=0,
     )
 
+    project_age_days = serializers.SerializerMethodField()
+
+    budget_display = serializers.SerializerMethodField()
+
     class Meta:
 
         model = Project
@@ -110,6 +115,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
             'budget_min',
             'budget_max',
+            'budget_display',
 
             'location',
 
@@ -128,6 +134,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'display_owner_name',
             'is_company_project',
 
+            'project_age_days',
             'created_at',
             'updated_at',
         )
@@ -181,6 +188,37 @@ class ProjectSerializer(serializers.ModelSerializer):
             }
             for skill in obj.skills.all()
         ]
+
+    @extend_schema_field(serializers.CharField)
+    def get_project_age(self, obj):
+
+        days = (
+                timezone.now().date()
+                -
+                obj.created_at.date()
+        ).days
+
+        if days == 0:
+            return "امروز"
+
+        if days == 1:
+            return "دیروز"
+
+        return f"{days} روز پیش"
+
+
+    @extend_schema_field(serializers.CharField)
+    def get_budget_display(self, obj):
+
+        if obj.budget_min and obj.budget_max:
+            return (
+                f"{int(obj.budget_min):,}"
+                f" تا "
+                f"{int(obj.budget_max):,}"
+                f" تومان"
+            )
+
+        return None
 
     def validate(self, attrs):
 
@@ -243,6 +281,22 @@ class ProjectSerializer(serializers.ModelSerializer):
             )
 
         deadline = attrs.get('deadline')
+
+        if (
+                budget_min is not None
+                and budget_min < 100000
+        ):
+            raise serializers.ValidationError(
+                MIN_BUDGET_TOO_LOW
+            )
+
+        if (
+                budget_max is not None
+                and budget_max > 10000000000
+        ):
+            raise serializers.ValidationError(
+                MAX_BUDGET_TOO_HIGH
+            )
 
         if (
             deadline is not None
