@@ -1619,7 +1619,7 @@ footer .footer-bottom p {
 }
 .project-layout .project-main .project-grid .projects-cards .card-project .card-top .icon-project {
   position: relative;
-  left: 60px;
+  left: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
