@@ -55,6 +55,17 @@ img {
   display: block;
 }
 
+.field-error {
+  color: hsl(9, 31%, 55%);
+  font-size: 0.78em;
+  margin-top: 10px;
+  margin-right: 4px;
+}
+
+.input.invalid {
+  border-color: hsl(9, 31%, 55%);
+}
+
 #header-placeholder {
   display: flex;
   justify-content: center;
