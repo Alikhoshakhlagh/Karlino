@@ -2140,6 +2140,7 @@ footer .footer-bottom p {
 }
 .Categories .Categories-cards .card-Categories .name-cat p {
   display: flex;
+  text-align: center;
   flex-direction: column;
   justify-content: center;
   align-items: center;
