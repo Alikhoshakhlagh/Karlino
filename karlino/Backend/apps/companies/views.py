@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from .models import Company
 from .serializers import CompanySerializer
+from ..core.messages import *
 
 
 class MyCompanyAPIView(APIView):
@@ -24,7 +25,10 @@ class MyCompanyAPIView(APIView):
     def post(self, request):
         if hasattr(request.user, 'company'):
             return Response(
-                {'detail': 'Company already exists.'},
+                {
+                    'detail':
+                        COMPANY_EXISTS
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

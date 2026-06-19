@@ -8,6 +8,7 @@ from ..projects.models import Project
 
 from .models import Bid
 from .serializers import BidSerializer
+from ..core.messages import *
 
 from django.utils import timezone
 from django.db import transaction
@@ -31,7 +32,7 @@ class CreateOrUpdateBidAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'This project is not tender based.'
+                        PROJECT_NOT_TENDER
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -43,20 +44,20 @@ class CreateOrUpdateBidAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'Project is not active.'
+                        PROJECT_NOT_ACTIVE
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         if (
-            project.status
+            project.ReviewStatus
             !=
-            Project.Status.APPROVED
+            Project.ReviewStatus.APPROVED
         ):
             return Response(
                 {
                     'detail':
-                        'Project is not approved.'
+                        PROJECT_NOT_APPROVED
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -66,7 +67,7 @@ class CreateOrUpdateBidAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'You cannot bid on your own project.'
+                        OWN_PROJECT_BID_REVIEWED
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -142,7 +143,7 @@ class ProjectBidListAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'Permission denied.'
+                        PERMISSION_DENIED
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -223,7 +224,7 @@ class AcceptBidAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'Permission denied.'
+                        PERMISSION_DENIED
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -236,7 +237,7 @@ class AcceptBidAPIView(APIView):
             return Response(
                 {
                     'detail':
-                        'Project already closed.'
+                        PROJECT_NOT_ACTIVE
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -271,6 +272,6 @@ class AcceptBidAPIView(APIView):
         return Response(
             {
                 'detail':
-                    'Bid accepted successfully.'
+                    BID_ACCEPTED
             }
         )

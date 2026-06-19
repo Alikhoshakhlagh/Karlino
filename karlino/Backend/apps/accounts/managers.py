@@ -1,14 +1,23 @@
 from django.contrib.auth.models import BaseUserManager
+from ..core.messages import *
 
 
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None, **extra_fields):
         if not email:
-            raise ValueError('Email is required')
+            raise ValueError(
+                EMAIL_REQUIRED
+            )
+
         if not first_name:
-            raise ValueError('First name is required')
+            raise ValueError(
+                FIRST_NAME_REQUIRED
+            )
+
         if not last_name:
-            raise ValueError('Last name is required')
+            raise ValueError(
+                LAST_NAME_REQUIRED
+            )
 
         email = self.normalize_email(email)
         user = self.model(

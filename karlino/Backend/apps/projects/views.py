@@ -12,6 +12,7 @@ from ..applications.serializers import ApplicationSerializer
 from .models import Project, ProjectReview
 from .permissions import IsProjectOwnerOrCompanyOwner
 from .serializers import ProjectSerializer, ExpertProjectSerializer, ProjectReviewSerializer
+from ..core.messages import *
 
 from drf_spectacular.utils import (
     extend_schema,
@@ -298,7 +299,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         ):
             return Response(
                 {
-                    'detail': 'Permission denied.'
+                    'detail': PERMISSION_DENIED
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -307,8 +308,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail': (
-                        'Only projects needing revision '
-                        'can be resubmitted.'
+                        PROJECT_NOT_NEEDS_REVISION
                     )
                 },
                 status=status.HTTP_400_BAD_REQUEST,
@@ -332,7 +332,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return Response(
             {
                 'detail': (
-                    'Project submitted for review.'
+                    PROJECT_SUBMITTED_FOR_REVIEW
                 )
             }
         )
@@ -374,7 +374,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail':
-                        'Project is already reviewed.'
+                        PROJECT_ALREADY_REVIEWED
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -382,7 +382,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail':
-                        'Project is already reviewed.'
+                        PROJECT_ALREADY_REVIEWED
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -391,7 +391,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail':
-                        'You cannot review your own project.'
+                        OWN_PROJECT_BID_REVIEWED
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -404,7 +404,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail':
-                        'You cannot review this category.'
+                        EXPERT_CATEGORY_DENIED
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
@@ -454,7 +454,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return Response(
             {
                 'detail':
-                    'Review submitted successfully.'
+                    REVIEW_SUBMITTED
             }
         )
 

@@ -8,6 +8,7 @@ from ..skills.models import Skill
 from ..categories.models import Category
 from ..categories.serializers import CategorySerializer
 from ..companies.models import Company
+from ..core.messages import *
 
 from .models import Project, ProjectReview
 
@@ -81,7 +82,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         read_only=True,
         default=0,
     )
-    can_resubmit = serializers.SerializerMethodField()
 
     class Meta:
 
@@ -207,13 +207,13 @@ class ProjectSerializer(serializers.ModelSerializer):
             if not user_company and not company:
 
                 raise serializers.ValidationError(
-                    'You do not have a company profile yet.'
+                    COMPANY_REQUIRED
                 )
 
             if company and company.owner_id != user.id:
 
                 raise serializers.ValidationError(
-                    'You can only post using your own company.'
+                    COMPANY_NOT_OWNED
                 )
 
             attrs['company'] = company or user_company
@@ -223,7 +223,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             if company is not None:
 
                 raise serializers.ValidationError(
-                    'Personal projects must not have a company.'
+                    COMPANY_ON_PERSONAL
                 )
 
             attrs['company'] = None
@@ -239,7 +239,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         ):
 
             raise serializers.ValidationError(
-                'budget_min cannot be greater than budget_max.'
+                INVALID_BUDGET_RANGE
             )
 
         deadline = attrs.get('deadline')
@@ -250,7 +250,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         ):
 
             raise serializers.ValidationError(
-                'deadline cannot be in the past.'
+                DEADLINE_IN_PAST
             )
 
         primary_category = attrs.get(
@@ -295,12 +295,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         return super().update(
             instance,
             validated_data,
-        )
-
-    def get_can_resubmit(self, obj):
-
-        return (
-                obj.review_status == Project.ReviewStatus.NEEDS_REVISION
         )
 
 
@@ -363,7 +357,7 @@ class ProjectReviewSerializer(
             raise serializers.ValidationError(
                 {
                     'comment': (
-                        'Comment is required.'
+                        COMMENT_REQUIRED
                     )
                 }
             )

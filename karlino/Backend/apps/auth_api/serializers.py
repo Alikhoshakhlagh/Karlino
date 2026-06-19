@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema_field
 
-from apps.accounts.models import User
+from ..accounts.models import User
+from ..core.messages import *
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -37,7 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
             raise serializers.ValidationError({
                 'confirm_password': (
-                    'Passwords do not match.'
+                    PASSWORD_NOT_MATCH
                 )
             })
 

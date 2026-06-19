@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
+from ..core.messages import *
 
 class ResetPasswordSerializer(
     serializers.Serializer
@@ -37,7 +38,7 @@ class ResetPasswordSerializer(
             raise serializers.ValidationError(
                 {
                     'confirm_password': (
-                        'Passwords do not match.'
+                        PASSWORD_NOT_MATCH
                     )
                 }
             )
