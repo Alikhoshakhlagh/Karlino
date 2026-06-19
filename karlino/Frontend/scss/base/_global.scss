@@ -56,8 +56,9 @@ img {
 .field-error {
   color: $danger;
   font-size: 0.78em;
-  margin-top: 10px;
+  //margin-top: 10px;
   margin-right: 4px;
+   &.show { display: block; }
 
 }
 

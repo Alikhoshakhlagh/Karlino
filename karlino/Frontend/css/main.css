@@ -58,8 +58,10 @@ img {
 .field-error {
   color: hsl(9, 31%, 55%);
   font-size: 0.78em;
-  margin-top: 10px;
   margin-right: 4px;
+}
+.field-error.show {
+  display: block;
 }
 
 #header-placeholder {
@@ -2233,8 +2235,8 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: max-content;
-  width: max-content;
+  max-height: 700px;
+  max-width: 500px;
   padding: 20px;
   border-radius: 20px;
   position: relative;
@@ -2391,8 +2393,8 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: max-content;
-  width: max-content;
+  max-height: 700px;
+  max-width: 500px;
   padding: 20px;
   border-radius: 20px;
   position: relative;
@@ -2496,7 +2498,6 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 15px;
 }
 .card-reg .form .gender .title {
   margin-right: 10px;
@@ -2581,8 +2582,8 @@ footer .footer-bottom p {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: max-content;
-  width: max-content;
+  max-height: 700px;
+  max-width: 500px;
   padding: 20px;
   border-radius: 20px;
   position: relative;
