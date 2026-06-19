@@ -6,6 +6,7 @@
   box-sizing: border-box;
   color: $text-color;
   font-family: Vazirmatn;
+
 }
 
 
@@ -50,4 +51,16 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+.field-error {
+  color: $danger;
+  font-size: 0.78em;
+  margin-top: 10px;
+  margin-right: 4px;
+
+}
+
+.input.invalid {
+  border-color: $danger;   // قاب قرمز برای فیلد خطادار
 }
