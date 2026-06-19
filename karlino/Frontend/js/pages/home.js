@@ -120,7 +120,13 @@ async function loadProjects() {
 
                         <div class="card-pro-cat">
                             <p>${project.primary_category_data.name}</p>
-                            ${others.map(cat => `<p>${cat.name}</p>`).join("")}
+                            <p>${(project.categories_data || [])
+            .find(cat => cat.id !== project.primary_category_data?.id)
+
+            ?.name || ""
+     }
+
+</p>
                         </div>
 
                         <div class="price">
