@@ -143,7 +143,7 @@ async function loadProjects() {
                     <div class="card-footer">
 
                         <span class="daysAgo">
-                            ${new Date(project.created_at).toLocaleDateString("fa-IR")}
+                            ${(project.project_age_days)}
                         </span>
 
                         <button class="button" type="button">

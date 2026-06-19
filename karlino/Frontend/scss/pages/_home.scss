@@ -408,7 +408,7 @@
       border-radius: $radius-md;
       border: 1px solid $border-muted;
       width: 250px;
-      height:max-content;
+      height: max-content;
 
 
       .icon-cat {
@@ -607,7 +607,7 @@
     margin-top: 40px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    column-gap: 50px;
+    column-gap: 25px;
     row-gap: 25px;
     padding-bottom: 20px;
 
@@ -618,8 +618,8 @@
       border: 1px solid $border-muted;
       border-radius: $radius-md;
       cursor: pointer;
-      width: 300px;
-      height: max-content;
+      width: 320px;
+      max-height: 375px;
 
       &:hover {
         border: 1px solid $primary-color;
@@ -757,6 +757,16 @@
           margin-right: 5px;
           font-size: $fs-card-title;
           font-weight: $fw-bold;
+
+          line-height: 1.5;
+          min-height: 3em; // ۲ خط × ۱.۵ = ۳em → همیشه جای دو خط رزرو می‌شود
+min-height: 3em;
+    display: flex;
+    align-items: center;   // متن در وسط فضای دو‌خطی بنشیند
+          display: -webkit-box;
+          -webkit-line-clamp: 2; // حداکثر دو خط (بلندتر شد، با ... کوتاه می‌شود)
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
 
         .card-pro-cat {

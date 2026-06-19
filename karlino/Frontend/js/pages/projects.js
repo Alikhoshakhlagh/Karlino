@@ -311,7 +311,7 @@ function renderPage(page) {
 
                 <div class="card-footer">
                     <span class="daysAgo">
-                        ${createdAt}
+                        ${project.project_age_days}
                     </span>
 
                     <button class="button project-details-btn" data-id="${project.id}" type="button">
