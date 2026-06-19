@@ -21,27 +21,32 @@
             <label>
                 <input class="input" type="text" placeholder="" required="" id="first-name">
                 <span>نام</span>
+                <span class="field-error" id="error-firstname"></span>
             </label>
             
             <label>
                 <input class="input" type="text" placeholder="" required="" id="last-name">
                 <span>نام خانوادگی</span>
+                <span class="field-error" id="error-lastname"></span>
             </label>
         </div>
         <!-- email -->
         <label>
             <input class="input" type="email" placeholder="" required="" id="email">
             <span>ایمیل</span>
+            <span class="field-error" id="error-email"></span>
         </label>
         <!-- pasword -->
         <label>
             <input class="input" type="password" placeholder="" required="" id="password">
             <span>پسورد</span>
+            <span class="field-error" id="error-password"></span>
         </label>
         <!-- repasword -->
         <label>
             <input class="input" type="password" placeholder="" required="" id="confirm-password">
             <span>تکرار رمز عبور</span>
+            <span class="field-error" id="error-confirmPassword"></span>
         </label>
         
         <div class="gender">
@@ -58,10 +63,12 @@
                     <span>زن</span>
                 </label>
             </div>
+            <span class="field-error" id="error-gender"></span>
         </div>
         
         <div class="bottom-reg">
             <button class="submit" type="submit">ثبت‌نام</button>
+            <p class="field-error" id="error-form" style="text-align:center;"></p>
             <p class="signin">
                 از قبل حساب کاربری دارید؟
                 
