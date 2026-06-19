@@ -7,7 +7,7 @@ from rest_framework import status
 from ..projects.models import Project
 
 from .models import Bid
-from .serializers import BidSerializer
+from .serializers import BidSerializer, MyBidSerializer
 from ..core.messages import *
 
 from django.utils import timezone
@@ -274,4 +274,31 @@ class AcceptBidAPIView(APIView):
                 'detail':
                     BID_ACCEPTED
             }
+        )
+
+
+class MyBidsAPIView(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request):
+
+        bids = (
+            Bid.objects
+            .select_related('project')
+            .filter(
+                freelancer=request.user,
+            )
+            .order_by('-created_at')
+        )
+
+        serializer = MyBidSerializer(
+            bids,
+            many=True,
+        )
+
+        return Response(
+            serializer.data
         )

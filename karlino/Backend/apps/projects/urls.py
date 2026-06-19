@@ -10,6 +10,7 @@ from ..bids.views import (
     CreateOrUpdateBidAPIView,
     ProjectBidListAPIView,
     AcceptBidAPIView,
+    MyBidsAPIView,
 )
 
 router = DefaultRouter()
@@ -45,6 +46,12 @@ urlpatterns = [
         "<uuid:project_id>/bids/<uuid:bid_id>/accept/",
         AcceptBidAPIView.as_view(),
         name="accept-bid",
+    ),
+
+    path(
+        'my-bids/',
+        MyBidsAPIView.as_view(),
+        name='my-bids',
     ),
 
     # Project ViewSet
