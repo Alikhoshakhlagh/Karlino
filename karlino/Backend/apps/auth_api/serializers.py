@@ -1,8 +1,14 @@
+from django.db.models import Count, Q
 from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema_field
 
-from apps.accounts.models import User
+from ..accounts.models import User
+from ..applications.models import Application
+from ..bids.models import Bid
+from ..core.messages import *
+from ..favorites.models import Favorite
+from ..projects.models import Project
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -37,7 +43,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
             raise serializers.ValidationError({
                 'confirm_password': (
-                    'Passwords do not match.'
+                    PASSWORD_NOT_MATCH
                 )
             })
 
@@ -87,3 +93,70 @@ class ProfileSerializer(serializers.ModelSerializer):
             f'{obj.first_name} '
             f'{obj.last_name}'
         ).strip()
+
+
+class ProfileDashboardSerializer(
+    ProfileSerializer
+):
+
+    dashboard = serializers.SerializerMethodField()
+
+    class Meta(ProfileSerializer.Meta):
+
+        fields = (
+            *ProfileSerializer.Meta.fields,
+            'is_expert',
+            'dashboard',
+        )
+
+    def get_dashboard(self, obj):
+        project_stats = Project.objects.filter(
+            creator=obj,
+        ).aggregate(
+
+            my_projects_count=Count('id'),
+
+            active_projects_count=Count(
+                'id',
+                filter=Q(
+                    status=Project.Status.ACTIVE,
+                ),
+            ),
+
+            approved_projects_count=Count(
+                'id',
+                filter=Q(
+                    review_status=Project.ReviewStatus.APPROVED,
+                ),
+            ),
+
+            pending_projects_count=Count(
+                'id',
+                filter=Q(
+                    review_status=Project.ReviewStatus.PENDING,
+                ),
+            ),
+
+            needs_revision_projects_count=Count(
+                'id',
+                filter=Q(
+                    review_status=Project.ReviewStatus.NEEDS_REVISION,
+                ),
+            ),
+        )
+
+        return {
+            **project_stats,
+
+            'favorites_count': Favorite.objects.filter(
+                user=obj,
+            ).count(),
+
+            'my_applications_count': Application.objects.filter(
+                applicant=obj,
+            ).count(),
+
+            'my_bids_count': Bid.objects.filter(
+                freelancer=obj,
+            ).count(),
+        }
