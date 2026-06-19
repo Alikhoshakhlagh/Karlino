@@ -290,7 +290,13 @@ function renderPage(page) {
 
                     <div class="card-pro-cat">
                         <p>${primaryCategoryName}</p>
-                        ${otherCategoriesHtml}
+                        <p>${(project.categories_data || [])
+            .find(cat => cat.id !== project.primary_category_data?.id)
+
+            ?.name || ""
+        }
+
+</p>
                     </div>
 
                     <div class="price">
