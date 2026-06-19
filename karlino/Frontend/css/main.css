@@ -62,10 +62,6 @@ img {
   margin-right: 4px;
 }
 
-.input.invalid {
-  border-color: hsl(9, 31%, 55%);
-}
-
 #header-placeholder {
   display: flex;
   justify-content: center;
