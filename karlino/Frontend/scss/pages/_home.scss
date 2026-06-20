@@ -409,6 +409,7 @@
       border: 1px solid $border-muted;
       width: 250px;
       height: max-content;
+      grid-template-columns: repeat(5, 1fr);
 
 
       .icon-cat {

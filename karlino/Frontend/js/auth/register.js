@@ -51,8 +51,10 @@ form.addEventListener("submit", async function (event) {
         // پاسخ سرور را می‌خوانیم
         const data = await response.json();
 
-        // اگر ثبت‌نام موفق بود → برو صفحه‌ی ورود
         if (response.ok) {
+            localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
+            localStorage.setItem("user", JSON.stringify({ email: email, isLoggedIn: true }));
             window.location.href = "index.html";
             return;
         }
