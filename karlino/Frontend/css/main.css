@@ -1397,13 +1397,13 @@ footer .footer-bottom p {
   color: hsl(221, 100%, 99%);
 }
 
-.title {
+.title-2 {
   margin-top: 0;
   margin-right: 40px;
   margin-bottom: 50px;
   margin-left: 40px;
 }
-.title .text {
+.title-2 .text {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1411,7 +1411,7 @@ footer .footer-bottom p {
   font-size: 34px;
   font-weight: 700;
 }
-.title .text .ping {
+.title-2 .text .ping {
   --uib-size: 50px;
   --uib-speed: 1s;
   --uib-color: $forth-color;
@@ -1419,7 +1419,7 @@ footer .footer-bottom p {
   width: var(--uib-size);
   height: var(--uib-size);
 }
-.title .text .ping::before, .title .text .ping::after {
+.title-2 .text .ping::before, .title-2 .text .ping::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1429,7 +1429,7 @@ footer .footer-bottom p {
   transform: scale(0);
   opacity: 0;
 }
-.title .text .ping::after {
+.title-2 .text .ping::after {
   animation-delay: calc(var(--uib-speed) / -2);
 }
 
