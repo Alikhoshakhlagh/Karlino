@@ -160,3 +160,28 @@ class ProfileDashboardSerializer(
                 freelancer=obj,
             ).count(),
         }
+
+
+class DashboardSerializer(
+    serializers.Serializer
+):
+
+    my_projects_count = serializers.IntegerField()
+
+    active_projects_count = serializers.IntegerField()
+
+    approved_projects_count = serializers.IntegerField()
+
+    pending_projects_count = serializers.IntegerField()
+
+    needs_revision_projects_count = serializers.IntegerField()
+
+    favorites_count = serializers.IntegerField()
+
+    my_applications_count = serializers.IntegerField()
+
+    my_bids_count = serializers.IntegerField()
+
+    pending_review_projects_count = serializers.IntegerField(
+        required=False
+    )

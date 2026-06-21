@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db.models import Q, Count
+from django.utils import timezone
 
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -417,7 +418,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         project.review_status = review_status
         project.reviewed_by = request.user
-        project.reviewed_at = datetime.now()
+        project.reviewed_at = timezone.now()
 
         if (
                 review_status
@@ -461,6 +462,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 #REVIEW
 class PendingProjectsAPIView(APIView):
+
+    serializer_class = ExpertProjectSerializer
+
     permission_classes = [
         IsAuthenticated,
         IsExpert,

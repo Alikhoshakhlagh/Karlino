@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,11 +17,14 @@ from django.db import transaction
 
 class CreateOrUpdateBidAPIView(APIView):
 
+    serializer_class  = MyBidSerializer
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request, project_id):
 
-        project = Project.objects.get(
+        project = get_object_or_404(
+            Project,
             pk=project_id
         )
 
@@ -50,9 +54,9 @@ class CreateOrUpdateBidAPIView(APIView):
             )
 
         if (
-            project.ReviewStatus
-            !=
-            Project.ReviewStatus.APPROVED
+             project.review_status
+             !=
+             Project.ReviewStatus.APPROVED
         ):
             return Response(
                 {
@@ -97,6 +101,8 @@ class CreateOrUpdateBidAPIView(APIView):
 
 
 class ProjectBidListAPIView(APIView):
+
+    serializer_class = BidSerializer
 
     permission_classes = [
         IsAuthenticated,
@@ -178,15 +184,17 @@ class ProjectBidListAPIView(APIView):
 
 class AcceptBidAPIView(APIView):
 
+    serializer_class = MyBidSerializer
+
     permission_classes = [
         IsAuthenticated,
     ]
 
     def post(
-        self,
-        request,
-        project_id,
-        bid_id,
+            self,
+            request,
+            project_id,
+            bid_id,
     ):
         project = get_object_or_404(
             Project,
@@ -198,28 +206,28 @@ class AcceptBidAPIView(APIView):
             project=project,
         )
         is_owner = (
-            project.creator_id
-            ==
-            request.user.id
+                project.creator_id
+                ==
+                request.user.id
         )
 
         is_company_owner = (
 
-            project.company
+                project.company
 
-            and
+                and
 
-            project.company.owner_id
-            ==
-            request.user.id
+                project.company.owner_id
+                ==
+                request.user.id
         )
 
         if not (
-            is_owner
-            or
-            is_company_owner
-            or
-            request.user.is_superuser
+                is_owner
+                or
+                is_company_owner
+                or
+                request.user.is_superuser
         ):
             return Response(
                 {
@@ -230,9 +238,9 @@ class AcceptBidAPIView(APIView):
             )
 
         if (
-            project.status
-            ==
-            Project.Status.CLOSED
+                project.status
+                ==
+                Project.Status.CLOSED
         ):
             return Response(
                 {
@@ -276,8 +284,12 @@ class AcceptBidAPIView(APIView):
             }
         )
 
-
+@extend_schema(
+    responses=MyBidSerializer(many=True)
+)
 class MyBidsAPIView(APIView):
+
+    serializer_class = BidSerializer
 
     permission_classes = [
         IsAuthenticated,

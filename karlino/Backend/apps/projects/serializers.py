@@ -190,7 +190,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         ]
 
     @extend_schema_field(serializers.CharField)
-    def get_project_age(self, obj):
+    def get_project_age_days(self, obj):
 
         days = (
                 timezone.now().date()
