@@ -1,4 +1,5 @@
 from django.db.models import Count, Q
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -6,7 +7,7 @@ from rest_framework.views import APIView
 
 from .serializers import (
     RegisterSerializer,
-    ProfileSerializer, ProfileDashboardSerializer,
+    ProfileSerializer, ProfileDashboardSerializer, DashboardSerializer,
 )
 from ..applications.models import Application
 from ..bids.models import Bid
@@ -18,7 +19,12 @@ class RegisterAPIView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
+@extend_schema(
+    responses=ProfileSerializer
+)
 class ProfileAPIView(APIView):
+
+    serializer_class = ProfileSerializer
 
     permission_classes = [
         IsAuthenticated,
@@ -37,7 +43,12 @@ class ProfileAPIView(APIView):
         )
 
 
+@extend_schema(
+    responses=DashboardSerializer
+)
 class DashboardAPIView(APIView):
+
+    serializer_class = DashboardSerializer
 
     permission_classes = [
         IsAuthenticated,
