@@ -21,6 +21,7 @@ async function loadCategories() {
 
         categories.slice(0, 10).forEach((category) => {
             categoriesContainer.innerHTML += `
+<a class="cat-link" href="projects.html?category=${category.id}">
                 <div class="card-Categories">
                     <div class="icon-cat">
                         <span>
