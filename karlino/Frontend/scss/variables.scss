@@ -63,3 +63,11 @@ $fw-regular: 400;
 $fw-medium: 500;
 $fw-bold: 700;
 
+// Layout
+$container-max: 1346px;   // هم‌اندازه‌ی هدرت
+
+// Breakpoints (desktop-first → max-width)
+$bp-lg: 1280px;
+$bp-md: 992px;
+$bp-sm: 768px;
+$bp-xs: 480px;
