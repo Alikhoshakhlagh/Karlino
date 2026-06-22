@@ -180,3 +180,36 @@ async function loadProjects() {
 }
 
 loadProjects();
+
+// ===== جستجوی صفحه‌ی اصلی → هدایت به صفحه‌ی پروژه‌ها =====
+
+const indexSearch = document.getElementById("indexSearch");
+const indexSearchBtn = document.querySelector(".find-talent");
+
+function goToProjectsSearch() {
+    const text = indexSearch.value.trim();
+
+    // اگر خالی بود، فقط برو صفحه‌ی پروژه‌ها بدون سرچ
+    if (text === "") {
+        window.location.href = "projects.html";
+        return;
+    }
+
+    window.location.href = "projects.html?search=" + encodeURIComponent(text);
+}
+
+// Enter داخل کادر
+if (indexSearch) {
+    indexSearch.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            goToProjectsSearch();
+        }
+    });
+}
+
+// کلیک روی دکمه‌ی ذره‌بین
+if (indexSearchBtn) {
+    indexSearchBtn.addEventListener("click", function () {
+        goToProjectsSearch();
+    });
+}
