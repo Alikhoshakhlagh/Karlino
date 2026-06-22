@@ -311,7 +311,7 @@ function renderPage(page) {
 
                 <div class="card-footer">
                     <span class="daysAgo">
-                        ${createdAt}
+                        ${project.project_age_days}
                     </span>
 
                     <button class="button project-details-btn" data-id="${project.id}" type="button">
@@ -459,7 +459,23 @@ async function init() {
         renderCategoryFilters();
         renderSkillFilters();
 
-        applyAll();
+        // ── اگر کاربر از هدر روی یک دسته‌بندی زده، از آدرس بخوان ──
+        const params = new URLSearchParams(window.location.search);
+        const categoryFromUrl = params.get("category");
+
+        if (categoryFromUrl) {
+            // چک‌باکس آن دسته‌بندی را تیک بزن
+            const checkbox = categoryFiltersContainer.querySelector(
+                `input[data-id="${categoryFromUrl}"]`
+            );
+            if (checkbox) {
+                checkbox.checked = true;
+                activeCategoryFilters = [categoryFromUrl]; // فیلتر را فعال کن (بدون زدن دکمه)
+            }
+        }
+
+        applyAll(); // خودکار فیلتر و نمایش
+
     } catch (error) {
         console.error("خطا:", error);
         projectsContainer.innerHTML = "<p class='field-error'>خطا در دریافت اطلاعات.</p>";
@@ -467,3 +483,4 @@ async function init() {
 }
 
 init();
+

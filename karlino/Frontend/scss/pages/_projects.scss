@@ -4,10 +4,10 @@
 .hero-project-page {
   position: relative;
   margin: 50px 30px 0px 30px;
-  padding: 80px 24px 120px;
+  padding: 80px 24px 40px;
   overflow: hidden;
   display: flex;
-  margin-top: 100px;
+  //margin-top: 100px;
 
 
   .title-hero-pro {
@@ -50,7 +50,31 @@
     }
   }
 
+
 }
+
+.title-2 {
+  margin-top: 0;
+  margin-right: 40px;
+  margin-bottom: 50px;
+  margin-left: 40px;
+
+  .text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+
+    color: $text-color;
+    font-size: $fs-section-title;
+    font-weight: $fw-bold;
+
+    .ping {
+      @include ping;
+    }
+  }
+}
+
 
 .project-layout {
   direction: ltr;
@@ -231,10 +255,10 @@
       gap: 20px;
 
       .projects-cards {
-        //margin-top: 40px;
+        margin-top: 15px;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        column-gap: 50px;
+        column-gap: 25px;
         row-gap: 25px;
         padding-bottom: 20px;
 
@@ -245,8 +269,8 @@
           border: 1px solid $border-muted;
           border-radius: $radius-md;
           cursor: pointer;
-          width: 300px;
-          height: max-content;
+          width: 320px;
+          max-height: 375px;
 
           &:hover {
             border: 1px solid $primary-color;
@@ -336,7 +360,7 @@
 
             .icon-project {
               position: relative;
-              left: 40px;
+              left: 30px;
               display: flex;
               flex-direction: column;
               justify-content: center;
@@ -384,6 +408,14 @@
               margin-right: 5px;
               font-size: $fs-card-title;
               font-weight: $fw-bold;
+
+              line-height: 1.5;
+              min-height: 3em; // ۲ خط × ۱.۵ = ۳em → همیشه جای دو خط رزرو می‌شود
+
+              display: -webkit-box;
+              -webkit-line-clamp: 2; // حداکثر دو خط (بلندتر شد، با ... کوتاه می‌شود)
+              -webkit-box-orient: vertical;
+              overflow: hidden;
             }
 
             .card-pro-cat {
@@ -670,7 +702,6 @@
       background-color: $glass-border;
 
 
-
       i {
 
         opacity: 1;
@@ -751,8 +782,6 @@
 }
 
 
-
-
 .project-pagination {
 
   margin-top: 20px;
@@ -788,7 +817,7 @@
     }
 
     &.active {
-      background-color:$third-color;
+      background-color: $third-color;
       color: white;
       border-color: $third-color;
       box-shadow: 0 0 20px rgba(255, 119, 64, 0.25);
