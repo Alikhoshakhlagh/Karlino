@@ -203,6 +203,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def apply(self, request, pk=None):
         project = self.get_object()
 
+        if project.status != Project.Status.ACTIVE:
+            return Response(
+                {'detail': PROJECT_NOT_ACTIVE},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if project.review_status != Project.ReviewStatus.APPROVED:
+            return Response(
+                {'detail': PROJECT_NOT_APPROVED},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         serializer = ApplicationSerializer(
             data=request.data,
             context={'request': request, 'project': project},
@@ -372,14 +384,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 !=
                 Project.ReviewStatus.PENDING
         ):
-            return Response(
-                {
-                    'detail':
-                        PROJECT_ALREADY_REVIEWED
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        if project.review_status != Project.ReviewStatus.PENDING:
             return Response(
                 {
                     'detail':

@@ -251,31 +251,22 @@ class AcceptBidAPIView(APIView):
             )
 
         with transaction.atomic():
-            bid.status = (
-                Bid.Status.ACCEPTED
-            )
-
-            bid.accepted_at = (
-                timezone.now()
-            )
-
+            bid.status = Bid.Status.ACCEPTED
+            bid.accepted_at = timezone.now()
             bid.save()
-        Bid.objects.filter(
-            project=project,
-        ).exclude(
-            pk=bid.pk,
-        ).update(
-            status=Bid.Status.REJECTED,
-        )
-        project.status = (
-            Project.Status.CLOSED
-        )
 
-        project.save(
-            update_fields=[
-                'status',
-            ]
-        )
+            Bid.objects.filter(
+                project=project,
+            ).exclude(
+                pk=bid.pk,
+            ).update(
+                status=Bid.Status.REJECTED,
+            )
+
+            project.status = Project.Status.CLOSED
+            project.save(
+                update_fields=['status'],
+            )
 
         return Response(
             {
