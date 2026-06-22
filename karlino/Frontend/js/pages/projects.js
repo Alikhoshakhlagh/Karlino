@@ -446,14 +446,14 @@ async function init() {
     projectsContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
     try {
-        const projectsResult = await fetchAll("http://127.0.0.1:8000/api/projects/");
+        const projectsResult = await fetchAll(BASE_URL + ENDPOINTS.projects);
         allProjects = projectsResult.items;
         pageSize = projectsResult.firstSize || allProjects.length || 1;
 
-        const categoriesResult = await fetchAll("http://127.0.0.1:8000/api/categories/");
+        const categoriesResult = await fetchAll(BASE_URL + ENDPOINTS.categories);
         allCategories = categoriesResult.items;
 
-        const skillsResult = await fetchAll("http://127.0.0.1:8000/api/skills/");
+        const skillsResult = await fetchAll(BASE_URL + ENDPOINTS.skills);
         allSkills = skillsResult.items;
 
         renderCategoryFilters();

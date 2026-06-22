@@ -22,7 +22,7 @@ form.addEventListener("submit", async function (event) {
     const confirmPassword = document.getElementById("confirm-password").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/auth/resetpassword/", {
+        const response = await fetch(BASE_URL + ENDPOINTS.resetPassword, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             // اسم فیلدها طبق /api/docs/ خودت — درست هستند

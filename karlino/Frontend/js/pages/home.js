@@ -6,7 +6,7 @@ async function loadCategories() {
     categoriesContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/categories/");
+        const response = await fetch(BASE_URL + ENDPOINTS.categories);
         if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
         const data = await response.json();
@@ -53,7 +53,8 @@ async function loadProjects() {
     projectsContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/projects/");
+
+        const response = await fetch(BASE_URL + ENDPOINTS.projects);
         if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
         const data = await response.json();
