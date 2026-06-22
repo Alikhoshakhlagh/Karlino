@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.projects.models import Project
+from ..projects.models import Project
 from .models import Favorite
 from .serializers import FavoriteSerializer
 

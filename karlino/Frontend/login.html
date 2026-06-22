@@ -24,13 +24,16 @@
         <label for="email">
             <input class="input" type="email" id="email" placeholder="">
             <span>ایمیل</span>
+            <span class="field-error" id="error-email"></span>
         </label>
         
         <!-- password -->
         <label for="password">
             <input class="input" type="password" id="password" placeholder="">
             <span>پسورد</span>
+             <span class="field-error" id="error-password"></span>
         </label>
+        
         
         <div class="forgetpasword2">
             <p class="forget">
@@ -40,8 +43,9 @@
         </div>
         
         <div class="bottom-reg">
-            <button type="submit" class="submit">ورود</button>
             
+            <button type="submit" class="submit">ورود</button>
+            <p class="field-error" id="error-form" style="text-align:center;"></p>
             <p class="signin">
                 حساب کاربری ندارید؟
                 <a href="register.html">ساخت</a>

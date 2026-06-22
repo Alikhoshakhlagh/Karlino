@@ -5,9 +5,7 @@ fetch('./components/header.html')
 
     .then(data => {
 
-        document.getElementById(
-            'header-placeholder'
-        ).innerHTML = data;
+        document.getElementById('header-placeholder').innerHTML = data;
 
         initializeHeader();
 
@@ -21,9 +19,7 @@ fetch('./components/footer.html')
 
     .then(data => {
 
-        document.getElementById(
-            'footer-placeholder'
-        ).innerHTML = data;
+        document.getElementById('footer-placeholder').innerHTML = data;
 
     });
 
@@ -31,14 +27,11 @@ fetch('./components/footer.html')
 // ── مدیریت هدر ─────────────────────────────
 function initializeHeader() {
 
-    const guestHeader =
-        document.querySelector('.guest-header');
+    const guestHeader = document.querySelector('.guest-header');
 
-    const userHeader =
-        document.querySelector('.user-header');
+    const userHeader = document.querySelector('.user-header');
 
-    const logoutBtn =
-        document.querySelector('.logout');
+    const logoutBtn = document.querySelector('.logout');
 
 
     const user = JSON.parse(
@@ -107,4 +100,3 @@ async function loadcategory_list() {
 }
 
 
-loadcategory_list();

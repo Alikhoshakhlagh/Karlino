@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 
 from .views import (
     RegisterAPIView,
-    ProfileAPIView,
+    ProfileAPIView, DashboardAPIView,
 )
 from ..accounts.views import ResetPasswordView
 
@@ -19,4 +19,6 @@ urlpatterns = [
     path('resetpassword/', ResetPasswordView.as_view(), name='reset_password',),
 
     path('profile/', ProfileAPIView.as_view(), name='profile'),
+
+    path('dashboard/', DashboardAPIView.as_view(), name='dashboard',),
 ]

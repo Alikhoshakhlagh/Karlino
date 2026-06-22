@@ -1,9 +1,11 @@
 import re
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from .models import Category
 from .constants import CATEGORY_ICONS
+from ..core.messages import *
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -22,6 +24,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'resolved_icon',
         )
 
+    @extend_schema_field(serializers.CharField)
     def get_resolved_icon(self, obj):
 
         if obj.icon:
@@ -36,9 +39,7 @@ class CategorySerializer(serializers.ModelSerializer):
         if not re.match(r'^[a-z0-9-]+$', value):
             raise serializers.ValidationError(
                 (
-                    'Slug must contain only '
-                    'english lowercase letters, '
-                    'numbers, and hyphens.'
+                    INVALID_SLUG
                 )
             )
 

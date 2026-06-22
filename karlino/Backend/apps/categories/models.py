@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.core.models import TimeStampedUUIDModel
+from ..core.models import TimeStampedUUIDModel
 from django.core.validators import RegexValidator
 
 
