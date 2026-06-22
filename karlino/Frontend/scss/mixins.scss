@@ -168,3 +168,21 @@
     right: 0;
   }
 }
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == lg {
+    @media (max-width: $bp-lg) { @content; }
+  } @else if $breakpoint == md {
+    @media (max-width: $bp-md) { @content; }
+  } @else if $breakpoint == sm {
+    @media (max-width: $bp-sm) { @content; }
+  } @else if $breakpoint == xs {
+    @media (max-width: $bp-xs) { @content; }
+  }
+}
+
+@mixin container {
+  max-width: $container-max;
+  margin-inline: auto;     // وسط‌چین — تو RTL هم درست کار می‌کنه
+  padding-inline: 24px;
+}
