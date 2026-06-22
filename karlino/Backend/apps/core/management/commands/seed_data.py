@@ -138,7 +138,7 @@ class Command(BaseCommand):
                     'icon': 'fa-solid fa-code',
                 },
                 {
-                    'name': 'طراحی رابط کاربری و تجربه کاربری',
+                    'name': 'Ui & Ux',
                     'slug': 'ui-ux-design',
                     'icon': 'fa-solid fa-palette',
                 },
@@ -148,7 +148,7 @@ class Command(BaseCommand):
                     'icon': 'fa-solid fa-mobile-screen',
                 },
                 {
-                    'name': 'هوش مصنوعی و یادگیری ماشین',
+                    'name': 'هوش مصنوعی',
                     'slug': 'ai-machine-learning',
                     'icon': 'fa-solid fa-robot',
                 },
