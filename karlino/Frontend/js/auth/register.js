@@ -35,9 +35,9 @@ form.addEventListener("submit", async function (event) {
 
     try {
         // درخواست ثبت‌نام — همه‌ی فیلدها فرستاده می‌شوند
-        const response = await fetch("http://127.0.0.1:8000/api/auth/register/", {
+        const response = await fetch(BASE_URL + ENDPOINTS.register, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 first_name: firstName,
                 last_name: lastName,
@@ -52,10 +52,7 @@ form.addEventListener("submit", async function (event) {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem("access", data.access);
-            localStorage.setItem("refresh", data.refresh);
-            localStorage.setItem("user", JSON.stringify({ email: email, isLoggedIn: true }));
-            window.location.href = "index.html";
+            window.location.href = "login.html";
             return;
         }
 

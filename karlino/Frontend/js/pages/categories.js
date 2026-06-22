@@ -8,7 +8,7 @@ let allCategories = [];      // همه‌ی دسته‌بندی‌ها را یک
 // ── گرفتن «همه‌ی» دسته‌بندی‌ها از همه‌ی صفحه‌های سرور ──
 async function fetchAllCategories() {
     let all = [];
-    let url = "http://127.0.0.1:8000/api/categories/";
+    let url = BASE_URL + ENDPOINTS.categories;
 
     // تا وقتی صفحه‌ی بعدی وجود دارد، ادامه بده
     while (url) {
@@ -36,6 +36,7 @@ function renderPage(page) {
     categoriesContainer.innerHTML = "";
     pageItems.forEach((category) => {
         categoriesContainer.innerHTML += `
+<a class="cat-link" href="projects.html?category=${category.id}">
             <div class="card-Categories">
                 <div class="icon-cat">
                     <span>
