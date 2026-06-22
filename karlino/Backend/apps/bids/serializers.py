@@ -21,7 +21,7 @@ class BidSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         )
-        read_only_field = (
+        read_only_fields = (
             'id',
             'status',
             'freelancer_name',
