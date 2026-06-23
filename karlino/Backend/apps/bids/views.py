@@ -75,6 +75,31 @@ class CreateOrUpdateBidAPIView(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        is_owner = (
+                project.creator_id == request.user.id
+        )
+
+        is_company_owner = (
+                project.company
+                and
+                project.company.owner_id == request.user.id
+        )
+
+        if (
+            is_owner
+            or
+            is_company_owner
+        ):
+            return Response(
+                {
+                    'detail':
+                        OWN_PROJECT_BID_REVIEWED
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
         bid, created = Bid.objects.update_or_create(
             project=project,
             freelancer=request.user,
