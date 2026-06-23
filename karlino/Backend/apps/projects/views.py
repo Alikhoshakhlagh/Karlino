@@ -164,7 +164,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                     '-created_at',
                 )
             )
-        # qs = qs.order_by(allowed_ordering.get(ordering, '-created_at'))
 
         return qs
 
@@ -392,7 +391,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if project.creator == request.user:
+        if (
+                project.creator
+                ==
+                request.user
+        ):
             return Response(
                 {
                     'detail':

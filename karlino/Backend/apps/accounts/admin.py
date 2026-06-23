@@ -15,6 +15,7 @@ class UserAdmin(BaseUserAdmin):
         'gender',
         'is_staff',
         'is_active',
+        'is_expert',
     )
 
     search_fields = (
@@ -47,6 +48,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': (
                 'is_active',
                 'is_staff',
+                'is_expert',
                 'is_superuser',
                 'groups',
                 'user_permissions',
@@ -74,6 +76,7 @@ class UserAdmin(BaseUserAdmin):
                 'password2',
                 'is_staff',
                 'is_active',
+                'is_expert',
             ),
         }),
     )
