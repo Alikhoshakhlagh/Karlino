@@ -19,20 +19,10 @@ async function loadCategories() {
 
         categoriesContainer.innerHTML = "";
 
-        categories.slice(0, 10).forEach((category) => {
-            categoriesContainer.innerHTML += `
-<a class="cat-link" href="projects.html?category=${category.id}">
-                <div class="card-Categories">
-                    <div class="icon-cat">
-                        <span>
-                            <i class="${category.icon}"></i>
-                        </span>
-                    </div>
-                    <div class="name-cat">
-                        <p>${category.name}</p>
-                    </div>
-                </div>
-            `;
+        categories.slice(0, 11).forEach((category) => {
+            categoriesContainer.appendChild(
+                createCategoryCard(category)
+            );
         });
 
     } catch (error) {
@@ -123,10 +113,10 @@ async function loadProjects() {
                         <div class="card-pro-cat">
                             <p>${project.primary_category_data.name}</p>
                             <p>${(project.categories_data || [])
-            .find(cat => cat.id !== project.primary_category_data?.id)
+                .find(cat => cat.id !== project.primary_category_data?.id)
 
-            ?.name || ""
-     }
+                ?.name || ""
+            }
 
 </p>
                         </div>

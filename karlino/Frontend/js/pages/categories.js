@@ -32,23 +32,17 @@ function renderPage(page) {
     const end = start + PAGE_SIZE;
     const pageItems = allCategories.slice(start, end);
 
-    // کارت‌های این صفحه را بساز
+    // پاک‌کردن محتوای قبلی
     categoriesContainer.innerHTML = "";
-    pageItems.forEach((category) => {
-        categoriesContainer.innerHTML += `
-<a class="cat-link" href="projects.html?category=${category.id}">
-            <div class="card-Categories">
-                <div class="icon-cat">
-                    <span>
-                        <i class="${category.icon}"></i>
-                    </span>
-                </div>
-                <div class="name-cat">
-                    <p>${category.name}</p>
-                </div>
-            </div>
-        `;
-    });
+
+    // کارت‌های این صفحه را یکی‌یکی بساز
+    for (let index = 0; index < pageItems.length; index++) {
+    const category = pageItems[index];
+
+    categoriesContainer.appendChild(
+        createCategoryCard(category)
+    );
+}
 
     renderPagination();      // دکمه‌های صفحه را به‌روز کن
     window.scrollTo(0, 0);   // برو بالای صفحه
