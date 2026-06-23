@@ -23,3 +23,16 @@ const ENDPOINTS = {
     company: "/api/company/",
     favorites: "/api/favorites/",
 };
+
+
+
+
+// محافظت در برابر XSS: کاراکترهای خطرناک HTML را به معادل بی‌خطرشان تبدیل می‌کند
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
