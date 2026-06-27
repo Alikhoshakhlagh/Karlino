@@ -15,6 +15,7 @@
   box-sizing: border-box;
   color: hsl(221, 100%, 99%);
   font-family: Vazirmatn;
+  color: hsl(221, 100%, 99%);
 }
 
 body {
@@ -1993,7 +1994,14 @@ footer .footer-bottom p {
   letter-spacing: 2px;
 }
 
-.project-info {
+.container-project {
+  height: max-content;
+  width: 80%;
+  border: 1px solid hsl(223, 41%, 21%);
+  border-radius: 32px;
+  margin: 35px auto;
+}
+.container-project .project-info {
   display: grid;
   /* راست | وسط | چپ */
   grid-template-columns: 160px 2fr auto;
@@ -2001,9 +2009,9 @@ footer .footer-bottom p {
   gap: 10px;
   direction: rtl;
   padding: 20px;
-  margin: 30px 40px;
+  margin: 10px 40px;
 }
-.project-info .project-avatar {
+.container-project .project-info .project-avatar {
   grid-area: avatar;
   width: 150px;
   height: 150px;
@@ -2013,35 +2021,35 @@ footer .footer-bottom p {
   background: hsl(222, 39%, 10%);
   border-radius: 12px;
 }
-.project-info .project-avatar i {
+.container-project .project-info .project-avatar i {
   color: hsl(222, 77%, 76%);
   font-size: 56px;
   font-weight: 700;
 }
-.project-info .project-details {
+.container-project .project-info .project-details {
   grid-area: details;
   justify-self: start;
   text-align: right;
 }
-.project-info .project-details .project-title {
+.container-project .project-info .project-details .project-title {
   font-size: 34px;
   color: hsl(221, 100%, 99%);
   margin: 10px 0;
   font-weight: 500;
 }
-.project-info .project-details .project-owner {
+.container-project .project-info .project-details .project-owner {
   display: flex;
   flex-direction: column;
 }
-.project-info .project-details .project-owner .owner-name {
+.container-project .project-info .project-details .project-owner .owner-name {
   font-size: 16px;
 }
-.project-info .project-details .project-owner .owner-name i {
+.container-project .project-info .project-details .project-owner .owner-name i {
   margin-left: 5px;
   color: hsl(222, 77%, 76%);
   font-size: 14px;
 }
-.project-info .project-details .bookmark {
+.container-project .project-info .project-details .bookmark {
   width: 35px;
   height: 35px;
   display: flex;
@@ -2050,14 +2058,14 @@ footer .footer-bottom p {
   cursor: pointer;
   border-radius: 10px;
 }
-.project-info .project-details .bookmark input {
+.container-project .project-info .project-details .bookmark input {
   display: none;
 }
-.project-info .project-details .bookmark input:checked + .svgIcon path {
+.container-project .project-info .project-details .bookmark input:checked + .svgIcon path {
   fill: hsl(9, 31%, 55%);
   animation: bookmark 0.5s linear;
 }
-.project-info .project-details .svgIcon path {
+.container-project .project-info .project-details .svgIcon path {
   stroke: hsl(9, 31%, 55%);
   fill: transparent;
   stroke-dasharray: 200 0;
@@ -2073,16 +2081,16 @@ footer .footer-bottom p {
     stroke-dasharray: 200 0;
   }
 }
-.project-info .project-details .project-bookmark {
+.container-project .project-info .project-details .project-bookmark {
   margin-top: 10px;
   transform: translatex(10px);
 }
-.project-info .project-actions {
+.container-project .project-info .project-actions {
   grid-area: actions;
   align-self: center;
   justify-self: center;
 }
-.project-info .project-actions button {
+.container-project .project-info .project-actions button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2099,12 +2107,12 @@ footer .footer-bottom p {
   cursor: pointer;
   transition: all 0.5s;
 }
-.project-info .project-actions button span {
+.container-project .project-info .project-actions button span {
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-.project-info .project-actions button span::after {
+.container-project .project-info .project-actions button span::after {
   content: "»";
   position: absolute;
   top: 0;
@@ -2112,47 +2120,49 @@ footer .footer-bottom p {
   opacity: 0;
   transition: 0.5s;
 }
-.project-info .project-actions button:hover span {
+.container-project .project-info .project-actions button:hover span {
   padding-right: 15px;
 }
-.project-info .project-actions button:hover span::after {
+.container-project .project-info .project-actions button:hover span::after {
   opacity: 1;
   right: 0;
 }
-.project-info .project-actions button {
+.container-project .project-info .project-actions button {
   margin: 5px;
 }
-.project-info .project-actions .project-submit-btn {
+.container-project .project-info .project-actions .project-submit-btn {
   padding: 20px 40px;
   border-radius: 20px;
   background-color: #fd653c;
   border: none;
   font-size: 20px;
 }
-
-.project-about {
+.container-project .project-info .project-actions .daysAgo {
+  align-self: center;
+  justify-self: center;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.51);
+}
+.container-project .project-about {
   font-size: 16px;
   margin: 20px 60px;
   line-height: 35px;
   height: max-content;
 }
-
-.project-categories {
+.container-project .project-skills {
   margin: 20px 40px;
-  display: flex;
-  justify-content: row;
-  align-items: center;
-  flex-direction: row;
-  gap: 0;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
 }
-.project-categories .title-project-categories {
+.container-project .project-skills .title-project-skills {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  flex-direction: row;
+  white-space: nowrap;
 }
-.project-categories .title-project-categories .ping {
+.container-project .project-skills .title-project-skills .ping {
   --uib-size: 50px;
   --uib-speed: 1s;
   --uib-color: $forth-color;
@@ -2160,7 +2170,7 @@ footer .footer-bottom p {
   width: var(--uib-size);
   height: var(--uib-size);
 }
-.project-categories .title-project-categories .ping::before, .project-categories .title-project-categories .ping::after {
+.container-project .project-skills .title-project-skills .ping::before, .container-project .project-skills .title-project-skills .ping::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -2170,39 +2180,40 @@ footer .footer-bottom p {
   transform: scale(0);
   opacity: 0;
 }
-.project-categories .title-project-categories .ping::after {
+.container-project .project-skills .title-project-skills .ping::after {
   animation-delay: calc(var(--uib-speed) / -2);
 }
-.project-categories .title-project-categories h3 {
+.container-project .project-skills .title-project-skills h3 {
   font-size: 16px;
   color: hsl(221, 100%, 99%);
 }
-.project-categories .card-pro-cat {
+.container-project .project-skills .card-project-skills {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   gap: 5px;
   margin-right: 20px;
+  height: max-content;
+  align-self: center;
 }
-.project-categories .card-pro-cat p {
+.container-project .project-skills .card-project-skills p {
   margin-top: 10px;
   margin-bottom: 5px;
   border: 1.5px solid oklch(76% 0.1 84deg);
-  font-size: 9px;
+  font-size: 11px;
   color: oklch(76% 0.1 84deg);
   border-radius: 12px;
   padding: 5px 10px;
   white-space: nowrap;
   width: max-content;
 }
-
-.project-box {
+.container-project .project-box {
   margin: 20px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
 }
-.project-box .box {
+.container-project .project-box .box {
   transition: 0.3s;
   background-color: hsla(224, 61%, 6%, 0.44);
   border: 1px solid hsl(223, 41%, 21%);
@@ -2213,11 +2224,76 @@ footer .footer-bottom p {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  width: 300px;
-  height: 100px;
+  width: 320px;
+  height: 125px;
 }
-.project-box .box h3 {
+.container-project .project-box .box h3 {
+  text-align: center;
   margin-bottom: 5px;
+  border-bottom: 1px solid hsl(222, 23%, 43%);
+  width: 250px;
+  padding-bottom: 10px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.container-project .project-box .box p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+.container-project .project-categories {
+  margin: 20px 40px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+}
+.container-project .project-categories .title-project-categories {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.container-project .project-categories .title-project-categories .ping {
+  --uib-size: 50px;
+  --uib-speed: 1s;
+  --uib-color: $forth-color;
+  position: relative;
+  width: var(--uib-size);
+  height: var(--uib-size);
+}
+.container-project .project-categories .title-project-categories .ping::before, .container-project .project-categories .title-project-categories .ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: oklch(76% 0.1 84deg);
+  animation: pulse7132 var(--uib-speed) linear infinite;
+  transform: scale(0);
+  opacity: 0;
+}
+.container-project .project-categories .title-project-categories .ping::after {
+  animation-delay: calc(var(--uib-speed) / -2);
+}
+.container-project .project-categories .title-project-categories h3 {
+  font-size: 16px;
+  color: hsl(221, 100%, 99%);
+}
+.container-project .project-categories .card-project-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-right: 20px;
+  height: max-content;
+  align-self: center;
+}
+.container-project .project-categories .card-project-categories p {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border: 1.5px solid oklch(76% 0.1 84deg);
+  font-size: 11px;
+  color: oklch(76% 0.1 84deg);
+  border-radius: 12px;
+  padding: 5px 10px;
+  white-space: nowrap;
+  width: max-content;
 }
 
 .hero-cat {
