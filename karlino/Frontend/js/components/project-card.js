@@ -115,7 +115,7 @@ function createProjectCard(project) {
     ${escapeHtml(ageDays)}
 </span>
 
-                <button class="button" type="button">
+                <a class="button" href="project-detail.html?id=${escapeHtml(projectId)}">
                     <div class="button-box">
                         <span class="button-elem">
                             <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@ function createProjectCard(project) {
                             </svg>
                         </span>
                     </div>
-                </button>
+                </a>
 
             </div>
 
