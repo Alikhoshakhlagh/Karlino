@@ -1156,37 +1156,28 @@ footer .footer-bottom p {
   justify-content: space-between;
   align-items: center;
 }
-.popular-projects .projects-cards .card-project .card-top #checkboxInput {
-  display: none;
-}
 .popular-projects .projects-cards .card-project .card-top .bookmark {
-  margin-left: 20px;
-  cursor: pointer;
   width: 35px;
   height: 35px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  cursor: pointer;
   border-radius: 10px;
-}
-.popular-projects .projects-cards .card-project .card-top .svgIcon path {
-  stroke-dasharray: 200 0;
-  stroke-dashoffset: 0;
-  stroke: hsl(9, 31%, 55%);
-  fill: rgba(221, 221, 221, 0);
-  transition-delay: 0s;
-  transition-duration: 0.5s;
 }
 .popular-projects .projects-cards .card-project .card-top .bookmark input {
   display: none;
 }
-.popular-projects .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path,
-.popular-projects .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
+.popular-projects .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path {
   fill: hsl(9, 31%, 55%);
   animation: bookmark 0.5s linear;
 }
-.popular-projects .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
-  transition-delay: 0.5s;
+.popular-projects .projects-cards .card-project .card-top .svgIcon path {
+  stroke: hsl(9, 31%, 55%);
+  fill: transparent;
+  stroke-dasharray: 200 0;
+  stroke-dashoffset: 0;
+  transition: fill 0.5s, stroke-dasharray 0.5s, stroke-dashoffset 0.5s;
 }
 @keyframes bookmark {
   0% {
@@ -2000,6 +1991,233 @@ footer .footer-bottom p {
   color: oklch(76% 0.05 264deg);
   font-size: 16px;
   letter-spacing: 2px;
+}
+
+.project-info {
+  display: grid;
+  /* راست | وسط | چپ */
+  grid-template-columns: 160px 2fr auto;
+  grid-template-areas: "avatar details actions";
+  gap: 10px;
+  direction: rtl;
+  padding: 20px;
+  margin: 30px 40px;
+}
+.project-info .project-avatar {
+  grid-area: avatar;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsl(222, 39%, 10%);
+  border-radius: 12px;
+}
+.project-info .project-avatar i {
+  color: hsl(222, 77%, 76%);
+  font-size: 56px;
+  font-weight: 700;
+}
+.project-info .project-details {
+  grid-area: details;
+  justify-self: start;
+  text-align: right;
+}
+.project-info .project-details .project-title {
+  font-size: 34px;
+  color: hsl(221, 100%, 99%);
+  margin: 10px 0;
+  font-weight: 500;
+}
+.project-info .project-details .project-owner {
+  display: flex;
+  flex-direction: column;
+}
+.project-info .project-details .project-owner .owner-name {
+  font-size: 16px;
+}
+.project-info .project-details .project-owner .owner-name i {
+  margin-left: 5px;
+  color: hsl(222, 77%, 76%);
+  font-size: 14px;
+}
+.project-info .project-details .bookmark {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.project-info .project-details .bookmark input {
+  display: none;
+}
+.project-info .project-details .bookmark input:checked + .svgIcon path {
+  fill: hsl(9, 31%, 55%);
+  animation: bookmark 0.5s linear;
+}
+.project-info .project-details .svgIcon path {
+  stroke: hsl(9, 31%, 55%);
+  fill: transparent;
+  stroke-dasharray: 200 0;
+  stroke-dashoffset: 0;
+  transition: fill 0.5s, stroke-dasharray 0.5s, stroke-dashoffset 0.5s;
+}
+@keyframes bookmark {
+  0% {
+    stroke-dasharray: 0 200;
+    stroke-dashoffset: 80;
+  }
+  100% {
+    stroke-dasharray: 200 0;
+  }
+}
+.project-info .project-details .project-bookmark {
+  margin-top: 10px;
+  transform: translatex(10px);
+}
+.project-info .project-actions {
+  grid-area: actions;
+  align-self: center;
+  justify-self: center;
+}
+.project-info .project-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 70px;
+  white-space: nowrap;
+  border: none;
+  border-radius: 20px;
+  background-color: #fd653c;
+  color: hsl(221, 100%, 99%);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.project-info .project-actions button span {
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.project-info .project-actions button span::after {
+  content: "»";
+  position: absolute;
+  top: 0;
+  right: -15px;
+  opacity: 0;
+  transition: 0.5s;
+}
+.project-info .project-actions button:hover span {
+  padding-right: 15px;
+}
+.project-info .project-actions button:hover span::after {
+  opacity: 1;
+  right: 0;
+}
+.project-info .project-actions button {
+  margin: 5px;
+}
+.project-info .project-actions .project-submit-btn {
+  padding: 20px 40px;
+  border-radius: 20px;
+  background-color: #fd653c;
+  border: none;
+  font-size: 20px;
+}
+
+.project-about {
+  font-size: 16px;
+  margin: 20px 60px;
+  line-height: 35px;
+  height: max-content;
+}
+
+.project-categories {
+  margin: 20px 40px;
+  display: flex;
+  justify-content: row;
+  align-items: center;
+  flex-direction: row;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+.project-categories .title-project-categories {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+}
+.project-categories .title-project-categories .ping {
+  --uib-size: 50px;
+  --uib-speed: 1s;
+  --uib-color: $forth-color;
+  position: relative;
+  width: var(--uib-size);
+  height: var(--uib-size);
+}
+.project-categories .title-project-categories .ping::before, .project-categories .title-project-categories .ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: oklch(76% 0.1 84deg);
+  animation: pulse7132 var(--uib-speed) linear infinite;
+  transform: scale(0);
+  opacity: 0;
+}
+.project-categories .title-project-categories .ping::after {
+  animation-delay: calc(var(--uib-speed) / -2);
+}
+.project-categories .title-project-categories h3 {
+  font-size: 16px;
+  color: hsl(221, 100%, 99%);
+}
+.project-categories .card-pro-cat {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-right: 20px;
+}
+.project-categories .card-pro-cat p {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border: 1.5px solid oklch(76% 0.1 84deg);
+  font-size: 9px;
+  color: oklch(76% 0.1 84deg);
+  border-radius: 12px;
+  padding: 5px 10px;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.project-box {
+  margin: 20px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.project-box .box {
+  transition: 0.3s;
+  background-color: hsla(224, 61%, 6%, 0.44);
+  border: 1px solid hsl(223, 41%, 21%);
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 300px;
+  height: 100px;
+}
+.project-box .box h3 {
+  margin-bottom: 5px;
 }
 
 .hero-cat {

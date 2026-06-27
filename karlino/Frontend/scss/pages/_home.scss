@@ -639,53 +639,7 @@
         justify-content: space-between;
         align-items: center;
 
-        #checkboxInput {
-          display: none;
-        }
-
-        .bookmark {
-          margin-left: 20px;
-          cursor: pointer;
-          width: 35px;
-          height: 35px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 10px;
-        }
-
-        .svgIcon path {
-          stroke-dasharray: 200 0;
-          stroke-dashoffset: 0;
-          stroke: $danger;
-          fill: #dddddd00;
-          transition-delay: 0s;
-          transition-duration: 0.5s;
-        }
-
-        .bookmark input {
-          display: none;
-        }
-
-        .bookmark input:checked + .svgIcon path,
-        #checkboxInput:checked ~ .svgIcon path {
-          fill: $danger;
-          animation: bookmark 0.5s linear;
-        }
-
-        #checkboxInput:checked ~ .svgIcon path {
-          transition-delay: 0.5s;
-        }
-
-        @keyframes bookmark {
-          0% {
-            stroke-dasharray: 0 200;
-            stroke-dashoffset: 80;
-          }
-          100% {
-            stroke-dasharray: 200 0;
-          }
-        }
+        @include bookmark();
 
         .status-project {
           .active {
