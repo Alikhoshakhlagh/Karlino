@@ -70,10 +70,9 @@ function initializeHeader() {
 
 }
 
-
 async function loadcategory_list() {
 
-    const list = document.getElementById("category-list")
+    const list = document.getElementById("category-list");
 
     try {
         const data = await apiRequest(ENDPOINTS.categories);
@@ -83,20 +82,35 @@ async function loadcategory_list() {
             list.innerHTML = "<li>دسته‌بندی‌ای موجود نیست</li>";
             return;
         }
+
         list.innerHTML = "";
-        data.results.forEach((cat) => {
+
+        for (let i = 0; i < data.results.length; i++) {
+            const cat = data.results[i];
+
             const li = document.createElement("li");
-            li.innerHTML = `
-        <a href="projects.html?category=${cat.id}">
-          ${cat.icon ? `<i class="${cat.icon}"></i>` : ""}
-          ${cat.name}
-        </a>`;
+
+            const a = document.createElement("a");
+            // چون آدرس با متن ثابت "projects.html?..." شروع می‌شود، امن است
+            a.href = "projects.html?category=" + cat.id;
+
+            // اگر آیکون داشت، یک <i> بساز و کلاسش را ست کن
+            if (cat.icon) {
+                const icon = document.createElement("i");
+                icon.className = cat.icon;
+                a.appendChild(icon);
+            }
+
+            // نام دسته را به‌صورت متن خام اضافه کن (این خط، امن‌سازی اصلی است)
+            a.appendChild(document.createTextNode(" " + cat.name));
+
+            li.appendChild(a);
             list.appendChild(li);
-        });
+        }
+
     } catch (err) {
         console.error("خطا در گرفتن دسته‌بندی‌ها:", err);
         list.innerHTML = "<li>خطا در بارگذاری</li>";
     }
 }
-
 

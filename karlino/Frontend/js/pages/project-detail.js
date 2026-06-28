@@ -1,4 +1,3 @@
-// این فایل فقط برای صفحه‌ی جزئیات پروژه است: project-detail.html
 
 // ۱) خواندن id پروژه از آدرس صفحه
 // آدرس به این شکل است: project-detail.html?id=<شناسه‌ی پروژه>
@@ -35,26 +34,23 @@ async function loadProject() {
 }
 
 
-// ۴) پرکردن صفحه با اطلاعات پروژه
 function renderProject(project) {
-  // عنوان
   document.getElementById("project-title").textContent = project.title;
 
-  // نام صاحب پروژه (این فیلد خودش حالت شرکت یا شخص را مدیریت می‌کند)
   document.getElementById("owner-name").textContent = project.display_owner_name;
 
-  // توضیحات
   document.getElementById("project-about-text").textContent = project.description;
 
-  // چند روز پیش ثبت شده
-  document.getElementById("project-days").textContent = daysAgoText(project.created_at);
+  // «چند روز پیش» مستقیم از بک‌اند می‌آید، پس همان را نشان می‌دهیم
+  if (project.project_age_days) {
+    document.getElementById("project-days").textContent = project.project_age_days;
+  } else {
+    document.getElementById("project-days").textContent = "";
+  }
 
-  // بودجه
   document.getElementById("project-budget").textContent = budgetText(project.budget_min, project.budget_max);
 
   // سطح مهارت
-  // توجه: این فیلد هنوز از طرف بک‌اند نهایی نشده. اسم دقیق فیلد را از بک‌اند بپرس
-  // و اگر اسمش چیز دیگری بود، اینجا project.skill_level را عوض کن.
   if (project.skill_level) {
     document.getElementById("project-skill-level").textContent = project.skill_level;
   } else {
@@ -69,34 +65,10 @@ function renderProject(project) {
 
   // دسته‌بندی‌ها
   renderCategories(project.categories_data);
-
-  // اگر پروژه فعال نباشد، اجازه‌ی ارسال درخواست نده
-  if (project.status !== "active") {
-    const applyButton = document.getElementById("apply-button");
-    applyButton.disabled = true;
-    document.getElementById("apply-button-text").textContent = "این پروژه بسته شده است";
-  }
 }
 
 
 // --- توابع کمکی ---
-
-// تبدیل تاریخ ثبت به متن «n روز پیش»
-function daysAgoText(createdAt) {
-  if (!createdAt) {
-    return "";
-  }
-  const created = new Date(createdAt);
-  const now = new Date();
-  const oneDay = 1000 * 60 * 60 * 24;
-  const days = Math.floor((now - created) / oneDay);
-
-  if (days <= 0) {
-    return "امروز";
-  }
-  return days + " روز پیش";
-}
-
 
 // ساخت متن بودجه با مدیریت حالت خالی
 function budgetText(min, max) {
@@ -107,13 +79,13 @@ function budgetText(min, max) {
 
   let text = "";
   if (min) {
-    text = text + Number(min).toLocaleString("fa-IR");
+    text = text + Number(min)
   }
   if (min && max) {
     text = text + " - ";
   }
   if (max) {
-    text = text + Number(max).toLocaleString("fa-IR");
+    text = text + Number(max)
   }
   return text + " تومان";
 }
@@ -200,60 +172,3 @@ function setupFavorite() {
 }
 
 
-// --- فرم ارسال درخواست ---
-function setupApplyForm() {
-  const button = document.getElementById("apply-button");
-  const formBox = document.getElementById("apply-form-box");
-  const submit = document.getElementById("apply-submit");
-
-  // با کلیک روی دکمه‌ی اصلی، فرم باز شود
-  button.addEventListener("click", function () {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    formBox.style.display = "block";
-  });
-
-  // با کلیک روی «ثبت»، درخواست فرستاده شود
-  submit.addEventListener("click", async function () {
-    const coverLetter = document.getElementById("cover-letter").value;
-    const proposedPrice = document.getElementById("proposed-price").value;
-    const messageBox = document.getElementById("apply-message");
-    const token = localStorage.getItem("access");
-
-    const body = {
-      cover_letter: coverLetter,
-      proposed_price: proposedPrice,
-    };
-
-    // اینجا از fetch خام استفاده می‌کنیم (نه apiRequest)
-    // چون می‌خواهیم خطاهای فیلدی بک‌اند را بخوانیم
-    const res = await fetch(BASE_URL + ENDPOINTS.projects + projectId + "/apply/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token,
-      },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      messageBox.textContent = "درخواست شما با موفقیت ثبت شد.";
-    } else {
-      // نمایش خطای بک‌اند
-      if (data.detail) {
-        messageBox.textContent = data.detail;
-      } else if (data.cover_letter) {
-        messageBox.textContent = data.cover_letter[0];
-      } else {
-        messageBox.textContent = "ثبت درخواست با خطا روبه‌رو شد.";
-      }
-    }
-  });
-}
