@@ -11,7 +11,7 @@ from ..categories.serializers import CategorySerializer
 from ..companies.models import Company
 from ..core.messages import *
 
-from .models import Project, ProjectReview
+from .models import Project, Milestone, ProjectReview
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -88,6 +88,15 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     budget_display = serializers.SerializerMethodField()
 
+    deadline_days = serializers.SerializerMethodField()
+
+    owner_icon = serializers.SerializerMethodField()
+
+    skill_level_display = serializers.CharField(
+        source='get_skill_level_display',
+        read_only=True,
+    )
+
     class Meta:
 
         model = Project
@@ -120,10 +129,13 @@ class ProjectSerializer(serializers.ModelSerializer):
             'location',
 
             'deadline',
+            'deadline_days',
 
             'status',
             'review_status',
             'project_mode',
+            'skill_level',
+            'skill_level_display',
 
             'skills',
             'skill_ids',
@@ -133,6 +145,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
             'display_owner_name',
             'is_company_project',
+            'owner_icon',
 
             'project_age_days',
             'created_at',
@@ -219,6 +232,30 @@ class ProjectSerializer(serializers.ModelSerializer):
             )
 
         return None
+
+    @extend_schema_field(serializers.IntegerField)
+    def get_deadline_days(self, obj):
+
+        if not obj.deadline:
+            return None
+
+        days = (
+            obj.deadline
+            - timezone.now().date()
+        ).days
+
+        if days < 0:
+            return 0
+
+        return days
+
+    @extend_schema_field(serializers.CharField)
+    def get_owner_icon(self, obj):
+
+        if obj.is_company_project:
+            return 'fa-building'
+
+        return 'fa-user'
 
     def validate(self, attrs):
 
@@ -417,3 +454,31 @@ class ProjectReviewSerializer(
             )
 
         return attrs
+
+
+class MilestoneSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Milestone
+
+        fields = (
+            'id',
+            'title',
+            'description',
+            'due_date',
+            'status',
+            'delivered_at',
+            'approved_at',
+            'created_at',
+            'updated_at',
+        )
+
+        read_only_fields = (
+            'id',
+            'status',
+            'delivered_at',
+            'approved_at',
+            'created_at',
+            'updated_at',
+        )

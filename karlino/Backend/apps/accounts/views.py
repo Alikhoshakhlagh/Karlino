@@ -8,6 +8,7 @@ from .serializers import (
 )
 
 from ..accounts.models import User
+from ..core.messages import *
 
 class ResetPasswordView(APIView):
 
@@ -42,8 +43,7 @@ class ResetPasswordView(APIView):
             return Response(
                 {
                     'detail': (
-                        'User with this email '
-                        'does not exist.'
+                        USER_NOT_FOUND
                     )
                 },
                 status=status.HTTP_404_NOT_FOUND,

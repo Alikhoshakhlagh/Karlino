@@ -46,6 +46,52 @@ class Bid(TimeStampedUUIDModel):
         blank=True,
     )
 
+    price_score = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+    )
+
+    experience_score = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+    )
+
+    expert_score = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        null=True,
+        blank=True,
+        db_index=True,
+    )
+
+    scored_by = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='scored_bids',
+    )
+
+    scored_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    score_note = models.TextField(
+        blank=True,
+        default='',
+    )
+
+    employer_message = models.TextField(
+        blank=True,
+        default='',
+    )
+
+    employer_message_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
     class Meta:
 
         constraints = [
