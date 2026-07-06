@@ -254,3 +254,219 @@
     }
   }
 }
+
+// ===== پاپ‌آپ ارسال درخواست همکاری =====
+.apply-modal {
+
+  // در حالت عادی مخفی است؛ با کلاس open باز می‌شود
+  display: none;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  &.open {
+    display: flex;
+  }
+
+  .apply-modal-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .apply-modal-card {
+    position: relative;
+    z-index: 1;
+
+    width: 90%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    background: $secondary-color;
+    border: 1px solid $border-muted;
+    border-radius: $radius-lg;
+
+    padding: 28px;
+
+    animation: applyModalIn 0.25s ease;
+
+    .apply-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 6px;
+
+      .apply-title {
+        @include flex(flex-start, center);
+        gap: 10px;
+
+        font-size: $fs-card-title;
+        font-weight: $fw-bold;
+        color: $text-color;
+
+        .ping {
+          @include ping;
+          --uib-size: 22px;
+        }
+      }
+
+      .apply-close {
+        @include flex();
+
+        width: 36px;
+        height: 36px;
+
+        background: $glass-color;
+        border: 1px solid $glass-border;
+        border-radius: 50%;
+
+        color: $gray-color;
+        font-size: $fs-base;
+
+        cursor: pointer;
+        transition: 0.25s;
+
+        &:hover {
+          color: $danger;
+          border-color: $danger;
+        }
+      }
+    }
+
+    .apply-project-name {
+      font-size: $fs-small;
+      color: $gray-color;
+
+      margin-bottom: 16px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      label {
+        position: relative;
+        width: 100%;
+
+        // حذف فلش‌های بالا/پایین اینپوت‌های عددی (کاربر دستی عدد وارد می‌کند)
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        input[type="number"] {
+          -moz-appearance: textfield;
+          appearance: textfield;
+        }
+
+        .input {
+          background-color: $glass-color;
+          color: $text-color;
+          width: 100%;
+          padding: 20px 10px 5px 5px;
+          outline: 0;
+          border: 1px solid rgba(105, 105, 105, 0.397);
+          border-radius: $radius-sm;
+          text-align: right;
+          font-size: medium;
+          font-family: Vazirmatn;
+
+          & + span {
+            color: $text-color;
+            position: absolute;
+            right: 10px;
+            top: 0;
+            font-size: $fs-small;
+            cursor: text;
+            transition: 0.3s ease;
+          }
+
+          &:placeholder-shown + span {
+            top: 12.5px;
+            font-size: $fs-small;
+          }
+
+          &:focus + span,
+          &:not(:placeholder-shown) + span {
+            padding-top: 6px;
+            color: $primary-color;
+            top: 0;
+            font-size: 0.7em;
+            font-weight: $fw-bold;
+          }
+        }
+      }
+
+      .apply-textarea {
+        min-height: 130px;
+        resize: vertical;
+      }
+
+      .apply-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .apply-success {
+        color: $success;
+        font-size: $fs-small;
+      }
+
+      .submit {
+        align-self: flex-start;
+        border: none;
+        outline: none;
+        padding: 12px 32px;
+        border-radius: $radius-sm;
+        color: $text-color;
+        font-size: $fs-base;
+        font-family: Vazirmatn;
+        cursor: pointer;
+        transition: 0.3s ease;
+        background-color: $primary-color;
+
+        &:hover {
+          transform: scale(1.03);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+
+  @include respond(xs) {
+    .apply-modal-card {
+      .form {
+        .apply-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
+
+@keyframes applyModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

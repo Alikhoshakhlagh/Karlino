@@ -1,4 +1,3 @@
-
 // ۱) خواندن id پروژه از آدرس صفحه
 // آدرس به این شکل است: project-detail.html?id=<شناسه‌ی پروژه>
 const params = new URLSearchParams(window.location.search);
@@ -65,6 +64,9 @@ function renderProject(project) {
 
   // دسته‌بندی‌ها
   renderCategories(project.categories_data);
+
+  // اسم پروژه را داخل پاپ‌آپ درخواست هم نشان بده
+  document.getElementById("apply-project-name").textContent = "پروژه: " + project.title;
 }
 
 
@@ -172,3 +174,126 @@ function setupFavorite() {
 }
 
 
+// ===== پاپ‌آپ ارسال درخواست همکاری =====
+function setupApplyForm() {
+
+  const applyButton = document.getElementById("apply-button");
+  const applyModal = document.getElementById("apply-modal");
+  const applyOverlay = document.getElementById("apply-modal-overlay");
+  const applyClose = document.getElementById("apply-close");
+  const applyForm = document.getElementById("apply-form");
+
+  // --- بازکردن پاپ‌آپ با دکمه‌ی «ارسال درخواست» ---
+  applyButton.addEventListener("click", function () {
+
+    // ارسال درخواست نیاز به لاگین دارد
+    const token = localStorage.getItem("access");
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    applyModal.classList.add("open");
+  });
+
+  // --- بستن پاپ‌آپ ---
+  function closeModal() {
+    applyModal.classList.remove("open");
+  }
+
+  applyClose.addEventListener("click", closeModal);
+  applyOverlay.addEventListener("click", closeModal);
+
+  // --- ارسال فرم ---
+  applyForm.addEventListener("submit", async function (event) {
+
+    event.preventDefault(); // جلوی رفرش‌شدن صفحه را می‌گیرد
+
+    // پاک‌کردن پیام‌های دفعه‌ی قبل
+    document.getElementById("error-cover_letter").textContent = "";
+    document.getElementById("error-proposed_price").textContent = "";
+    document.getElementById("error-duration_days").textContent = "";
+    document.getElementById("error-apply-form").textContent = "";
+    document.getElementById("success-apply").textContent = "";
+
+    const token = localStorage.getItem("access");
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    // قیمت و مدت زمان اختیاری هستند؛ اگر خالی بودند null بفرست
+    const priceValue = document.getElementById("apply-price").value;
+    const durationValue = document.getElementById("apply-duration").value;
+
+    let proposedPrice = null;
+    if (priceValue !== "") {
+      proposedPrice = priceValue;
+    }
+
+    let durationDays = null;
+    if (durationValue !== "") {
+      durationDays = durationValue;
+    }
+
+    const body = {
+      cover_letter: document.getElementById("apply-cover").value,
+      proposed_price: proposedPrice,
+      duration_days: durationDays
+    };
+
+    try {
+      const response = await fetch(BASE_URL + ENDPOINTS.projects + projectId + "/apply/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+
+      // درخواست با موفقیت ثبت شد
+      if (response.ok) {
+        document.getElementById("success-apply").textContent =
+          "درخواست شما با موفقیت ارسال شد. وضعیت آن را می‌توانید در پنل کاربری دنبال کنید.";
+
+        applyForm.reset();
+
+        // دکمه‌ی اصلی صفحه را هم به حالت «ارسال شد» ببر
+        document.getElementById("apply-button-text").textContent = "درخواست ارسال شد";
+
+        // بعد از ۲ ثانیه پاپ‌آپ را ببند تا کاربر پیام موفقیت را ببیند
+        setTimeout(function () {
+          closeModal();
+          document.getElementById("success-apply").textContent = "";
+        }, 2000);
+
+        return;
+      }
+
+      // خطاهای فیلدی سرور
+      if (data.cover_letter) {
+        document.getElementById("error-cover_letter").textContent = data.cover_letter[0];
+      }
+      if (data.proposed_price) {
+        document.getElementById("error-proposed_price").textContent = data.proposed_price[0];
+      }
+      if (data.duration_days) {
+        document.getElementById("error-duration_days").textContent = data.duration_days[0];
+      }
+
+      // خطاهای کلی سرور (مثلاً: قبلاً درخواست داده‌اید / پروژه‌ی خودتان است)
+      if (data.non_field_errors) {
+        document.getElementById("error-apply-form").textContent = data.non_field_errors[0];
+      }
+      if (data.detail) {
+        document.getElementById("error-apply-form").textContent = data.detail;
+      }
+
+    } catch (error) {
+      document.getElementById("error-apply-form").textContent = "ارتباط با سرور برقرار نشد";
+    }
+  });
+}

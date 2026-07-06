@@ -91,6 +91,56 @@
 
 </section>
 
+<!-- ===== پاپ‌آپ ارسال درخواست همکاری ===== -->
+<div class="apply-modal" id="apply-modal">
+
+    <!-- پس‌زمینه‌ی تیره؛ با کلیک روی آن پاپ‌آپ بسته می‌شود -->
+    <div class="apply-modal-overlay" id="apply-modal-overlay"></div>
+
+    <div class="apply-modal-card">
+
+        <div class="apply-modal-top">
+            <h2 class="apply-title">
+                <div class="ping"></div>
+                ارسال درخواست همکاری
+            </h2>
+            <button type="button" class="apply-close" id="apply-close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <p class="apply-project-name" id="apply-project-name"></p>
+
+        <form class="form" id="apply-form" novalidate>
+
+            <label>
+                <textarea class="input apply-textarea" id="apply-cover" placeholder=" "></textarea>
+                <span>چرا کارفرما باید شما را انتخاب کند؟</span>
+            </label>
+            <span class="field-error" id="error-cover_letter"></span>
+
+            <div class="apply-row">
+                <label>
+                    <input class="input" type="number" id="apply-price" placeholder=" ">
+                    <span>قیمت پیشنهادی (تومان)</span>
+                </label>
+                <label>
+                    <input class="input" type="number" id="apply-duration" placeholder=" ">
+                    <span>مدت زمان انجام (روز)</span>
+                </label>
+            </div>
+            <span class="field-error" id="error-proposed_price"></span>
+            <span class="field-error" id="error-duration_days"></span>
+
+            <p class="field-error" id="error-apply-form"></p>
+            <p class="apply-success" id="success-apply"></p>
+
+            <button type="submit" class="submit">ثبت درخواست</button>
+        </form>
+
+    </div>
+</div>
+
 <div id="footer-placeholder"></div>
 
 <script src="js/config.js"></script>
