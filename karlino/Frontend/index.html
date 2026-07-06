@@ -7,6 +7,8 @@
     <title>سایت فریلنسری</title>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
 </head>
 
 <body>
@@ -14,35 +16,41 @@
 <div id="header-placeholder"></div>
 
 <section class="hero-index">
-    <div class="image">
-        <img src="assets/images/charecter.png" class="hero-img">
-    </div>
-    <h1 class="hero-text">
-        <span class="build">ایده‌هات</span>
-        رو واقعی کن.
-        <br>
-        با آدم‌های حرفه‌ای همکاری کن.
-    </h1>
-    
-    <p class="intro">
-        با افراد حرفه‌ای همکاری کن، پروژه‌های واقعی بساز و فرصت‌هایی پیدا کن که با مهارت، خلاقیت و مسیر رشدت هماهنگن —
-        همه در یک پلتفرم مدرن برای کار و همکاری.
-    </p>
-    
-    <div class="search-input">
+    <!--    <div class="image">-->
+    <!--        <img src="assets/images/charecter.png" class="hero-img">-->
+    <!--    </div>-->
+    <div class="center">
+        <h1 class="hero-text">
+            <span class="build">ایده‌هات</span>
+            رو واقعی کن.
+            <br>
+            با آدم‌های حرفه‌ای همکاری کن.
+        </h1>
         
-        <input
-                type="search"
-                class="search"
-                name="search"
-                placeholder="جستجوی پروژه، مهارت یا تخصص..."
-        >
+        <p class="intro">
+            با افراد حرفه‌ای همکاری کن، پروژه‌های واقعی بساز و فرصت‌هایی پیدا کن که با مهارت، خلاقیت و مسیر رشدت هماهنگن
+            —
+            همه در یک پلتفرم مدرن برای کار و همکاری.
+        </p>
         
-        <button class="find-talent">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    
+        <div class="search-input">
+            
+            <input
+                    type="search"
+                    id="indexSearch"
+                    type="search"
+                    class="search"
+                    name="search"
+                    placeholder="جستجوی پروژه، مهارت یا تخصص..."
+            >
+            
+            <button class="find-talent" type="button">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        
+        </div>
     </div>
+    
     
     <div class="trending-categories">
         
@@ -189,20 +197,38 @@
             مشاهده همه مهارت‌ها
             <i class="fa-solid fa-arrow-left"></i>
         </a>
-    
     </div>
     
     <div class="Categories-cards" id="categoriesContainer">
     
+    </div>
+</section>
+
+<section class="post_job">
+    <div class="right">
+        <i class="fa-solid fa-rocket"></i>
+        <div class="text-post">
+            <h2 class="title">به دنبال نیروی متخصص هستید؟</h2>
+            <p>
+                ایده یا پروژه‌ای در ذهن دارید؟ تنها در چند دقیقه پروژه خود را ثبت کنید،
+                <br>
+                پیشنهادهای فریلنسرهای متخصص را دریافت کنید و مناسب‌ترین فرد را برای همکاری انتخاب کنید
+            </p>
+        </div>
+        <span class="post">ثبت پروژه</span>
     
     </div>
+<!--    <div class="left">-->
+<!--            <span class="post">ثبت پروژه</span>-->
+<!--        </div>-->
+
 </section>
 
 <section class="popular-projects">
     <div class="title-projects">
         <h2 class="project-text">
             <div class="ping"></div>
-            پروژه ها
+            پرطرفدارترین پروژه ها
         </h2>
         
         <a href="projects.html" class="more-project">
@@ -213,72 +239,6 @@
     
     </div>
     <div class="projects-cards" id="projectsContainer">
-        <div class="card-project">
-            <div class="card-top">
-                <div class="icon-project">
-                <span>
-                    <i class="fa-solid fa-palette" id="user"> </i>
-                </span>
-                </div>
-                <label for="checkboxInput" class="bookmark">
-                    <input type="checkbox" id="checkboxInput"/>
-                    <svg
-                            width="15"
-                            viewBox="0 0 50 70"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="svgIcon"
-                    >
-                        <path
-                                d="M46 62.0085L46 3.88139L3.99609 3.88139L3.99609 62.0085L24.5 45.5L46 62.0085Z"
-                                stroke="black"
-                                stroke-width="7"
-                        ></path>
-                    </svg>
-                </label>
-            </div>
-            <div class="card-content">
-                <h2 class="name-company">
-                    <i class="fa-solid fa-user"></i>
-                    علی خوش اخلاق
-                </h2>
-                <h3>طراحی پوستر</h3>
-                <div class="card-pro-cat">
-                    <p class="categori">طراحی گرافیک</p>
-                    <p class="categori">تولید محتوا</p>
-                
-                </div>
-                
-                <div class="price">
-                    <span>تومان</span>
-                    <span class="number">5,500 - 3,000</span>
-                </div>
-            
-            </div>
-            <div class="card-footer">
-                <span class="daysAgo">8 روز پیش</span>
-                <button class="button">
-                    <div class="button-box">
-<span class="button-elem">
-  <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
-    <path
-            d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"
-    ></path>
-  </svg>
-</span>
-                        <span class="button-elem">
-  <svg viewBox="0 0 46 40">
-    <path
-            d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"
-    ></path>
-  </svg>
-</span>
-                    </div>
-                </button>
-            
-            
-            </div>
-        </div>
     
     
     </div>
@@ -288,8 +248,11 @@
 
 <div id="footer-placeholder"></div>
 
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
 
 <script src="js/layout.js"></script>
+<script src="js/pages/Favorites.js"></script>
 <script src="js/pages/home.js"></script>
 
 

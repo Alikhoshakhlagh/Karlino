@@ -1,309 +1,216 @@
-const categories = [
-    {
-        title: "توسعه وب",
-        projects: "12,500+",
-        icon: "fa-solid fa-code"
-    },
+// ===== پرطرفدارترین دسته‌بندی‌ها — از API =====
 
-    {
-        title: "UI/UX Design",
-        projects: "8,200+",
-        icon: "fa-solid fa-pen-ruler"
-    },
-    {
-        title: "امنیت شبکه",
-        projects: "2,100+",
-        icon: "fa-solid fa-shield-halved"
-    },
+const categoriesContainer = document.getElementById("categoriesContainer");
 
-    {
-        title: "هوش مصنوعی",
-        projects: "5,100+",
-        icon: "fa-solid fa-robot"
-    },
+async function loadCategories() {
+    categoriesContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
-    {
-        title: "Graphic Design",
-        projects: "6,500+",
-        icon: "fa-solid fa-palette"
-    },
+    try {
+        const response = await fetch(BASE_URL + ENDPOINTS.categories);
+        if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
-    {
-        title: "تولید محتوا",
-        projects: "5,900+",
-        icon: "fa-solid fa-video"
-    },
+        const data = await response.json();
+        const categories = data.results;
 
-    {
-        title: "دیجیتال مارکتینگ",
-        projects: "7,400+",
-        icon: "fa-solid fa-bullhorn"
-    },
+        if (!categories.length) {
+            categoriesContainer.innerHTML = "<p>دسته‌بندی‌ای موجود نیست.</p>";
+            return;
+        }
 
-    {
-        title: "برنامه نویسی موبایل",
-        projects: "4,800+",
-        icon: "fa-solid fa-mobile-screen"
-    },
+        categoriesContainer.innerHTML = "";
 
-    {
-        title: "سئو و بهینه سازی",
-        projects: "3,700+",
-        icon: "fa-solid fa-chart-line"
-    },
+        categories.slice(0, 10).forEach((category) => {
+            categoriesContainer.innerHTML += `
+<a class="cat-link" href="projects.html?category=${category.id}">
+                <div class="card-Categories">
+                    <div class="icon-cat">
+                        <span>
+                            <i class="${category.icon}"></i>
+                        </span>
+                    </div>
+                    <div class="name-cat">
+                        <p>${category.name}</p>
+                    </div>
+                </div>
+            `;
+        });
 
-    {
-        title: "ویرایش ویدیو",
-        projects: "4,300+",
-        icon: "fa-solid fa-film"
-    },
-
-    {
-        title: "ترجمه و زبان",
-        projects: "2,900+",
-        icon: "fa-solid fa-language"
-    },
-
-    {
-        title: "ورود داده و تایپ",
-        projects: "3,200+",
-        icon: "fa-solid fa-keyboard"
+    } catch (error) {
+        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+        categoriesContainer.innerHTML =
+            "<p class='field-error'>خطا در دریافت دسته‌بندی‌ها.</p>";
     }
-];
+}
 
-const container = document.getElementById("categoriesContainer");
+loadCategories();
 
-categories.slice(0, 10).forEach(category => {
 
-    container.innerHTML += `
-
-        <div class="card-Categories">
-
-            <div class="icon-cat">
-                <span>
-                    <i class="${category.icon}"></i>
-                </span>
-            </div>
-
-            <div class="name-cat">
-                <p>${category.title}</p>
-            </div>
-
-            <div class="project-stats">
-                <h3 class="count">${category.projects}</h3>
-                <p class="lable">پروژه</p>
-            </div>
-
-        </div>
-
-    `;
-
-});
-
-const projects = [
-    {
-        owner: "نیلوفر زمانی",
-        title: "تدوین ویدیو اینستاگرام",
-        categories: ["تدوین ویدیو", "شبکه اجتماعی"],
-        price: "7,000 - 4,500",
-        daysAgo: "3 روز پیش",
-        icon: "fa-solid fa-video"
-    },
-
-    {
-        owner: "پارسا نیکخواه",
-        title: "طراحی داشبورد مدیریتی",
-        categories: ["UI/UX", "طراحی وب"],
-        price: "15,000 - 10,000",
-        daysAgo: "6 روز پیش",
-        icon: "fa-solid fa-chart-line"
-    },
-
-    {
-        owner: "ریحانه موسوی",
-        title: "تولید محتوای بلاگ",
-        categories: ["تولید محتوا", "SEO"],
-        price: "6,000 - 3,500",
-        daysAgo: "4 روز پیش",
-        icon: "fa-solid fa-pen"
-    },
-
-    {
-        owner: "آرین شریفی",
-        title: "طراحی بنر تبلیغاتی",
-        categories: ["طراحی گرافیک", "تبلیغات"],
-        price: "3,500 - 1,500",
-        daysAgo: "9 روز پیش",
-        icon: "fa-solid fa-image"
-    },
-
-    {
-        owner: "مبینا اسدی",
-        title: "طراحی اپلیکیشن فروشگاهی",
-        categories: ["Mobile App", "UI Design"],
-        price: "18,000 - 12,000",
-        daysAgo: "1 روز پیش",
-        icon: "fa-solid fa-mobile"
-    },
-
-    {
-        owner: "عرفان تهرانی",
-        title: "پیاده سازی پنل ادمین",
-        categories: ["توسعه وب", "React"],
-        price: "14,000 - 9,000",
-        daysAgo: "7 روز پیش",
-        icon: "fa-solid fa-laptop-code"
-    },
-
-    {
-        owner: "هلیا رستگار",
-        title: "طراحی کارت ویزیت حرفه‌ای",
-        categories: ["چاپ", "برندینگ"],
-        price: "2,500 - 1,000",
-        daysAgo: "2 روز پیش",
-        icon: "fa-solid fa-id-card"
-    },
-
-    {
-        owner: "کیان مرادی",
-        title: "ساخت موشن گرافیک تبلیغاتی",
-        categories: ["موشن گرافیک", "تبلیغات"],
-        price: "11,000 - 7,500",
-        daysAgo: "10 روز پیش",
-        icon: "fa-solid fa-film"
-    },
-
-    {
-        owner: "شایان اکبری",
-        title: "بهینه سازی سئو سایت",
-        categories: ["SEO", "دیجیتال مارکتینگ"],
-        price: "9,500 - 5,000",
-        daysAgo: "5 روز پیش",
-        icon: "fa-solid fa-magnifying-glass-chart"
-    },
-
-    {
-        owner: "ترانه حیدری",
-        title: "طراحی لندینگ پیج محصول",
-        categories: ["Landing Page", "UI/UX"],
-        price: "13,000 - 8,500",
-        daysAgo: "امروز",
-        icon: "fa-solid fa-window-maximize"
-    },
-];
+// ===== پروژه‌ها — از API =====
 
 const projectsContainer = document.getElementById("projectsContainer");
 
-projectsContainer.innerHTML = "";
+async function loadProjects() {
+    projectsContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
-projects.slice(0, 8).forEach((project, index) => {
+    try {
 
-    projectsContainer.innerHTML += `
+        const response = await fetch(BASE_URL + ENDPOINTS.projects);
+        if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
-    <div class="card-project">
+        const data = await response.json();
+        const projects = data.results;
 
-        <div class="card-top">
+        if (!projects.length) {
+            projectsContainer.innerHTML = "<p>پروژه‌ای موجود نیست.</p>";
+            return;
+        }
 
-            <div class="icon-project">
-                <span>
-                    <i class="${project.icon}"></i>
-                </span>
-            </div>
+        projectsContainer.innerHTML = "";
 
-            <label for="checkbox-${index}" class="bookmark">
+        projects.slice(0, 8).forEach((project, index) => {
 
-                <input 
-                    type="checkbox" 
-                    id="checkbox-${index}"
-                />
+            // دسته‌بندی‌های اضافی (بدون تکرارِ دسته‌ی اصلی)
+            const others = (project.categories_data || [])
+                .filter(cat => cat.id !== project.primary_category_data.id);
 
-                <svg
-                    width="15"
-                    viewBox="0 0 50 70"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="svgIcon"
-                >
-                    <path
-                        d="M46 62.0085L46 3.88139L3.99609 3.88139L3.99609 62.0085L24.5 45.5L46 62.0085Z"
-                        stroke="black"
-                        stroke-width="7"
-                    ></path>
-                </svg>
+            projectsContainer.innerHTML += `
+                <div class="card-project">
 
-            </label>
+                    <div class="card-top">
 
-        </div>
+                        <div class="icon-project">
+                            <span>
+                                <i class="${project.primary_category_data.icon}"></i>
+                            </span>
+                        </div>
 
-        <div class="card-content">
+                        <div class="status-project">
+                            <span class="active">${project.status}</span>
+                        </div>
 
-            <h2 class="owner">
-                <i class="fa-solid fa-user"></i>
-                ${project.owner}
-            </h2>
+                        <label for="checkbox-${index}" class="bookmark">
+                            <input
+                                type="checkbox"
+                                id="checkbox-${index}"
+                                data-id="${project.id}"
+                            />
+                            <svg
+                                width="15"
+                                viewBox="0 0 50 70"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="svgIcon"
+                            >
+                                <path
+                                    d="M46 62.0085L46 3.88139L3.99609 3.88139L3.99609 62.0085L24.5 45.5L46 62.0085Z"
+                                    stroke="black"
+                                    stroke-width="7"
+                                ></path>
+                            </svg>
+                        </label>
 
-            <h3>${project.title}</h3>
+                    </div>
 
-            <div class="card-pro-cat">
+                    <div class="card-content">
 
-                ${project.categories.map(category => `
-                
-                    <p class="categori">
-                        ${category}
-                    </p>
+                        <h2 class="owner">
+                            <i class="fa-solid fa-user"></i>
+                            ${project.display_owner_name}
+                        </h2>
 
-                `).join("")}
+                        <h3>${project.title}</h3>
 
-            </div>
+                        <div class="card-pro-cat">
+                            <p>${project.primary_category_data.name}</p>
+                            <p>${(project.categories_data || [])
+            .find(cat => cat.id !== project.primary_category_data?.id)
 
-            <div class="price">
-                <span>تومان</span>
-                <span class="number">${project.price}</span>
-            </div>
+            ?.name || ""
+     }
 
-        </div>
+</p>
+                        </div>
 
-        <div class="card-footer">
+                        <div class="price">
+                            <span>تومان</span>
+                            <span class="number">
+                                ${Number(project.budget_min).toLocaleString()}
+                                -
+                                ${Number(project.budget_max).toLocaleString()}
+                            </span>
+                        </div>
 
-            <span class="daysAgo">
-                ${project.daysAgo}
-            </span>
+                    </div>
 
-            <button class="button" type="button">
+                    <div class="card-footer">
 
-                <div class="button-box">
+                        <span class="daysAgo">
+                            ${(project.project_age_days)}
+                        </span>
 
-                    <span class="button-elem">
+                        <button class="button" type="button">
+                            <div class="button-box">
+                                <span class="button-elem">
+                                    <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                    </svg>
+                                </span>
+                                <span class="button-elem">
+                                    <svg viewBox="0 0 46 40">
+                                        <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        </button>
 
-                        <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
-
-                            <path
-                                d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"
-                            ></path>
-
-                        </svg>
-
-                    </span>
-
-                    <span class="button-elem">
-
-                        <svg viewBox="0 0 46 40">
-
-                            <path
-                                d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"
-                            ></path>
-
-                        </svg>
-
-                    </span>
+                    </div>
 
                 </div>
+            `;
+        });
 
-            </button>
+        // ← مهم: بعد از ساختن کارت‌ها، بوکمارک‌ها را راه‌اندازی کن
+        // (هم به کلیک‌ها گوش می‌دهد، هم علاقه‌مندی‌های قبلی را تیک می‌زند)
+        await initBookmarks();
 
-        </div>
+    } catch (error) {
+        console.error("خطا در دریافت پروژه‌ها:", error);
+        projectsContainer.innerHTML =
+            "<p class='field-error'>خطا در دریافت پروژه‌ها.</p>";
+    }
+}
 
-    </div>
+loadProjects();
 
-    `;
-});
+// ===== جستجوی صفحه‌ی اصلی → هدایت به صفحه‌ی پروژه‌ها =====
+
+const indexSearch = document.getElementById("indexSearch");
+const indexSearchBtn = document.querySelector(".find-talent");
+
+function goToProjectsSearch() {
+    const text = indexSearch.value.trim();
+
+    // اگر خالی بود، فقط برو صفحه‌ی پروژه‌ها بدون سرچ
+    if (text === "") {
+        window.location.href = "projects.html";
+        return;
+    }
+
+    window.location.href = "projects.html?search=" + encodeURIComponent(text);
+}
+
+// Enter داخل کادر
+if (indexSearch) {
+    indexSearch.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            goToProjectsSearch();
+        }
+    });
+}
+
+// کلیک روی دکمه‌ی ذره‌بین
+if (indexSearchBtn) {
+    indexSearchBtn.addEventListener("click", function () {
+        goToProjectsSearch();
+    });
+}

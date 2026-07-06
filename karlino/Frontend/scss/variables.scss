@@ -1,15 +1,50 @@
 //for color
-$primary-color:#FF653F;
-//$secondary-color: #14336A;
-$secondary-color: #0d204b;
-$secondary-color-box:rgba(20, 51, 106, 0.44);
-$text-color: #F8FAFC;
-$gray-color: rgba(255, 255, 255, 0.51);
-$glass-color: rgba(217, 217, 217, 0.14);
+$primary-color: #fd653c;              // طلایی-ملایم — کنش اصلی
 
-//bacground
-//$main-background:linear-gradient(177.6deg, rgba(20, 0, 113, 1) 15.3%, rgba(1, 0, 62, 1) 91.3%);
-$main-background:linear-gradient(177.6deg, rgb(16, 16, 40) 15.3%, rgb(3, 3, 24) 91.3%);
+$secondary-color: hsl(222 39% 10%);           // آبی — کنش ثانویه
+
+$secondary-color-box: hsl(224 61% 6% / 0.44); // باکس/کارت (هم‌نقشِ قبلی)
+
+$third-color:hsl(222 77% 76%);
+$forth-color:oklch(0.76 0.1 84);
+
+$text-color: hsl(221 100% 99%);
+$gray-color: oklch(0.76 0.05 264);
+$mute-color:rgba(255, 255, 255, 0.51);
+
+$glass-color: hsl(222 39% 10%);
+$glass-border: hsl(222 23% 43% / 0.30);
+$glass-highlight: hsl(221 100% 99% / 0.05);
+
+// borders
+$highlight: hsl(222 23% 43%);
+
+$border: hsl(222 30% 32%); //border asli
+
+$border-muted: hsl(223 41% 21%); // its better
+
+// alerts
+$danger: hsl(9 31% 55%);
+$warning:oklch(0.76 0.1 84);
+$success: hsl(147 21% 58%);
+$info: hsl(217 34% 65%);
+
+$main-background:hsl(231 83% 3%);
+
+
+//--bg: hsl(224 61% 6%);
+//--bg-light: hsl(222 39% 10%);
+//
+//
+//--highlight: hsl(222 23% 43%);
+
+//--border-muted: hsl(223 41% 21%);
+//--primary: hsl(222 77% 76%);
+//--secondary: hsl(42 52% 60%);
+//--danger: hsl(9 31% 65%);
+//--warning: hsl(52 22% 56%);
+//--success: hsl(147 21% 58%);
+//--info: hsl(217 34% 65%);
 
 //for radius
 $radius-sm: 12px;
@@ -28,3 +63,11 @@ $fw-regular: 400;
 $fw-medium: 500;
 $fw-bold: 700;
 
+// Layout
+$container-max: 1346px;   // هم‌اندازه‌ی هدرت
+
+// Breakpoints (desktop-first → max-width)
+$bp-lg: 1280px;
+$bp-md: 992px;
+$bp-sm: 768px;
+$bp-xs: 480px;

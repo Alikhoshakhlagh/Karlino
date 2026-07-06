@@ -5,9 +5,7 @@ fetch('./components/header.html')
 
     .then(data => {
 
-        document.getElementById(
-            'header-placeholder'
-        ).innerHTML = data;
+        document.getElementById('header-placeholder').innerHTML = data;
 
         initializeHeader();
 
@@ -21,26 +19,19 @@ fetch('./components/footer.html')
 
     .then(data => {
 
-        document.getElementById(
-            'footer-placeholder'
-        ).innerHTML = data;
+        document.getElementById('footer-placeholder').innerHTML = data;
 
     });
-
-
 
 
 // ── مدیریت هدر ─────────────────────────────
 function initializeHeader() {
 
-    const guestHeader =
-        document.querySelector('.guest-header');
+    const guestHeader = document.querySelector('.guest-header');
 
-    const userHeader =
-        document.querySelector('.user-header');
+    const userHeader = document.querySelector('.user-header');
 
-    const logoutBtn =
-        document.querySelector('.logout');
+    const logoutBtn = document.querySelector('.logout');
 
 
     const user = JSON.parse(
@@ -75,5 +66,37 @@ function initializeHeader() {
         });
 
     }
+    loadcategory_list();
 
 }
+
+
+async function loadcategory_list() {
+
+    const list = document.getElementById("category-list")
+
+    try {
+        const data = await apiRequest(ENDPOINTS.categories);
+
+        // اگه چیزی نبود
+        if (!data.results || data.results.length === 0) {
+            list.innerHTML = "<li>دسته‌بندی‌ای موجود نیست</li>";
+            return;
+        }
+        list.innerHTML = "";
+        data.results.forEach((cat) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+        <a href="projects.html?category=${cat.id}">
+          ${cat.icon ? `<i class="${cat.icon}"></i>` : ""}
+          ${cat.name}
+        </a>`;
+            list.appendChild(li);
+        });
+    } catch (err) {
+        console.error("خطا در گرفتن دسته‌بندی‌ها:", err);
+        list.innerHTML = "<li>خطا در بارگذاری</li>";
+    }
+}
+
+
