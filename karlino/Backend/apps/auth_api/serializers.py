@@ -1,14 +1,26 @@
 from django.db.models import Count, Q
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from drf_spectacular.utils import extend_schema_field
 
-from ..accounts.models import User
+from ..accounts.models import User, UserSession
 from ..applications.models import Application
 from ..bids.models import Bid
+from ..bids.serializers import WonBidSerializer
 from ..core.messages import *
 from ..favorites.models import Favorite
 from ..projects.models import Project
+
+
+class PersianTokenObtainPairSerializer(
+    TokenObtainPairSerializer
+):
+
+    default_error_messages = {
+        'no_active_account': INVALID_CREDENTIALS,
+    }
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -185,3 +197,80 @@ class DashboardSerializer(
     pending_review_projects_count = serializers.IntegerField(
         required=False
     )
+
+class ChangePasswordSerializer(
+    serializers.Serializer
+):
+
+    old_password = serializers.CharField(
+        write_only=True,
+    )
+
+    new_password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        error_messages={
+            'min_length': PASSWORD_TOO_SHORT,
+        },
+    )
+
+    confirm_password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        error_messages={
+            'min_length': PASSWORD_TOO_SHORT,
+        },
+    )
+
+    def validate_old_password(self, value):
+
+        user = self.context['request'].user
+
+        if not user.check_password(value):
+
+            raise serializers.ValidationError(
+                OLD_PASSWORD_INCORRECT
+            )
+
+        return value
+
+    def validate_new_password(self, value):
+
+        validate_password(value)
+
+        return value
+
+    def validate(self, attrs):
+
+        if (
+            attrs['new_password']
+            != attrs['confirm_password']
+        ):
+
+            raise serializers.ValidationError({
+                'confirm_password': (
+                    PASSWORD_NOT_MATCH
+                )
+            })
+
+        return attrs
+
+
+class UserSessionSerializer(
+    serializers.ModelSerializer
+):
+
+    class Meta:
+
+        model = UserSession
+
+        fields = (
+            'id',
+            'user_agent',
+            'ip_address',
+            'created_at',
+            'updated_at',
+            'expires_at',
+        )
+
+        read_only_fields = fields

@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.db.models import ManyToManyField
 
-from .. import categories
+from .. import categories, accounts
 from ..core.models import TimeStampedUUIDModel
 from ..categories.models import Category
 from .managers import UserManager
@@ -45,3 +45,38 @@ class User(TimeStampedUUIDModel, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.full_name} ({self.email})'
+
+class UserSession(TimeStampedUUIDModel):
+    user = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name='login_sessions',
+    )
+
+    jti = models.CharField(
+        max_length=255,
+        db_index=True,
+    )
+
+    user_agent = models.TextField(
+        blank=True,
+        default='',
+    )
+
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+    )
+
+    expires_at = models.DateTimeField()
+
+    revoked = models.BooleanField(
+        default=False,
+        db_index=True,
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.user.email} ({self.jti})'
