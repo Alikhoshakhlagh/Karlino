@@ -6,7 +6,7 @@ async function loadCategories() {
     categoriesContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/categories/");
+        const response = await fetch(BASE_URL + ENDPOINTS.categories);
         if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
         const data = await response.json();
@@ -21,6 +21,7 @@ async function loadCategories() {
 
         categories.slice(0, 10).forEach((category) => {
             categoriesContainer.innerHTML += `
+<a class="cat-link" href="projects.html?category=${category.id}">
                 <div class="card-Categories">
                     <div class="icon-cat">
                         <span>
@@ -52,7 +53,8 @@ async function loadProjects() {
     projectsContainer.innerHTML = "<p>در حال بارگذاری...</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/projects/");
+
+        const response = await fetch(BASE_URL + ENDPOINTS.projects);
         if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
         const data = await response.json();
@@ -179,3 +181,36 @@ async function loadProjects() {
 }
 
 loadProjects();
+
+// ===== جستجوی صفحه‌ی اصلی → هدایت به صفحه‌ی پروژه‌ها =====
+
+const indexSearch = document.getElementById("indexSearch");
+const indexSearchBtn = document.querySelector(".find-talent");
+
+function goToProjectsSearch() {
+    const text = indexSearch.value.trim();
+
+    // اگر خالی بود، فقط برو صفحه‌ی پروژه‌ها بدون سرچ
+    if (text === "") {
+        window.location.href = "projects.html";
+        return;
+    }
+
+    window.location.href = "projects.html?search=" + encodeURIComponent(text);
+}
+
+// Enter داخل کادر
+if (indexSearch) {
+    indexSearch.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            goToProjectsSearch();
+        }
+    });
+}
+
+// کلیک روی دکمه‌ی ذره‌بین
+if (indexSearchBtn) {
+    indexSearchBtn.addEventListener("click", function () {
+        goToProjectsSearch();
+    });
+}

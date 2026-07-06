@@ -1,7 +1,3 @@
-// ===== favorites.js — منطق مشترک علاقه‌مندی‌ها =====
-// مهم: این فایل باید «قبل از» home.js و projects.js لود شود
-
-const FAV_BASE = "http://127.0.0.1:8000";
 
 // ── گرفتن id پروژه‌هایی که کاربر علاقه‌مند کرده ──
 async function getFavoriteIds() {
@@ -9,7 +5,7 @@ async function getFavoriteIds() {
     if (!token) return []; // لاگین نیست → لیست خالی
 
     try {
-        const response = await fetch(`${FAV_BASE}/api/favorites/`, {
+        const response = await fetch(BASE_URL + ENDPOINTS.favorites, {
             headers: { "Authorization": "Bearer " + token }
         });
         if (!response.ok) return [];
@@ -50,7 +46,7 @@ async function toggleFavorite(projectId) {
     }
 
     try {
-        const response = await fetch(`${FAV_BASE}/api/favorites/${projectId}/toggle/`, {
+        const response = await fetch(BASE_URL + ENDPOINTS.favorites + projectId + "/toggle/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
