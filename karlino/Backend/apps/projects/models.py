@@ -12,6 +12,7 @@ class Project(TimeStampedUUIDModel):
         DRAFT = 'draft', 'Draft'
         ACTIVE = 'active', 'Active'
         CLOSED = 'closed', 'Closed'
+        COMPLETED = 'completed', 'Completed'
         ARCHIVED = 'archived', 'Archived'
 
     class ProjectMode(models.TextChoices):
@@ -23,6 +24,12 @@ class Project(TimeStampedUUIDModel):
         APPROVED = 'approved', 'Approved'
         REJECTED = 'rejected', 'Rejected'
         NEEDS_REVISION = 'needs_revision', 'Needs Revision'
+
+    class SkillLevel(models.TextChoices):
+        NONE = 'none', 'بدون نیاز به مهارت'
+        BEGINNER = 'beginner', 'مبتدی'
+        INTERMEDIATE = 'intermediate', 'متوسط'
+        EXPERT = 'expert', 'حرفه‌ای'
 
     creator = models.ForeignKey(
         'accounts.User',
@@ -58,7 +65,7 @@ class Project(TimeStampedUUIDModel):
     )
 
     title = models.CharField(
-        max_length=27,
+        max_length=120,
         db_index=True
     )
 
@@ -107,6 +114,13 @@ class Project(TimeStampedUUIDModel):
         choices=ProjectMode.choices,
         default=ProjectMode.SIMPLE,
         db_index=True
+    )
+
+    skill_level = models.CharField(
+        max_length=20,
+        choices=SkillLevel.choices,
+        default=SkillLevel.NONE,
+        db_index=True,
     )
 
     review_status = models.CharField(
@@ -172,3 +186,58 @@ class ProjectReview(TimeStampedUUIDModel):
         blank=True,
         default='',
     )
+
+
+class Milestone(TimeStampedUUIDModel):
+    """
+    Delivery stage of a project after a winner is picked.
+    pending -> delivered (by the winner) -> approved (by the owner).
+    """
+
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        DELIVERED = 'delivered', 'Delivered'
+        APPROVED = 'approved', 'Approved'
+
+    project = models.ForeignKey(
+        'projects.Project',
+        on_delete=models.CASCADE,
+        related_name='milestones',
+    )
+
+    title = models.CharField(
+        max_length=120,
+    )
+
+    description = models.TextField(
+        blank=True,
+        default='',
+    )
+
+    due_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+        db_index=True,
+    )
+
+    delivered_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    approved_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'{self.project.title} - {self.title}'
