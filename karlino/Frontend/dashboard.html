@@ -10,6 +10,305 @@
 </head>
 <body>
 <div id="header-placeholder"></div>
+
+<section class="dashboard-layout">
+    
+    <!-- ===== منوی کناری پنل ===== -->
+    <aside class="dashboard-sidebar">
+        
+        <div class="sidebar-user">
+            <div class="avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="user-info">
+                <p class="user-name" id="sidebarUserName">...</p>
+                <p class="user-email" id="sidebarUserEmail"></p>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-section="section-summary">
+                <i class="fa-solid fa-gauge"></i>
+                <span>خلاصه وضعیت</span>
+            </button>
+            <button class="nav-item" data-section="section-my-projects">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>پروژه‌های من</span>
+            </button>
+            <button class="nav-item" data-section="section-my-applications">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>درخواست‌های من</span>
+            </button>
+            <button class="nav-item" data-section="section-my-bids">
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <span>پیشنهادهای من</span>
+            </button>
+            <button class="nav-item" data-section="section-favorites">
+                <i class="fa-solid fa-bookmark"></i>
+                <span>پروژه‌های ذخیره‌شده</span>
+            </button>
+            <button class="nav-item" data-section="section-incoming-applications">
+                <i class="fa-solid fa-inbox"></i>
+                <span>درخواست‌های دریافتی</span>
+            </button>
+            <button class="nav-item" data-section="section-incoming-bids">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <span>پیشنهادهای دریافتی</span>
+            </button>
+            <button class="nav-item" data-section="section-charts">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>نمودارها</span>
+            </button>
+            <button class="nav-item" data-section="section-profile">
+                <i class="fa-solid fa-id-card"></i>
+                <span>پروفایل کاربر</span>
+            </button>
+            <button class="nav-item" data-section="section-company">
+                <i class="fa-solid fa-building"></i>
+                <span>پروفایل شرکت</span>
+            </button>
+            <button class="nav-item" data-section="section-security">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>امنیت</span>
+            </button>
+        </nav>
+    
+    </aside>
+    
+    <!-- ===== محتوای پنل ===== -->
+    <div class="dashboard-content">
+        
+        <!-- خلاصه وضعیت -->
+        <section class="dashboard-section" id="section-summary">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                خلاصه وضعیت
+            </h2>
+            <div class="stat-cards" id="summaryCards">
+                <p class="loading-text">در حال بارگذاری...</p>
+            </div>
+        </section>
+        
+        <!-- پروژه‌های من -->
+        <section class="dashboard-section hidden" id="section-my-projects">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پروژه‌های من
+            </h2>
+            <div class="items-list" id="myProjectsList"></div>
+        </section>
+        
+        <!-- درخواست‌های من -->
+        <section class="dashboard-section hidden" id="section-my-applications">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                درخواست‌های من
+            </h2>
+            <div class="items-list" id="myApplicationsList"></div>
+        </section>
+        
+        <!-- پیشنهادهای من -->
+        <section class="dashboard-section hidden" id="section-my-bids">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پیشنهادهای من
+            </h2>
+            <div class="items-list" id="myBidsList"></div>
+        </section>
+        
+        <!-- پروژه‌های ذخیره‌شده -->
+        <section class="dashboard-section hidden" id="section-favorites">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پروژه‌های ذخیره‌شده
+            </h2>
+            <div class="items-list" id="favoritesList"></div>
+        </section>
+        
+        <!-- درخواست‌های دریافتی -->
+        <section class="dashboard-section hidden" id="section-incoming-applications">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                درخواست‌های دریافتی
+            </h2>
+            <div class="items-list" id="incomingApplicationsList"></div>
+        </section>
+        
+        <!-- پیشنهادهای دریافتی -->
+        <section class="dashboard-section hidden" id="section-incoming-bids">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پیشنهادهای دریافتی
+            </h2>
+            <div class="items-list" id="incomingBidsList"></div>
+        </section>
+        
+        <!-- نمودارها -->
+        <section class="dashboard-section hidden" id="section-charts">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                نمودارها
+            </h2>
+            <div class="charts-grid" id="chartsContainer"></div>
+        </section>
+        
+        <!-- پروفایل کاربر -->
+        <section class="dashboard-section hidden" id="section-profile">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پروفایل کاربر
+            </h2>
+            
+            <form class="dashboard-form" id="profile-form">
+                
+                <label>
+                    <input class="input" type="email" id="profile-email" placeholder=" " disabled>
+                    <span>ایمیل (غیرقابل تغییر)</span>
+                </label>
+                
+                <div class="form-row">
+                    <label>
+                        <input class="input" type="text" id="profile-first-name" placeholder=" ">
+                        <span>نام</span>
+                    </label>
+                    <label>
+                        <input class="input" type="text" id="profile-last-name" placeholder=" ">
+                        <span>نام خانوادگی</span>
+                    </label>
+                </div>
+                <span class="field-error" id="error-first_name"></span>
+                <span class="field-error" id="error-last_name"></span>
+                
+                <label>
+                    <input class="input" type="text" id="profile-phone" placeholder=" ">
+                    <span>شماره تماس</span>
+                </label>
+                <span class="field-error" id="error-phone"></span>
+                
+                <div class="form-row">
+                    <label class="select-label">
+                        <select class="input" id="profile-gender">
+                            <option value="male">مرد</option>
+                            <option value="female">زن</option>
+                        </select>
+                        <span class="fixed-span">جنسیت</span>
+                    </label>
+                    <label>
+                        <input class="input" type="date" id="profile-birth" placeholder=" ">
+                        <span class="fixed-span">تاریخ تولد</span>
+                    </label>
+                </div>
+                <span class="field-error" id="error-gender"></span>
+                <span class="field-error" id="error-date_of_birth"></span>
+                
+                <span class="field-error" id="error-profile-form"></span>
+                <span class="form-success" id="success-profile"></span>
+                
+                <button type="submit" class="submit-btn">
+                    <span>ذخیره تغییرات</span>
+                </button>
+            </form>
+        </section>
+        
+        <!-- پروفایل شرکت -->
+        <section class="dashboard-section hidden" id="section-company">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                پروفایل شرکت
+                <span class="verify-badge hidden" id="companyVerified">
+                    <i class="fa-solid fa-circle-check"></i>
+                    تأییدشده
+                </span>
+            </h2>
+            
+            <form class="dashboard-form" id="company-form">
+                
+                <label>
+                    <input class="input" type="text" id="company-name" placeholder=" ">
+                    <span>نام شرکت</span>
+                </label>
+                <span class="field-error" id="error-name"></span>
+                
+                <label>
+                    <textarea class="input textarea" id="company-description" placeholder=" "></textarea>
+                    <span>توضیحات</span>
+                </label>
+                <span class="field-error" id="error-description"></span>
+                
+                <div class="form-row">
+                    <label>
+                        <input class="input ltr-input" type="url" id="company-website" placeholder=" ">
+                        <span>وب‌سایت</span>
+                    </label>
+                    <label>
+                        <input class="input" type="text" id="company-phone" placeholder=" ">
+                        <span>شماره تماس</span>
+                    </label>
+                </div>
+                <span class="field-error" id="error-website"></span>
+                <span class="field-error" id="error-company-phone"></span>
+                
+                <label>
+                    <input class="input" type="text" id="company-address" placeholder=" ">
+                    <span>آدرس</span>
+                </label>
+                <span class="field-error" id="error-address"></span>
+                
+                <span class="field-error" id="error-company-form"></span>
+                <span class="form-success" id="success-company"></span>
+                
+                <button type="submit" class="submit-btn">
+                    <span>ذخیره اطلاعات شرکت</span>
+                </button>
+            </form>
+        </section>
+        
+        <!-- امنیت: نشست‌ها + تغییر رمز -->
+        <section class="dashboard-section hidden" id="section-security">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                نشست‌های فعال
+            </h2>
+            <div class="items-list" id="sessionsList"></div>
+            
+            <h2 class="section-title security-title">
+                <div class="ping"></div>
+                تغییر رمز عبور
+            </h2>
+            
+            <form class="dashboard-form" id="password-form">
+                
+                <label>
+                    <input class="input" type="password" id="old-password" placeholder=" ">
+                    <span>رمز عبور فعلی</span>
+                </label>
+                <span class="field-error" id="error-old_password"></span>
+                
+                <label>
+                    <input class="input" type="password" id="new-password" placeholder=" ">
+                    <span>رمز عبور جدید</span>
+                </label>
+                <span class="field-error" id="error-new_password"></span>
+                
+                <label>
+                    <input class="input" type="password" id="confirm-password" placeholder=" ">
+                    <span>تکرار رمز عبور جدید</span>
+                </label>
+                <span class="field-error" id="error-confirm_password"></span>
+                
+                <span class="field-error" id="error-password-form"></span>
+                <span class="form-success" id="success-password"></span>
+                
+                <button type="submit" class="submit-btn">
+                    <span>تغییر رمز عبور</span>
+                </button>
+            </form>
+        </section>
+    
+    </div>
+
+</section>
+
 <div id="footer-placeholder"></div>
 
 <script src="js/config.js"></script>
