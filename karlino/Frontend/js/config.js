@@ -8,10 +8,16 @@ const ENDPOINTS = {
     profile: "/api/auth/profile/",
     resetPassword: "/api/auth/resetpassword/",
     verifyOtp: "/api/auth/verify-otp/",
+    dashboard: "/api/auth/dashboard/",
+    charts: "/api/auth/profile/charts/",
+    changePassword: "/api/auth/change-password/",
+    sessions: "/api/auth/sessions/",
 
     // projects
     projects: "/api/projects/",
     myPosted: "/api/projects/my_posted/",
+    myBids: "/api/projects/my-bids/",
+    incomingBids: "/api/projects/incoming-bids/",
 
     // applications
     myApplications: "/api/applications/me/",
