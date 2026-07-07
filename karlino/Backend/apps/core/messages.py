@@ -228,6 +228,14 @@ PRICE_SCORE_INVALID = (
     'امتیاز قیمت باید عددی بین ۱ تا ۵ باشد.'
 )
 
+PRICE_BELOW_BUDGET = (
+    'قیمت پیشنهادی نمی‌تواند کمتر از حداقل بودجه پروژه باشد.'
+)
+
+PRICE_ABOVE_BUDGET = (
+    'قیمت پیشنهادی نمی‌تواند بیشتر از حداکثر بودجه پروژه باشد.'
+)
+
 EXPERIENCE_SCORE_INVALID = (
     'امتیاز سابقه باید عددی بین ۱ تا ۵ باشد.'
 )
@@ -280,4 +288,17 @@ RESUME_PRIVATE = (
 
 EXPERIENCE_NOT_FOUND = (
     'سابقه کاری موردنظر یافت نشد.'
+)
+
+# Application (accept / reject)
+APPLICATION_NOT_PENDING = (
+    'این درخواست در وضعیت «در انتظار» نیست و قابل تغییر نیست.'
+)
+
+APPLICATION_ACCEPTED = (
+    'درخواست با موفقیت تأیید شد.'
+)
+
+APPLICATION_REJECTED = (
+    'درخواست رد شد.'
 )
