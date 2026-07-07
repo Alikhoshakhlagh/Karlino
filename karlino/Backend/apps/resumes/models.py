@@ -1,6 +1,7 @@
 from django.db import models
 
-from apps.core.models import TimeStampedUUIDModel
+from .. import accounts
+from ..core.models import TimeStampedUUIDModel
 
 
 class Resume(TimeStampedUUIDModel):
@@ -76,7 +77,6 @@ class ResumeExperience(TimeStampedUUIDModel):
 
     start_date = models.DateField()
 
-    # null means "still working here"
     end_date = models.DateField(
         null=True,
         blank=True,
