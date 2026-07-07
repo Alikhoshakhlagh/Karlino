@@ -1371,7 +1371,7 @@ footer .footer-bottom p {
 .hero-project-page .title-hero-pro h3 {
   position: relative;
   left: 3px;
-  top: -53px;
+  top: -70px;
   font-size: 56px;
   font-weight: 700;
   line-height: 1.4;
@@ -1428,7 +1428,7 @@ footer .footer-bottom p {
 
 .project-layout {
   direction: ltr;
-  margin: 0 40px 0 40px;
+  margin: 80px 40px 0 40px;
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 30px;
