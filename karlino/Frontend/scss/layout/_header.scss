@@ -2,10 +2,10 @@
 @use '../mixins' as *;
 
 #header-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex();
+
   position: sticky;
+
   top: 10px;
   z-index: 999;
 
@@ -19,16 +19,15 @@
 
     background: $secondary-color;
     border-radius: $radius-lg;
+    border: 1px solid $border-muted;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include flex(space-between, center);
 
     .right {
 
       .logo {
-        display: flex;
-        align-items: center;
+        @include flex();
+
         gap: 10px;
 
         img {
@@ -46,103 +45,130 @@
     }
 
     .navbar {
-
       ul {
-        display: flex;
-        align-items: center;
+        @include flex(row, 25px);
+
         gap: 25px;
 
         list-style: none;
 
         li {
           position: relative;
+          @include flex(row);
+          gap:25px ;
 
           a {
+            @include flex();
+
             position: relative;
 
-            display: flex;
-            align-items: center;
             gap: 6px;
 
-            text-decoration: none;
             color: $text-color;
 
             font-size: $fs-base;
+
             font-weight: $fw-medium;
 
             transition: 0.3s;
 
-            &:hover {
-              color: $primary-color;
-            }
-
-            &::after {
-              content: "";
-
-              position: absolute;
-
-              right: 0;
-              bottom: -6px;
-
-              width: 0;
-              height: 2px;
-
-              background: $primary-color;
-
-              transition: 0.3s;
-            }
-
-            &:hover::after {
-              width: 100%;
-            }
+            @include hover-underline();
 
             i {
               font-size: 12px;
+              transition: transform 0.3s;
             }
+
           }
 
           .dropdown {
             position: absolute;
+            top: calc(100% + 35px);
+            right: -250px;
 
-            top: 130%;
-            right: 0;
 
-            min-width: 180px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 4px;
+
+            min-width: 340px;
+            padding: 10px;
 
             background: $secondary-color;
+            border-radius: $radius-md;
 
-            border-radius: $radius-sm;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border: 1px solid $highlight;
 
-            padding: 10px 0;
 
-            display: none;
-            flex-direction: column;
-
-            gap: 5px;
-
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-
+            // مخفی + انیمیشن
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
             z-index: 100;
+
+            // فلش کوچک بالای منو
+            &::before {
+              content: "";
+              position: absolute;
+              top: -6px;
+              right: 24px;
+              width: 12px;
+              height: 12px;
+              background: $secondary-color;
+              border-top: 1px solid rgba(0, 0, 0, 0.05);
+              border-left: 1px solid rgba(0, 0, 0, 0.05);
+              transform: rotate(45deg);
+            }
 
             li {
               width: 100%;
 
               a {
-                padding: 10px 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                padding: 10px 12px;
+                border-radius: $radius-sm;
+
+                font-size: $fs-small;
+                color: $text-color;
+
+                white-space: nowrap;
+                transition: background 0.2s, color 0.2s;
 
                 &::after {
                   display: none;
                 }
 
+                i {
+                  font-size:$fs-small;
+                  color: $third-color;
+                  width: 18px;
+                  text-align: center;
+                }
+
                 &:hover {
                   background: $glass-color;
+                  color: $primary-color;
                 }
               }
             }
           }
 
+          // نمایش هنگام hover
           &:hover .dropdown {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+          }
+
+          // چرخش فلش هنگام باز شدن
+          &:hover > a i {
+            transform: rotate(720deg);
           }
         }
       }
@@ -150,8 +176,8 @@
 
     .left {
       .guest-header {
-        display: flex;
-        align-items: center;
+        @include flex();
+
         gap: 15px;
 
         .sign-up {
@@ -162,9 +188,9 @@
 
           background: $primary-color;
 
-          color: white;
+          color: $text-color;
 
-          font-size: 15px;
+          font-size:$fs-small;
           font-weight: $fw-bold;
 
           cursor: pointer;
@@ -177,7 +203,7 @@
         }
 
         .login {
-          color: $text-color;
+          color: $third-color;
 
           font-size: 15px;
           font-weight: $fw-medium;
@@ -194,8 +220,8 @@
 
       .user-header {
         //after login & regester
-        display: flex;
-        align-items: center;
+        @include flex();
+
         gap: 15px;
 
         .popup {
@@ -213,9 +239,7 @@
             border-radius: 50%;
             background: $primary-color;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @include flex();
 
             cursor: pointer;
             transition: 0.25s ease;
@@ -242,7 +266,7 @@
             width: 260px;
 
             background: $secondary-color;
-            border: 1px solid $gray-color;
+            border: 1px solid $border;
             border-radius: $radius-md;
 
             padding: 12px;
@@ -258,7 +282,7 @@
 
             .popup-header {
               padding: 10px 12px 15px;
-              border-bottom: 1px solid #f1f1f1;
+              border-bottom: 1px solid $highlight;
               margin-bottom: 10px;
 
               h3 {
@@ -308,7 +332,7 @@
                   }
 
                   &:hover {
-                    background: $primary-color;
+                    background: $info;
                     color: $text-color;
                   }
                 }
@@ -317,7 +341,7 @@
                   color: red;
 
                   &:hover {
-                    background: #ef4444;
+                    background:$danger;
                     color: $text-color;
                   }
                 }
@@ -352,7 +376,7 @@
           }
 
           &:hover {
-            background-color: $primary-color;
+            background-color:$warning;
 
             i {
               animation: bellRing 0.9s both;

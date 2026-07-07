@@ -1,160 +1,101 @@
+const form = document.getElementById("register-form");
 
+// جعبه‌های خطا را یک‌بار می‌گیریم تا پایین راحت استفاده شوند
+const firstnameError = document.getElementById("error-firstname");
+const lastnameError = document.getElementById("error-lastname");
+const emailError = document.getElementById("error-email");
+const passwordError = document.getElementById("error-password");
+const confirmPasswordError = document.getElementById("error-confirmPassword");
+const genderError = document.getElementById("error-gender");
+const formError = document.getElementById("error-form");
 
-const form = document.getElementById('register-form');
-const firstNameInput = document.getElementById('first-name');
-const lastNameInput = document.getElementById('last-name');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const confirmPasswordInput = document.getElementById('confirm-password');
-const submitBtn = document.querySelector('.submit');
+form.addEventListener("submit", async function (event) {
 
-// ── نمایش ارور برای input های معمولی ──
-function showError(inputEl, message) {
-    inputEl.style.borderColor = '#ff4444';
+    event.preventDefault(); // جلوی رفرش صفحه
 
-    const label = inputEl.closest('label');
-    let errorEl = label.querySelector('.error-msg');
+    // پاک‌کردن خطاهای قبلی: متن خالی + برداشتن کلاس show تا دوباره مخفی شوند
+    firstnameError.textContent = "";
+    lastnameError.textContent = "";
+    emailError.textContent = "";
+    passwordError.textContent = "";
+    confirmPasswordError.textContent = "";
+    genderError.textContent = "";
+    formError.textContent = "";
 
-    if (!errorEl) {
-        errorEl = document.createElement('p');
-        errorEl.className = 'error-msg';
-        errorEl.style.cssText = 'color:#ff4444; font-size:12px; margin-top:4px;';
-        label.appendChild(errorEl);
+    // خواندن مقادیری که کاربر تایپ کرده
+    const firstName = document.getElementById("first-name").value;
+    const lastName = document.getElementById("last-name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
+    // خواندن جنسیت انتخاب‌شده (اگر چیزی انتخاب نشده، خالی می‌ماند)
+    const genderInput = document.querySelector('input[name="gender"]:checked');
+    const gender = genderInput ? genderInput.value : "";
+
+    try {
+        // درخواست ثبت‌نام — همه‌ی فیلدها فرستاده می‌شوند
+        const response = await fetch(BASE_URL + ENDPOINTS.register, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                password: password,
+                confirm_password: confirmPassword,
+                gender: gender
+            })
+        });
+
+        // پاسخ سرور را می‌خوانیم
+        const data = await response.json();
+
+        if (response.ok) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        // ── خطاهای فیلدی از بک‌اند (هر کدام آرایه است، [0] اولین پیام) ──
+
+        if (data.first_name) {
+            firstnameError.textContent = data.first_name[0];
+        }
+        if (data.last_name) {
+            lastnameError.textContent = data.last_name[0];
+
+        }
+        if (data.email) {
+            emailError.textContent = data.email[0];
+
+        }
+        if (data.password) {
+            passwordError.textContent = data.password[0];
+
+        }
+        if (data.confirm_password) {
+            confirmPasswordError.textContent = data.confirm_password[0];
+
+        }
+        if (data.gender) {
+            genderError.textContent = data.gender[0];
+
+        }
+
+        // ── خطای کلی (بدون فیلد مشخص) ──
+        if (data.non_field_errors) {
+            formError.textContent = data.non_field_errors[0];
+            formError.classList.add("show");
+        }
+        if (data.detail) {
+            formError.textContent = data.detail;
+            formError.classList.add("show");
+        }
+
+    } catch (error) {
+        // سرور در دسترس نبود → پیام خودمان
+        formError.textContent = "ارتباط با سرور برقرار نشد";
+        formError.classList.add("show");
     }
-
-    errorEl.textContent = message;
-}
-
-// ── پاک کردن ارور برای input های معمولی ──
-function clearError(inputEl) {
-    inputEl.style.borderColor = '';
-    const label = inputEl.closest('label');
-    const errorEl = label.querySelector('.error-msg');
-    if (errorEl) errorEl.textContent = '';
-}
-
-// ── نمایش ارور برای gender (جداست چون radio box ساختار فرق داره) ──
-function showGenderError(message) {
-    const genderOptions = document.querySelector('.gender-options');
-
-    let errorEl = document.querySelector('.gender-error');
-    if (!errorEl) {
-        errorEl = document.createElement('p');
-        errorEl.className = 'gender-error';
-        errorEl.style.cssText = 'color:#ff4444; font-size:12px; margin-top:6px;';
-        genderOptions.parentElement.appendChild(errorEl);
-    }
-
-    errorEl.textContent = message;
-}
-
-// ── پاک کردن ارور gender ──
-function clearGenderError() {
-    const errorEl = document.querySelector('.gender-error');
-    if (errorEl) errorEl.textContent = '';
-}
-
-// ── loading state دکمه ──
-function setLoading(isLoading) {
-    if (isLoading) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'در حال ثبت‌نام...';
-        submitBtn.style.opacity = '0.7';
-        submitBtn.style.cursor = 'not-allowed';
-    } else {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'ثبت‌نام';
-        submitBtn.style.opacity = '1';
-        submitBtn.style.cursor = 'pointer';
-    }
-}
-
-// ── submit ──
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const firstName = firstNameInput.value.trim();
-    const lastName = lastNameInput.value.trim();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
-
-    // گرفتن مقدار gender — null میشه اگه هیچکدام انتخاب نشده باشه
-    const selectedGender = document.querySelector('input[name="gender"]:checked');
-
-    // پاک کردن ارورهای قبلی
-    clearError(firstNameInput);
-    clearError(lastNameInput);
-    clearError(emailInput);
-    clearError(passwordInput);
-    clearError(confirmPasswordInput);
-    clearGenderError();
-
-    let hasError = false;
-
-    if (firstName.length < 2) {
-        showError(firstNameInput, 'نام باید حداقل ۲ کاراکتر باشد');
-        hasError = true;
-    }
-    if (lastName.length < 2) {
-        showError(lastNameInput, 'نام خانوادگی باید حداقل ۲ کاراکتر باشد');
-        hasError = true;
-    }
-    if (!email.includes('@') || !email.includes('.')) {
-        showError(emailInput, 'ایمیل معتبر نیست');
-        hasError = true;
-    }
-    if (password.length < 8) {
-        showError(passwordInput, 'رمز باید حداقل ۸ کاراکتر باشد');
-        hasError = true;
-    }
-    if (password !== confirmPassword) {
-        showError(confirmPasswordInput, 'رمز عبور و تکرار آن یکسان نیستند');
-        hasError = true;
-    }
-
-    // چک کردن gender
-    if (!selectedGender) {
-        showGenderError('لطفاً جنسیت را انتخاب کنید');
-        hasError = true;
-    }
-
-    if (hasError) return;
-
-
-    // اطلاعات کاربر
-    const userData = {
-
-        first_name: firstName,
-
-        last_name: lastName,
-
-        email: email,
-
-        password: password,
-
-        gender: selectedGender.value,
-
-        isLoggedIn: true
-    };
-
-
-    // ذخیره در localStorage
-    localStorage.setItem(
-        'user',
-        JSON.stringify(userData)
-    );
-
-
-    // loading
-    setLoading(true);
-
-
-    // redirect به صفحه اصلی
-    setTimeout(function () {
-
-        window.location.href = 'index.html';
-
-    }, 1500);
 
 });

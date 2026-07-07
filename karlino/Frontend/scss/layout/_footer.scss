@@ -7,7 +7,7 @@ footer {
   min-height: 240px;
   margin-top: 50px;
   padding: 20px 20px 0 20px;
-  border-top: 2px solid $primary-color;
+  border-top: 2px solid $border;
 
   .footer-container {
     display: grid;
@@ -40,7 +40,7 @@ footer {
       p {
         margin-top: 10px;
         font-size: $fs-base;
-        color: $gray-color;
+        color: $text-color;
       }
 
       .card {
@@ -51,7 +51,6 @@ footer {
         align-items: center;
         justify-content: center;
         gap: 20px;
-
         padding: 25px;
 
         background-color: transparent;
@@ -59,7 +58,7 @@ footer {
         .socialContainer {
           width: 52px;
           height: 52px;
-
+          border: 1px solid $border-muted;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -67,7 +66,7 @@ footer {
           overflow: hidden;
 
           border-radius: 50%;
-          background-color: $secondary-color-box;
+          background-color: $glass-color;
 
           transition: 0.3s;
 
@@ -141,7 +140,7 @@ footer {
       a {
         margin-top: 10px;
         font-size: $fs-base;
-        color: $gray-color;
+
         font-weight: $fw-medium;
         transition: 0.3s;
 
@@ -167,12 +166,12 @@ footer {
         display: flex;
         align-items: center;
         gap: 10px;
-        color: $gray-color;
+        color: $text-color;
         transition: 0.3s;
 
         i {
 
-          color: $primary-color;
+          color: $third-color;
 
           font-size: 16px;
 
@@ -180,7 +179,7 @@ footer {
 
         span {
           direction: ltr;
-          color: $gray-color;
+          color: $text-color;
           font-size: $fs-base;
           font-weight: $fw-medium;
 
@@ -210,6 +209,7 @@ footer {
     align-items: center;
     justify-content: center;
     margin-top: -20px;
+
     p {
       color: $gray-color;
       font-size: $fs-small;

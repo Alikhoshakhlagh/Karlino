@@ -1,101 +1,96 @@
-const categories = [
-    {
-        title: "توسعه وب",
-        projects: "12,500+",
-        icon: "fa-solid fa-code"
-    },
+const categoriesContainer = document.getElementById("categoriesContainer");
+const paginationContainer = document.querySelector(".category-pagination");
 
-    {
-        title: "UI/UX Design",
-        projects: "8,200+",
-        icon: "fa-solid fa-pen-ruler"
-    },
-    {
-        title: "امنیت شبکه",
-        projects: "2,100+",
-        icon: "fa-solid fa-shield-halved"
-    },
+const PAGE_SIZE = 20;       // تعداد کارت در هر صفحه
+let currentPage = 1;        // صفحه‌ی فعلی
+let allCategories = [];      // همه‌ی دسته‌بندی‌ها را یک‌بار از سرور می‌گیریم
 
-    {
-        title: "هوش مصنوعی",
-        projects: "5,100+",
-        icon: "fa-solid fa-robot"
-    },
+// ── گرفتن «همه‌ی» دسته‌بندی‌ها از همه‌ی صفحه‌های سرور ──
+async function fetchAllCategories() {
+    let all = [];
+    let url = BASE_URL + ENDPOINTS.categories;
 
-    {
-        title: "Graphic Design",
-        projects: "6,500+",
-        icon: "fa-solid fa-palette"
-    },
+    // تا وقتی صفحه‌ی بعدی وجود دارد، ادامه بده
+    while (url) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
 
-    {
-        title: "تولید محتوا",
-        projects: "5,900+",
-        icon: "fa-solid fa-video"
-    },
-
-    {
-        title: "دیجیتال مارکتینگ",
-        projects: "7,400+",
-        icon: "fa-solid fa-bullhorn"
-    },
-
-    {
-        title: "برنامه نویسی موبایل",
-        projects: "4,800+",
-        icon: "fa-solid fa-mobile-screen"
-    },
-
-    {
-        title: "سئو و بهینه سازی",
-        projects: "3,700+",
-        icon: "fa-solid fa-chart-line"
-    },
-
-    {
-        title: "ویرایش ویدیو",
-        projects: "4,300+",
-        icon: "fa-solid fa-film"
-    },
-
-    {
-        title: "ترجمه و زبان",
-        projects: "2,900+",
-        icon: "fa-solid fa-language"
-    },
-
-    {
-        title: "ورود داده و تایپ",
-        projects: "3,200+",
-        icon: "fa-solid fa-keyboard"
+        const data = await response.json();
+        all = all.concat(data.results); // نتایج این صفحه را اضافه کن
+        url = data.next;                // لینک صفحه‌ی بعد، یا null اگر تمام شد
     }
-];
 
-const container = document.getElementById("categoriesContainer");
+    return all;
+}
 
-categories.slice(0, 10).forEach(category => {
+// ── نمایش یک صفحه‌ی مشخص ──
+function renderPage(page) {
+    currentPage = page;
 
-    container.innerHTML += `
+    // برش ۲۰تایی: از کجا تا کجا
+    const start = (page - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    const pageItems = allCategories.slice(start, end);
 
-        <div class="card-Categories">
+    // پاک‌کردن محتوای قبلی
+    categoriesContainer.innerHTML = "";
 
-            <div class="icon-cat">
-                <span>
-                    <i class="${category.icon}"></i>
-                </span>
-            </div>
+    // کارت‌های این صفحه را یکی‌یکی بساز
+    for (let index = 0; index < pageItems.length; index++) {
+    const category = pageItems[index];
 
-            <div class="name-cat">
-                <p>${category.title}</p>
-            </div>
+    categoriesContainer.appendChild(
+        createCategoryCard(category)
+    );
+}
 
-            <div class="project-stats">
-                <h3 class="count">${category.projects}</h3>
-                <p class="lable">پروژه</p>
-            </div>
+    renderPagination();      // دکمه‌های صفحه را به‌روز کن
+    window.scrollTo(0, 0);   // برو بالای صفحه
+}
 
-        </div>
+// ── ساختن دکمه‌های صفحه‌بندی ──
+function renderPagination() {
+    const totalPages = Math.ceil(allCategories.length / PAGE_SIZE);
 
-    `;
+    paginationContainer.innerHTML = "";
 
-});
+    // اگر فقط یک صفحه باشد، دکمه‌ای لازم نیست
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement("button");
+        button.className = "page-btn";
+        if (i === currentPage) button.classList.add("active"); // صفحه‌ی فعلی
+        button.textContent = i;
+
+        // با کلیک، همان صفحه را نشان بده
+        button.addEventListener("click", function () {
+            renderPage(i);
+        });
+
+        paginationContainer.appendChild(button);
+    }
+}
+
+// ── شروع ──
+async function loadCategories() {
+    categoriesContainer.innerHTML = "<p>در حال بارگذاری...</p>";
+
+    try {
+        allCategories = await fetchAllCategories();
+
+        if (allCategories.length === 0) {
+            categoriesContainer.innerHTML = "<p>دسته‌بندی‌ای موجود نیست.</p>";
+            return;
+        }
+
+        renderPage(1); // صفحه‌ی اول را نشان بده
+
+    } catch (error) {
+        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+        categoriesContainer.innerHTML =
+            "<p class='field-error'>خطا در دریافت دسته‌بندی‌ها.</p>";
+    }
+}
+
+loadCategories();

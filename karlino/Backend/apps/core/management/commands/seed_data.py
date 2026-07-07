@@ -1,796 +1,788 @@
 import random
 from datetime import timedelta
 
+from faker import Faker
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.utils import timezone
-from django.utils.text import slugify
 
-from ....accounts.models import User
-from ....categories.models import Category
-from ....skills.models import Skill
-from ....companies.models import Company
-from ....projects.models import Project
-from ....applications.models import Application
-from ....bids.models import Bid
-from ....favorites.models import Favorite
-from ....projects.models import Milestone
-from ....resumes.models import Resume, ResumeExperience
+from apps.accounts.models import User
+from apps.applications.models import Application
+from apps.bids.models import Bid
+from apps.categories.models import Category
+from apps.companies.models import Company
+from apps.favorites.models import Favorite
+from apps.projects.models import Project, ProjectReview
+from apps.skills.models import Skill
 
 
-def make_slug(value):
-    return slugify(value, allow_unicode=True)
+fake = Faker('fa_IR')
 
 
-# --- curated Persian data (kept short + realistic on purpose) ---
+def get_user_company(user):
+    try:
+        return user.company
+    except (Company.DoesNotExist, AttributeError):
+        return None
 
-FIRST_NAMES_MALE = [
-    'علی', 'رضا', 'محمد', 'حسین', 'امیر', 'مهدی',
-    'سعید', 'مجید', 'کاوه', 'آرش', 'پارسا', 'سینا',
-]
 
-FIRST_NAMES_FEMALE = [
-    'زهرا', 'فاطمه', 'مریم', 'نگار', 'سارا', 'الهام',
-    'پریسا', 'مینا', 'لیلا', 'نازنین', 'هستی', 'ندا',
-]
+def generate_budget(project_mode, category_slug):
+    if project_mode == Project.ProjectMode.SIMPLE:
+        base_min = random.choice([
+            1_500_000,
+            2_500_000,
+            3_500_000,
+            5_000_000,
+            7_500_000,
+        ])
+        spread = random.choice([
+            1_000_000,
+            2_000_000,
+            3_000_000,
+            5_000_000,
+        ])
+    else:
+        base_min = random.choice([
+            5_000_000,
+            10_000_000,
+            15_000_000,
+            20_000_000,
+            30_000_000,
+            40_000_000,
+        ])
+        spread = random.choice([
+            5_000_000,
+            10_000_000,
+            15_000_000,
+            20_000_000,
+        ])
 
-LAST_NAMES = [
-    'احمدی', 'محمدی', 'رضایی', 'حسینی', 'کریمی', 'موسوی',
-    'جعفری', 'صادقی', 'کاظمی', 'رحیمی', 'نوری', 'اکبری',
-    'قاسمی', 'شریفی', 'یوسفی', 'هاشمی',
-]
+    if category_slug in {
+        'ai-machine-learning',
+        'data-science-data-analysis',
+        'cyber-security',
+        'devops-cloud-infrastructure',
+    }:
+        base_min += random.choice([5_000_000, 10_000_000])
+        spread += random.choice([5_000_000, 10_000_000])
 
-CITIES = [
-    'تهران', 'مشهد', 'اصفهان', 'شیراز', 'تبریز', 'کرج',
-    'اهواز', 'قم', 'رشت', 'یزد', 'کرمان', 'ارومیه',
-]
+    budget_min = base_min
+    budget_max = base_min + spread
 
-COMPANY_NAMES = [
-    'فناوری داده‌پرداز', 'گروه نرم‌افزاری آسا', 'پویا سیستم',
-    'رایان‌تک', 'هوشمندگستر', 'داده‌کاوان', 'وب‌آفرین',
-    'نوآوران دیجیتال', 'پارس‌کد', 'ابری‌سازان',
-]
+    return budget_min, budget_max
 
-PROJECT_TITLES = [
-    'طراحی سایت فروشگاهی',
-    'اپلیکیشن موبایل فروشگاه',
-    'ربات تلگرام هوشمند',
-    'داشبورد مدیریت فروش',
-    'طراحی لوگو حرفه‌ای',
-    'سایت شرکتی وردپرس',
-    'اپ اندروید سفارش غذا',
-    'طراحی API فروشگاه',
-    'طراحی رابط کاربری اپ',
-    'بهینه‌سازی سئو سایت',
-    'تحلیل داده فروش',
-    'اپلیکیشن رزرو نوبت',
-    'میکروسرویس پرداخت',
-    'چت‌بات پشتیبانی',
-    'دیتا اسکرپینگ سایت',
-    'سیستم CRM شرکتی',
-    'درگاه پرداخت آنلاین',
-    'پنل ادمین جنگو',
-    'اپ فروشگاهی iOS',
-    'داشبورد تحلیلی',
-    'سایت آموزش آنلاین',
-    'طراحی لندینگ پیج',
-    'ربات معامله‌گر ارز',
-    'اپ مدیریت تسک',
-]
 
-DESCRIPTIONS = [
-    'به یک توسعه‌دهنده باتجربه برای انجام این پروژه نیاز داریم. '
-    'لطفاً نمونه‌کارهای مرتبط خود را همراه با پیشنهاد ارسال کنید.',
+def pick_expert_for_category(category, experts, expert_category_map):
+    eligible_experts = [
+        expert
+        for expert in experts
+        if category.id in expert_category_map.get(expert.id, set())
+    ]
+    return random.choice(eligible_experts or experts)
 
-    'این پروژه شامل طراحی، پیاده‌سازی و تحویل نهایی است. '
-    'کیفیت کد و تحویل به‌موقع برای ما اهمیت زیادی دارد.',
 
-    'به دنبال فردی هستیم که بتواند به‌صورت مستقل کار کند و '
-    'گزارش پیشرفت را به‌صورت هفتگی ارائه دهد.',
+def create_project_review(project, expert, review_status, comment):
+    ProjectReview.objects.create(
+        project=project,
+        expert=expert,
+        status=review_status,
+        comment=comment,
+    )
 
-    'جزئیات کامل پروژه پس از انتخاب فریلنسر ارسال می‌شود. '
-    'آشنایی با تکنولوژی‌های به‌روز الزامی است.',
+    project.review_status = review_status
+    project.reviewed_by = expert
+    project.reviewed_at = timezone.now()
 
-    'یک پروژه‌ی کوتاه‌مدت با امکان همکاری بلندمدت. '
-    'ارتباط خوب و تعهد به زمان‌بندی برای ما مهم است.',
-]
+    if review_status == Project.ReviewStatus.APPROVED:
+        project.status = Project.Status.ACTIVE
+    elif review_status == Project.ReviewStatus.REJECTED:
+        project.status = Project.Status.ARCHIVED
+    elif review_status == Project.ReviewStatus.NEEDS_REVISION:
+        project.status = Project.Status.DRAFT
 
-HEADLINES = [
-    'توسعه‌دهنده فرانت‌اند',
-    'توسعه‌دهنده بک‌اند',
-    'برنامه‌نویس فول‌استک',
-    'طراح رابط کاربری',
-    'متخصص علم داده',
-    'توسعه‌دهنده موبایل',
-]
-
-ABOUT_TEXTS = [
-    'چند سال است در حوزه نرم‌افزار فعالیت می‌کنم و به کیفیت کد '
-    'و تحویل به‌موقع اهمیت می‌دهم.',
-
-    'علاقه‌مند به یادگیری تکنولوژی‌های جدید و کار تیمی هستم و '
-    'تجربه همکاری با تیم‌های مختلف را دارم.',
-
-    'تمرکز من روی ساخت محصول‌های قابل‌اعتماد و ساده برای کاربر است.',
-]
-
-EXPERIENCE_TITLES = [
-    'توسعه‌دهنده نرم‌افزار',
-    'برنامه‌نویس وب',
-    'کارشناس فنی',
-    'طراح محصول',
-]
-
-MILESTONE_TITLES = [
-    'تحلیل و طراحی اولیه',
-    'پیاده‌سازی نسخه اول',
-    'رفع بازخوردها',
-    'تحویل نهایی و مستندات',
-]
-
-COVER_LETTERS = [
-    'سلام، من تجربه‌ی مرتبط با این پروژه را دارم و می‌توانم '
-    'در زمان مقرر آن را تحویل دهم.',
-
-    'با سلام، نمونه‌کارهای مشابهی انجام داده‌ام و آماده‌ی '
-    'شروع همکاری هستم.',
-
-    'درود، پیشنهاد من شامل تحلیل، پیاده‌سازی و پشتیبانی '
-    'اولیه پس از تحویل است.',
-
-    'سلام، مهارت‌های لازم برای این کار را دارم و می‌توانم '
-    'کیفیت مطلوب را تضمین کنم.',
-]
+    project.save(update_fields=[
+        'review_status',
+        'reviewed_by',
+        'reviewed_at',
+        'status',
+    ])
 
 
 class Command(BaseCommand):
-
-    help = 'Seed fake data (Persian, realistic)'
+    help = 'Seed fake data'
 
     def handle(self, *args, **kwargs):
-
-        self.stdout.write(
-            self.style.WARNING('Deleting old data...')
-        )
-
-        ResumeExperience.objects.all().delete()
-        Resume.objects.all().delete()
-        Milestone.objects.all().delete()
-        Favorite.objects.all().delete()
-        Bid.objects.all().delete()
-        Application.objects.all().delete()
-        Project.objects.all().delete()
-        Company.objects.all().delete()
-        Skill.objects.all().delete()
-        Category.objects.all().delete()
-        User.objects.filter(is_superuser=False).delete()
-
-        self.stdout.write(
-            self.style.SUCCESS('Old data deleted.')
-        )
-
-        # -----------------------------------
-        # Categories
-        # -----------------------------------
-
-        category_data = [
-            {'name': 'هوش مصنوعی', 'icon': 'fa-solid fa-robot'},
-            {'name': 'طراحی وب', 'icon': 'fa-solid fa-globe'},
-            {'name': 'بک‌اند', 'icon': 'fa-solid fa-server'},
-            {'name': 'فرانت‌اند', 'icon': 'fa-solid fa-code'},
-            {'name': 'اپلیکیشن موبایل', 'icon': 'fa-solid fa-mobile-screen'},
-            {'name': 'DevOps و زیرساخت', 'icon': 'fa-solid fa-cloud'},
-            {'name': 'رابط کاربری', 'icon': 'fa-solid fa-palette'},
-            {'name': 'علم داده', 'icon': 'fa-solid fa-chart-line'},
-        ]
-
-        categories = []
-
-        for item in category_data:
-
-            category = Category.objects.create(
-                name=item['name'],
-                slug=make_slug(item['name']),
-                icon=item['icon'],
-            )
-
-            categories.append(category)
-
-        self.stdout.write(
-            self.style.SUCCESS('Categories created.')
-        )
-
-        # -----------------------------------
-        # Skills
-        # -----------------------------------
-
-        skill_names = [
-            'Python', 'Django', 'FastAPI', 'React', 'Vue',
-            'Docker', 'Kubernetes', 'TensorFlow', 'PyTorch',
-            'Linux', 'Redis', 'Celery', 'SQL Server',
-            'PostgreSQL', 'JavaScript', 'TypeScript', 'SASS',
-            'Tailwind',
-        ]
-
-        skills = []
-
-        for name in skill_names:
-
-            skill = Skill.objects.create(
-                name=name,
-                slug=name.lower().replace(' ', '-'),
-            )
-
-            skills.append(skill)
-
-        self.stdout.write(
-            self.style.SUCCESS('Skills created.')
-        )
-
-        # -----------------------------------
-        # Users
-        # -----------------------------------
-
-        users = []
-
-        for i in range(20):
-
-            if random.choice([True, False]):
-                gender = User.Gender.MALE
-                first_name = random.choice(FIRST_NAMES_MALE)
-            else:
-                gender = User.Gender.FEMALE
-                first_name = random.choice(FIRST_NAMES_FEMALE)
-
-            last_name = random.choice(LAST_NAMES)
-
-            user = User.objects.create_user(
-                email=f'user{i}@test.com',
-                first_name=first_name,
-                last_name=last_name,
-                gender=gender,
-                phone=f'09{random.randint(100000000, 999999999)}',
-                password='Test12345',
-            )
-
-            users.append(user)
-
-        # two experts covering all categories
-        experts = random.sample(users, 2)
-
-        for expert in experts:
-
-            expert.is_expert = True
-
-            expert.save(
-                update_fields=['is_expert'],
-            )
-
-            expert.expert_categories.set(categories)
-
-        self.stdout.write(
-            self.style.SUCCESS('Users created (2 experts).')
-        )
-
-        # -----------------------------------
-        # Companies
-        # -----------------------------------
-
-        companies = []
-
-        company_users = random.sample(users, 8)
-
-        company_names = random.sample(
-            COMPANY_NAMES,
-            len(company_users),
-        )
-
-        for user, name in zip(company_users, company_names):
-
-            company = Company.objects.create(
-                owner=user,
-                name=name,
-                description=random.choice(DESCRIPTIONS),
-                phone=f'09{random.randint(100000000, 999999999)}',
-                address=f'{random.choice(CITIES)}، خیابان اصلی',
-                is_verified=random.choice([True, False]),
-            )
-
-            companies.append(company)
-
-        self.stdout.write(
-            self.style.SUCCESS('Companies created.')
-        )
-
-        # -----------------------------------
-        # Projects
-        # -----------------------------------
-
-        simple_projects = []
-        tender_projects = []
-
-        for i in range(50):
-
-            creator = random.choice(users)
-
-            user_company = getattr(creator, 'company', None)
-
-            use_company = (
-                user_company is not None
-                and random.choice([True, False])
-            )
-
-            primary_category = random.choice(categories)
-
-            extra_categories = random.sample(
-                categories,
-                random.randint(1, 3),
-            )
-
-            # tender ~ 40% of projects
-            project_mode = random.choice([
-                Project.ProjectMode.SIMPLE,
-                Project.ProjectMode.SIMPLE,
-                Project.ProjectMode.SIMPLE,
-                Project.ProjectMode.TENDER,
-                Project.ProjectMode.TENDER,
-            ])
-
-            budget_min = random.randint(1, 10) * 500000
-            budget_max = budget_min + random.randint(2, 60) * 500000
-
-            project = Project.objects.create(
-                creator=creator,
-
-                owner_type=(
-                    Project.OwnerType.COMPANY
-                    if use_company
-                    else Project.OwnerType.PERSONAL
-                ),
-
-                company=(
-                    user_company
-                    if use_company
-                    else None
-                ),
-
-                primary_category=primary_category,
-
-                title=random.choice(PROJECT_TITLES),
-
-                description=random.choice(DESCRIPTIONS),
-
-                budget_min=budget_min,
-                budget_max=budget_max,
-
-                location=random.choice(CITIES),
-
-                deadline=(
-                    timezone.now().date()
-                    + timedelta(days=random.randint(3, 30))
-                ),
-
-                project_mode=project_mode,
-
-                skill_level=random.choice([
-                    Project.SkillLevel.NONE,
-                    Project.SkillLevel.BEGINNER,
-                    Project.SkillLevel.BEGINNER,
-                    Project.SkillLevel.INTERMEDIATE,
-                    Project.SkillLevel.INTERMEDIATE,
-                    Project.SkillLevel.EXPERT,
-                ]),
-
-                # most projects visible in listings
-                status=Project.Status.ACTIVE,
-                review_status=Project.ReviewStatus.APPROVED,
-                reviewed_at=timezone.now(),
-            )
-
-            project.categories.set(
-                list(set(extra_categories + [primary_category]))
-            )
-
-            selected_skills = random.sample(
-                skills,
-                random.randint(2, 6),
-            )
-
-            project.skills.set(selected_skills)
-
-            if project_mode == Project.ProjectMode.TENDER:
-                tender_projects.append(project)
-            else:
-                simple_projects.append(project)
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{len(simple_projects)} simple + '
-                f'{len(tender_projects)} tender projects created.'
-            )
-        )
-
-        # -----------------------------------
-        # Applications (for SIMPLE projects)
-        # -----------------------------------
-
-        applications_count = 0
-
-        for project in simple_projects:
-
-            applicants = random.sample(
-                users,
-                random.randint(1, 5),
-            )
-
-            for applicant in applicants:
-
-                if applicant.id == project.creator_id:
-                    continue
-
-                if (
-                    project.company
-                    and project.company.owner_id == applicant.id
-                ):
-                    continue
-
-                exists = Application.objects.filter(
-                    project=project,
-                    applicant=applicant,
-                ).exists()
-
-                if exists:
-                    continue
-
-                Application.objects.create(
-                    project=project,
-                    applicant=applicant,
-                    cover_letter=random.choice(COVER_LETTERS),
-                    proposed_price=(
-                        random.randint(1, 20) * 500000
+        with transaction.atomic():
+            self.stdout.write(self.style.WARNING('Deleting old data...'))
+
+            Favorite.objects.all().delete()
+            Application.objects.all().delete()
+            Bid.objects.all().delete()
+            ProjectReview.objects.all().delete()
+            Project.objects.all().delete()
+            Company.objects.all().delete()
+            Skill.objects.all().delete()
+            Category.objects.all().delete()
+            User.objects.filter(is_superuser=False).delete()
+
+            self.stdout.write(self.style.SUCCESS('Old data deleted.'))
+
+            # -----------------------------------
+            # Categories
+            # -----------------------------------
+
+            category_data = [
+                {
+                    'name': 'برنامه‌نویسی و توسعه وب',
+                    'slug': 'programming-web-development',
+                    'icon': 'fa-solid fa-code',
+                },
+                {
+                    'name': 'Ui & Ux',
+                    'slug': 'ui-ux-design',
+                    'icon': 'fa-solid fa-palette',
+                },
+                {
+                    'name': 'توسعه اپلیکیشن موبایل',
+                    'slug': 'mobile-app-development',
+                    'icon': 'fa-solid fa-mobile-screen',
+                },
+                {
+                    'name': 'هوش مصنوعی',
+                    'slug': 'ai-machine-learning',
+                    'icon': 'fa-solid fa-robot',
+                },
+                {
+                    'name': 'علم داده و تحلیل داده',
+                    'slug': 'data-science-data-analysis',
+                    'icon': 'fa-solid fa-chart-line',
+                },
+                {
+                    'name': 'بک‌اند و پایگاه داده',
+                    'slug': 'backend-database',
+                    'icon': 'fa-solid fa-server',
+                },
+                {
+                    'name': 'DevOps و زیرساخت ابری',
+                    'slug': 'devops-cloud-infrastructure',
+                    'icon': 'fa-solid fa-cloud',
+                },
+                {
+                    'name': 'امنیت سایبری',
+                    'slug': 'cyber-security',
+                    'icon': 'fa-solid fa-shield-halved',
+                },
+                {
+                    'name': 'طراحی گرافیک',
+                    'slug': 'graphic-design',
+                    'icon': 'fa-solid fa-pen-ruler',
+                },
+                {
+                    'name': 'تولید محتوا و کپی‌رایتینگ',
+                    'slug': 'content-writing-copywriting',
+                    'icon': 'fa-solid fa-pen-to-square',
+                },
+                {
+                    'name': 'ترجمه و زبان',
+                    'slug': 'translation-language',
+                    'icon': 'fa-solid fa-language',
+                },
+                {
+                    'name': 'دیجیتال مارکتینگ و سئو',
+                    'slug': 'digital-marketing-seo',
+                    'icon': 'fa-solid fa-bullhorn',
+                },
+                {
+                    'name': 'تدوین ویدئو و موشن گرافیک',
+                    'slug': 'video-editing-motion-graphics',
+                    'icon': 'fa-solid fa-video',
+                },
+                {
+                    'name': 'عکاسی و ویرایش تصویر',
+                    'slug': 'photography-image-editing',
+                    'icon': 'fa-solid fa-camera',
+                },
+                {
+                    'name': 'ورود داده و امور اداری',
+                    'slug': 'data-entry-office-work',
+                    'icon': 'fa-solid fa-keyboard',
+                },
+                {
+                    'name': 'حسابداری و امور مالی',
+                    'slug': 'accounting-finance',
+                    'icon': 'fa-solid fa-calculator',
+                },
+                {
+                    'name': 'مشاوره کسب‌وکار',
+                    'slug': 'business-consulting',
+                    'icon': 'fa-solid fa-briefcase',
+                },
+                {
+                    'name': 'پشتیبانی و خدمات مشتریان',
+                    'slug': 'customer-support',
+                    'icon': 'fa-solid fa-headset',
+                },
+            ]
+
+            categories = []
+            category_by_slug = {}
+
+            for item in category_data:
+                category = Category.objects.create(
+                    name=item['name'],
+                    slug=item['slug'],
+                    icon=item['icon'],
+                )
+                categories.append(category)
+                category_by_slug[item['slug']] = category
+
+            self.stdout.write(self.style.SUCCESS('Categories created.'))
+
+            # -----------------------------------
+            # Skills
+            # -----------------------------------
+
+            skill_data = [
+                {'name': 'Python', 'slug': 'python'},
+                {'name': 'Django', 'slug': 'django'},
+                {'name': 'FastAPI', 'slug': 'fastapi'},
+                {'name': 'React', 'slug': 'react'},
+                {'name': 'Vue', 'slug': 'vue'},
+                {'name': 'Next.js', 'slug': 'nextjs'},
+                {'name': 'Docker', 'slug': 'docker'},
+                {'name': 'Kubernetes', 'slug': 'kubernetes'},
+                {'name': 'TensorFlow', 'slug': 'tensorflow'},
+                {'name': 'PyTorch', 'slug': 'pytorch'},
+                {'name': 'Linux', 'slug': 'linux'},
+                {'name': 'Redis', 'slug': 'redis'},
+                {'name': 'Celery', 'slug': 'celery'},
+                {'name': 'SQL Server', 'slug': 'sql-server'},
+                {'name': 'PostgreSQL', 'slug': 'postgresql'},
+                {'name': 'JavaScript', 'slug': 'javascript'},
+                {'name': 'TypeScript', 'slug': 'typescript'},
+                {'name': 'SASS', 'slug': 'sass'},
+                {'name': 'Tailwind CSS', 'slug': 'tailwind-css'},
+                {'name': 'Figma', 'slug': 'figma'},
+                {'name': 'WordPress', 'slug': 'wordpress'},
+                {'name': 'SEO', 'slug': 'seo'},
+                {'name': 'Copywriting', 'slug': 'copywriting'},
+                {'name': 'Excel', 'slug': 'excel'},
+                {'name': 'PowerPoint', 'slug': 'powerpoint'},
+                {'name': 'Content Writing', 'slug': 'content-writing'},
+                {'name': 'Communication', 'slug': 'communication'},
+            ]
+
+            skills = []
+
+            for item in skill_data:
+                skill = Skill.objects.create(
+                    name=item['name'],
+                    slug=item['slug'],
+                )
+                skills.append(skill)
+
+            self.stdout.write(self.style.SUCCESS('Skills created.'))
+
+            # -----------------------------------
+            # Users
+            # -----------------------------------
+
+            users = []
+
+            for i in range(24):
+                gender = random.choice([
+                    User.Gender.MALE,
+                    User.Gender.FEMALE,
+                ])
+
+                user = User.objects.create_user(
+                    email=f'user{i + 1}@test.com',
+                    first_name=fake.first_name(),
+                    last_name=fake.last_name(),
+                    date_of_birth=fake.date_of_birth(
+                        minimum_age=18,
+                        maximum_age=50,
                     ),
-                    status=random.choice([
-                        Application.Status.PENDING,
-                        Application.Status.PENDING,
-                        Application.Status.ACCEPTED,
-                        Application.Status.REJECTED,
-                    ]),
+                    gender=gender,
+                    phone=f'09{900000000 + i:09d}',
+                    password='Test12345',
+                )
+                users.append(user)
+
+            self.stdout.write(self.style.SUCCESS('Users created.'))
+
+            # -----------------------------------
+            # Experts
+            # -----------------------------------
+
+            expert_category_groups = [
+                [
+                    'programming-web-development',
+                    'backend-database',
+                    'devops-cloud-infrastructure',
+                    'cyber-security',
+                ],
+                [
+                    'ai-machine-learning',
+                    'data-science-data-analysis',
+                    'mobile-app-development',
+                ],
+                [
+                    'ui-ux-design',
+                    'graphic-design',
+                    'video-editing-motion-graphics',
+                    'photography-image-editing',
+                ],
+                [
+                    'content-writing-copywriting',
+                    'translation-language',
+                    'digital-marketing-seo',
+                    'accounting-finance',
+                    'business-consulting',
+                    'customer-support',
+                    'data-entry-office-work',
+                ],
+            ]
+
+            expert_users = random.sample(users, 4)
+
+            for expert, group in zip(expert_users, expert_category_groups):
+                expert.is_expert = True
+                expert.save(update_fields=['is_expert'])
+                expert.expert_categories.set(
+                    [category_by_slug[slug] for slug in group]
                 )
 
-                applications_count += 1
+            expert_category_map = {
+                expert.id: {
+                    category.id
+                    for category in expert.expert_categories.all()
+                }
+                for expert in expert_users
+            }
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{applications_count} applications created.'
-            )
-        )
+            self.stdout.write(self.style.SUCCESS('Experts created.'))
 
-        # -----------------------------------
-        # Bids (for TENDER projects)
-        # -----------------------------------
+            # -----------------------------------
+            # Companies
+            # -----------------------------------
 
-        bids_count = 0
+            companies = []
+            company_owners = random.sample(users, 6)
 
-        for project in tender_projects:
+            for index, owner in enumerate(company_owners, start=1):
+                company = Company.objects.create(
+                    owner=owner,
+                    name=fake.company(),
+                    description=fake.text(max_nb_chars=220),
+                    website=f'https://company{index}.example.com',
+                    phone=f'09{910000000 + index:09d}',
+                    address=fake.address(),
+                    is_verified=random.choice([True, False]),
+                )
+                companies.append(company)
 
-            bidders = random.sample(
-                users,
-                random.randint(1, 5),
-            )
+            self.stdout.write(self.style.SUCCESS('Companies created.'))
 
-            for bidder in bidders:
+            # -----------------------------------
+            # Projects
+            # -----------------------------------
 
-                if bidder.id == project.creator_id:
-                    continue
+            project_titles = [
+                'طراحی سایت فروشگاهی با پنل مدیریت',
+                'ساخت API احراز هویت و ثبت نام',
+                'توسعه داشبورد مدیریت سفارش‌ها',
+                'پیاده‌سازی سیستم فیلتر و جستجو',
+                'ساخت اپلیکیشن مدیریت وظایف',
+                'طراحی و توسعه سایت معرفی شرکت',
+                'پیاده‌سازی ماژول درخواست پروژه',
+                'ساخت پنل کارفرما و فریلنسر',
+                'توسعه بخش علاقه‌مندی‌ها و درخواست‌ها',
+                'پیاده‌سازی داشبورد آماری',
+                'ساخت سرویس تحلیل داده و گزارش',
+                'توسعه سامانه رزرو آنلاین',
+                'طراحی فرانت‌اند واکنش‌گرا',
+                'اتصال پروژه به SQL Server',
+                'توسعه API مناقصه و پیشنهاد',
+                'ساخت سیستم دسته‌بندی پروژه‌ها',
+                'طراحی اپ موبایل برای سفارش آنلاین',
+                'پیاده‌سازی موتور توصیه‌گر ساده',
+                'تولید محتوای سئو برای صفحات سایت',
+                'طراحی کمپین دیجیتال مارکتینگ',
+                'تدوین ویدئو تبلیغاتی کوتاه',
+                'ورود اطلاعات و مدیریت اکسل',
+                'مشاوره مالی و حسابداری',
+                'پشتیبانی آنلاین مشتریان',
+            ]
 
-                if (
-                    project.company
-                    and project.company.owner_id == bidder.id
-                ):
-                    continue
+            project_comments_approved = [
+                'پروژه از نظر ساختار و جزئیات قابل پذیرش است.',
+                'اطلاعات پروژه کامل است و می‌تواند منتشر شود.',
+                'پروژه تایید شد و آماده نمایش در سایت است.',
+            ]
 
-                exists = Bid.objects.filter(
-                    project=project,
-                    freelancer=bidder,
-                ).exists()
+            project_comments_revision = [
+                'بودجه پروژه باید دقیق‌تر مشخص شود.',
+                'توضیحات پروژه نیاز به تکمیل دارد.',
+                'لطفاً جزئیات فنی و خروجی مورد انتظار را واضح‌تر بنویسید.',
+                'فایل‌ها و اطلاعات تکمیلی را اضافه کنید.',
+            ]
 
-                if exists:
-                    continue
+            project_comments_rejected = [
+                'پروژه با قوانین پلتفرم سازگار نیست.',
+                'شرح پروژه مبهم است و قابل انتشار نیست.',
+                'این پروژه در وضعیت فعلی قابل تایید نیست.',
+            ]
 
-                bid = Bid.objects.create(
-                    project=project,
-                    freelancer=bidder,
-                    amount=random.randint(1, 20) * 500000,
-                    delivery_days=random.randint(3, 30),
-                    cover_letter=random.choice(COVER_LETTERS),
-                    status=random.choice([
-                        Bid.Status.PENDING,
-                        Bid.Status.PENDING,
-                        Bid.Status.SHORTLISTED,
-                        Bid.Status.REJECTED,
-                    ]),
+            projects = []
+
+            for i in range(30):
+                creator = random.choice(users)
+                user_company = get_user_company(creator)
+
+                use_company = (
+                    user_company is not None
+                    and random.choice([True, False])
                 )
 
-                # ~70% of bids already scored by an expert
-                expert = random.choice(experts)
+                primary_category = random.choice(categories)
 
-                can_score = (
-                    expert.id != bid.freelancer_id
-                    and expert.id != project.creator_id
+                extra_categories = random.sample(
+                    [c for c in categories if c != primary_category],
+                    random.randint(1, 3),
                 )
 
-                if can_score and random.random() < 0.7:
+                project_mode = random.choice([
+                    Project.ProjectMode.SIMPLE,
+                    Project.ProjectMode.TENDER,
+                ])
 
-                    price_score = random.randint(1, 5)
-                    experience_score = random.randint(1, 5)
+                review_status = random.choices(
+                    [
+                        Project.ReviewStatus.PENDING,
+                        Project.ReviewStatus.APPROVED,
+                        Project.ReviewStatus.NEEDS_REVISION,
+                        Project.ReviewStatus.REJECTED,
+                    ],
+                    weights=[2, 6, 1, 1],
+                    k=1,
+                )[0]
 
-                    bid.price_score = price_score
-                    bid.experience_score = experience_score
-                    bid.expert_score = (
-                        (price_score + experience_score) / 2
-                    )
-                    bid.score_note = (
-                        'قیمت نسبت به بودجه و سابقه فریلنسر '
-                        'بررسی شد.'
-                    )
-                    bid.scored_by = expert
-                    bid.scored_at = timezone.now()
+                budget_min, budget_max = generate_budget(
+                    project_mode,
+                    primary_category.slug,
+                )
 
-                    bid.save(
-                        update_fields=[
-                            'price_score',
-                            'experience_score',
-                            'expert_score',
-                            'score_note',
-                            'scored_by',
-                            'scored_at',
+                project = Project.objects.create(
+                    creator=creator,
+                    owner_type=(
+                        Project.OwnerType.COMPANY
+                        if use_company
+                        else Project.OwnerType.PERSONAL
+                    ),
+                    company=(
+                        user_company
+                        if use_company
+                        else None
+                    ),
+                    primary_category=primary_category,
+                    title=random.choice(project_titles),
+                    description=fake.text(max_nb_chars=1000),
+                    budget_min=budget_min,
+                    budget_max=budget_max,
+                    location=fake.city(),
+                    deadline=fake.future_date(),
+                    status=(
+                        Project.Status.DRAFT
+                        if review_status in [
+                            Project.ReviewStatus.PENDING,
+                            Project.ReviewStatus.NEEDS_REVISION,
                         ]
-                    )
-
-                # ~25% get a one-time employer message
-                if random.random() < 0.25:
-
-                    bid.employer_message = (
-                        'سلام، امکانش هست قیمت یا زمان تحویل '
-                        'را کمی بهتر کنید؟'
-                    )
-
-                    bid.employer_message_at = timezone.now()
-
-                    bid.save(
-                        update_fields=[
-                            'employer_message',
-                            'employer_message_at',
-                        ]
-                    )
-
-                bids_count += 1
-
-        # winners on roughly a third of tender projects
-        winners_count = 0
-
-        for project in tender_projects:
-
-            if random.random() > 0.35:
-                continue
-
-            project_bids = list(
-                Bid.objects.filter(project=project)
-            )
-
-            if not project_bids:
-                continue
-
-            winner = random.choice(project_bids)
-
-            winner.status = Bid.Status.ACCEPTED
-            winner.accepted_at = timezone.now()
-
-            winner.save(
-                update_fields=['status', 'accepted_at'],
-            )
-
-            Bid.objects.filter(
-                project=project,
-            ).exclude(
-                pk=winner.pk,
-            ).update(
-                status=Bid.Status.REJECTED,
-            )
-
-            project.status = Project.Status.CLOSED
-
-            project.save(
-                update_fields=['status'],
-            )
-
-            winners_count += 1
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{bids_count} bids created, '
-                f'{winners_count} winners picked.'
-            )
-        )
-
-        # -----------------------------------
-        # Favorites
-        # -----------------------------------
-
-        all_projects = simple_projects + tender_projects
-
-        favorites_count = 0
-
-        for user in users:
-
-            fav_projects = random.sample(
-                all_projects,
-                random.randint(2, 8),
-            )
-
-            for project in fav_projects:
-
-                exists = Favorite.objects.filter(
-                    user=user,
-                    project=project,
-                ).exists()
-
-                if exists:
-                    continue
-
-                Favorite.objects.create(
-                    user=user,
-                    project=project,
-                )
-
-                favorites_count += 1
-
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{favorites_count} favorites created.'
-            )
-        )
-
-        # -----------------------------------
-        # Resumes
-        # -----------------------------------
-
-        resumes_count = 0
-
-        resume_users = random.sample(users, 12)
-
-        for user in resume_users:
-
-            resume = Resume.objects.create(
-                user=user,
-                headline=random.choice(HEADLINES),
-                about=random.choice(ABOUT_TEXTS),
-                city=random.choice(CITIES),
-                is_public=random.choice(
-                    [True, True, True, False]
-                ),
-            )
-
-            resume.skills.set(
-                random.sample(
-                    skills,
-                    random.randint(3, 6),
-                )
-            )
-
-            for i in range(random.randint(1, 2)):
-
-                start = timezone.now().date() - timedelta(
-                    days=random.randint(400, 2000),
-                )
-
-                still_working = random.choice(
-                    [True, False]
-                )
-
-                ResumeExperience.objects.create(
-                    resume=resume,
-                    title=random.choice(EXPERIENCE_TITLES),
-                    company=random.choice(COMPANY_NAMES),
-                    description=random.choice(DESCRIPTIONS),
-                    start_date=start,
-                    end_date=(
-                        None
-                        if still_working
-                        else start + timedelta(
-                            days=random.randint(180, 700),
+                        else (
+                            Project.Status.ACTIVE
+                            if review_status == Project.ReviewStatus.APPROVED
+                            else Project.Status.ARCHIVED
                         )
                     ),
+                    project_mode=project_mode,
+                    review_status=review_status,
                 )
 
-            resumes_count += 1
+                project.categories.set(
+                    list(
+                        {
+                            cat.id: cat
+                            for cat in [primary_category, *extra_categories]
+                        }.values()
+                    )
+                )
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{resumes_count} resumes created.'
+                selected_skills = random.sample(
+                    skills,
+                    random.randint(2, 6),
+                )
+                project.skills.set(selected_skills)
+
+                # backdate project age a bit for UI variety
+                Project.objects.filter(pk=project.pk).update(
+                    created_at=timezone.now() - timedelta(days=random.randint(0, 35))
+                )
+
+                # create review history for reviewed projects
+                if review_status != Project.ReviewStatus.PENDING:
+                    expert = pick_expert_for_category(
+                        primary_category,
+                        expert_users,
+                        expert_category_map,
+                    )
+
+                    if (
+                        review_status == Project.ReviewStatus.APPROVED
+                        and random.random() < 0.25
+                    ):
+                        first_expert = pick_expert_for_category(
+                            primary_category,
+                            expert_users,
+                            expert_category_map,
+                        )
+                        create_project_review(
+                            project=project,
+                            expert=first_expert,
+                            review_status=Project.ReviewStatus.NEEDS_REVISION,
+                            comment=random.choice(project_comments_revision),
+                        )
+
+                        second_expert = pick_expert_for_category(
+                            primary_category,
+                            expert_users,
+                            expert_category_map,
+                        )
+                        create_project_review(
+                            project=project,
+                            expert=second_expert,
+                            review_status=Project.ReviewStatus.APPROVED,
+                            comment=random.choice(project_comments_approved),
+                        )
+                    else:
+                        create_project_review(
+                            project=project,
+                            expert=expert,
+                            review_status=review_status,
+                            comment=random.choice(
+                                project_comments_approved
+                                if review_status == Project.ReviewStatus.APPROVED
+                                else (
+                                    project_comments_revision
+                                    if review_status == Project.ReviewStatus.NEEDS_REVISION
+                                    else project_comments_rejected
+                                )
+                            ),
+                        )
+
+                projects.append(project)
+
+            self.stdout.write(self.style.SUCCESS('Projects created.'))
+
+            # -----------------------------------
+            # Applications
+            # -----------------------------------
+
+            applications_count = 0
+
+            simple_public_projects = [
+                project
+                for project in projects
+                if (
+                    project.project_mode == Project.ProjectMode.SIMPLE
+                    and project.review_status == Project.ReviewStatus.APPROVED
+                    and project.status == Project.Status.ACTIVE
+                )
+            ]
+
+            for project in simple_public_projects:
+                applicant_pool = [
+                    user
+                    for user in users
+                    if user.id != project.creator_id
+                    and not (
+                        project.company
+                        and project.company.owner_id == user.id
+                    )
+                ]
+
+                if not applicant_pool:
+                    continue
+
+                applicants = random.sample(
+                    applicant_pool,
+                    random.randint(1, min(5, len(applicant_pool))),
+                )
+
+                for applicant in applicants:
+                    proposed_price = random.randint(
+                        max(500_000, int(project.budget_min * 0.75)),
+                        int(project.budget_max * 1.15),
+                    )
+
+                    Application.objects.create(
+                        project=project,
+                        applicant=applicant,
+                        cover_letter=fake.text(max_nb_chars=300),
+                        proposed_price=proposed_price,
+                        status=random.choice([
+                            Application.Status.PENDING,
+                            Application.Status.ACCEPTED,
+                            Application.Status.REJECTED,
+                        ]),
+                    )
+                    applications_count += 1
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f'{applications_count} applications created.'
+                )
             )
-        )
 
-        # -----------------------------------
-        # Milestones (projects with winners)
-        # -----------------------------------
+            # -----------------------------------
+            # Bids
+            # -----------------------------------
 
-        milestones_count = 0
+            bids_count = 0
 
-        won_projects = Project.objects.filter(
-            bids__status=Bid.Status.ACCEPTED,
-        ).distinct()
+            tender_public_projects = [
+                project
+                for project in projects
+                if (
+                    project.project_mode == Project.ProjectMode.TENDER
+                    and project.review_status == Project.ReviewStatus.APPROVED
+                    and project.status in [
+                        Project.Status.ACTIVE,
+                        Project.Status.CLOSED,
+                    ]
+                )
+            ]
 
-        for project in won_projects:
+            for project in tender_public_projects:
+                bidder_pool = [
+                    user
+                    for user in users
+                    if user.id != project.creator_id
+                    and not (
+                        project.company
+                        and project.company.owner_id == user.id
+                    )
+                ]
 
-            titles = random.sample(
-                MILESTONE_TITLES,
-                random.randint(2, 4),
-            )
+                if not bidder_pool:
+                    continue
 
-            statuses = []
+                bidders = random.sample(
+                    bidder_pool,
+                    random.randint(2, min(5, len(bidder_pool))),
+                )
 
-            for i, title in enumerate(titles):
+                make_closed = random.random() < 0.35
 
-                if i == 0:
-                    milestone_status = Milestone.Status.APPROVED
-                elif i == 1:
-                    milestone_status = random.choice([
-                        Milestone.Status.APPROVED,
-                        Milestone.Status.DELIVERED,
-                    ])
+                if make_closed and len(bidders) >= 2:
+                    winner = random.choice(bidders)
+
+                    for bidder in bidders:
+                        accepted = bidder.id == winner.id
+                        Bid.objects.create(
+                            project=project,
+                            freelancer=bidder,
+                            amount=random.randint(
+                                max(1_000_000, int(project.budget_min * 0.8)),
+                                int(project.budget_max * 1.05),
+                            ),
+                            delivery_days=random.randint(7, 60),
+                            cover_letter=fake.text(max_nb_chars=350),
+                            status=(
+                                Bid.Status.ACCEPTED
+                                if accepted
+                                else Bid.Status.REJECTED
+                            ),
+                            accepted_at=timezone.now() if accepted else None,
+                        )
+                        bids_count += 1
+
+                    project.status = Project.Status.CLOSED
+                    project.save(update_fields=['status'])
                 else:
-                    milestone_status = Milestone.Status.PENDING
+                    for bidder in bidders:
+                        Bid.objects.create(
+                            project=project,
+                            freelancer=bidder,
+                            amount=random.randint(
+                                max(1_000_000, int(project.budget_min * 0.85)),
+                                int(project.budget_max * 1.05),
+                            ),
+                            delivery_days=random.randint(7, 60),
+                            cover_letter=fake.text(max_nb_chars=350),
+                            status=Bid.Status.PENDING,
+                        )
+                        bids_count += 1
 
-                statuses.append(milestone_status)
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f'{bids_count} bids created.'
+                )
+            )
 
-                Milestone.objects.create(
-                    project=project,
-                    title=title,
-                    description=random.choice(DESCRIPTIONS),
-                    due_date=(
-                        timezone.now().date()
-                        + timedelta(days=(i + 1) * 7)
-                    ),
-                    status=milestone_status,
-                    delivered_at=(
-                        timezone.now()
-                        if milestone_status
-                        != Milestone.Status.PENDING
-                        else None
-                    ),
-                    approved_at=(
-                        timezone.now()
-                        if milestone_status
-                        == Milestone.Status.APPROVED
-                        else None
-                    ),
+            # -----------------------------------
+            # Favorites
+            # -----------------------------------
+
+            favorites_count = 0
+
+            public_projects = [
+                project
+                for project in projects
+                if (
+                    project.status == Project.Status.ACTIVE
+                    and project.review_status == Project.ReviewStatus.APPROVED
+                )
+            ]
+
+            for user in users:
+                if not public_projects:
+                    break
+
+                fav_count = random.randint(
+                    2,
+                    min(8, len(public_projects)),
                 )
 
-                milestones_count += 1
-
-            all_approved = True
-
-            for milestone_status in statuses:
-
-                if milestone_status != Milestone.Status.APPROVED:
-                    all_approved = False
-
-            if all_approved:
-
-                project.status = Project.Status.COMPLETED
-
-                project.save(
-                    update_fields=['status'],
+                fav_projects = random.sample(
+                    public_projects,
+                    fav_count,
                 )
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{milestones_count} milestones created.'
-            )
-        )
+                for project in fav_projects:
+                    if project.creator_id == user.id:
+                        continue
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                'FAKE DATA CREATED SUCCESSFULLY'
+                    if (
+                        project.company
+                        and project.company.owner_id == user.id
+                    ):
+                        continue
+
+                    obj, created = Favorite.objects.get_or_create(
+                        user=user,
+                        project=project,
+                    )
+                    if created:
+                        favorites_count += 1
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f'{favorites_count} favorites created.'
+                )
             )
-        )
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    'FAKE DATA CREATED SUCCESSFULLY'
+                )
+            )

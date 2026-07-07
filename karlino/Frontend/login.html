@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>login</title>
     <link rel="stylesheet" href="css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
 </head>
 <body>
 
@@ -24,13 +26,16 @@
         <label for="email">
             <input class="input" type="email" id="email" placeholder="">
             <span>ایمیل</span>
+            <span class="field-error" id="error-email"></span>
         </label>
         
         <!-- password -->
         <label for="password">
             <input class="input" type="password" id="password" placeholder="">
             <span>پسورد</span>
+             <span class="field-error" id="error-password"></span>
         </label>
+        
         
         <div class="forgetpasword2">
             <p class="forget">
@@ -40,8 +45,9 @@
         </div>
         
         <div class="bottom-reg">
-            <button type="submit" class="submit">ورود</button>
             
+            <button type="submit" class="submit">ورود</button>
+            <p class="field-error" id="error-form" style="text-align:center;"></p>
             <p class="signin">
                 حساب کاربری ندارید؟
                 <a href="register.html">ساخت</a>
@@ -51,7 +57,7 @@
     </form>
 
 </section>
-
+<script src="js/config.js"></script>
 <script src="js/auth/login.js"></script>
 
 </body>

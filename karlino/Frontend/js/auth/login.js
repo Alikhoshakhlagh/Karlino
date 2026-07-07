@@ -1,170 +1,59 @@
-const fakeUsers = [
-    {
-        first_name: 'علی',
-        last_name: 'رضایی',
-        email: 'ali.rezaei@gmail.com',
-        password: 'Ali@12345',
-        gender: 'male',
-        isLoggedIn: false
-    },
-    {
-        first_name: 'سارا',
-        last_name: 'محمدی',
-        email: 'sara.mohammadi@yahoo.com',
-        password: 'Sara#2024',
-        gender: 'female',
-        isLoggedIn: false
-    },
-    {
-        first_name: 'محمد',
-        last_name: 'حسینی',
-        email: 'm.hosseini@outlook.com',
-        password: 'Mhmd@5678',
-        gender: 'male',
-        isLoggedIn: false
+// المنت فرم را می‌گیریم
+const form = document.getElementById("login-form");
+
+// وقتی فرم ارسال شد، این کد اجرا می‌شود
+form.addEventListener("submit", async function (event) {
+
+    event.preventDefault(); // جلوی رفرش‌شدن خودکار صفحه را می‌گیرد
+
+    // پاک‌کردن خطاهای دفعه‌ی قبل
+    document.getElementById("error-email").textContent = "";
+    document.getElementById("error-password").textContent = "";
+    document.getElementById("error-form").textContent = "";
+
+    // خواندن مقادیری که کاربر تایپ کرده
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        // درخواست ورود را به سرور می‌فرستیم
+        const response = await fetch(BASE_URL + ENDPOINTS.login, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email, password: password })
+        });
+
+        // پاسخ سرور را می‌خوانیم
+        const data = await response.json();
+
+        // اگر ورود موفق بود
+        if (response.ok) {
+            localStorage.setItem("access", data.access);
+            localStorage.setItem("refresh", data.refresh);
+            localStorage.setItem("user", JSON.stringify({ email: email, isLoggedIn: true }));
+            window.location.href = "index.html";
+            return;
+        }
+
+        // اگر سرور درباره‌ی فیلد ایمیل خطا داد، همان پیام سرور را نشان بده
+        if (data.email) {
+            document.getElementById("error-email").textContent = data.email[0];
+        }
+
+        // اگر سرور درباره‌ی فیلد رمز خطا داد، همان پیام سرور را نشان بده
+        if (data.password) {
+            document.getElementById("error-password").textContent = data.password[0];
+        }
+
+        // اگر سرور خطای کلی داد (ایمیل یا رمز اشتباه)، همان پیام سرور را نشان بده
+        if (data.detail) {
+            document.getElementById("error-form").textContent = data.detail;
+        }
+
+    } catch (error) {
+        // این حالت یعنی اصلاً به سرور وصل نشدیم، پس سرور هیچ پیامی نفرستاده
+        // برای همین این یک پیام خودمان است، نه از بک‌اند
+        document.getElementById("error-form").textContent = "ارتباط با سرور برقرار نشد";
     }
-];
-
-if (!localStorage.getItem('user')) {
-    localStorage.setItem('user', JSON.stringify(fakeUsers[0]));
-}
-
-
-const form = document.getElementById('login-form');
-
-const emailInput = document.getElementById('email');
-
-const passwordInput = document.getElementById('password');
-
-const submitBtn = document.querySelector('.submit');
-
-
-
-function showError(inputEl, message) {
-
-    inputEl.style.borderColor = '#ff4444';
-
-    const label = inputEl.closest('label');
-
-    let errorEl = label.querySelector('.error-msg');
-
-    if (!errorEl) {
-
-        errorEl = document.createElement('p');
-
-        errorEl.className = 'error-msg';
-
-        errorEl.style.cssText = `
-            color:#ff4444;
-            font-size:12px;
-            margin-top:4px;
-        `;
-
-        label.appendChild(errorEl);
-    }
-
-    errorEl.textContent = message;
-}
-
-
-function clearError(inputEl) {
-
-    inputEl.style.borderColor = '';
-
-    const label = inputEl.closest('label');
-
-    const errorEl = label.querySelector('.error-msg');
-
-    if (errorEl) {
-        errorEl.textContent = '';
-    }
-}
-
-
-function setLoading(isLoading) {
-
-    if (isLoading) {
-
-        submitBtn.disabled = true;
-
-        submitBtn.textContent = 'در حال ورود...';
-
-        submitBtn.style.opacity = '0.7';
-
-    } else {
-
-        submitBtn.disabled = false;
-
-        submitBtn.textContent = 'ورود';
-
-        submitBtn.style.opacity = '1';
-    }
-}
-
-
-form.addEventListener('submit', function (e) {
-
-    e.preventDefault();
-
-    const email = emailInput.value.trim();
-
-    const password = passwordInput.value;
-
-    clearError(emailInput);
-
-    clearError(passwordInput);
-
-    let hasError = false;
-
-    if (!email.includes('@') || !email.includes('.')) {
-
-        showError(emailInput, 'ایمیل معتبر نیست');
-
-        hasError = true;
-    }
-
-    if (password.length < 8) {
-
-        showError(passwordInput, 'رمز عبور باید حداقل ۸ کاراکتر باشد');
-
-        hasError = true;
-    }
-
-    if (hasError) return;
-
-    const savedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (!savedUser) {
-
-        showError(emailInput, 'حساب کاربری پیدا نشد');
-
-        return;
-    }
-
-    if (savedUser.email !== email) {
-
-        showError(emailInput, 'ایمیل اشتباه است');
-
-        return;
-    }
-
-    if (savedUser.password !== password) {
-
-        showError(passwordInput, 'رمز عبور اشتباه است');
-
-        return;
-    }
-
-    savedUser.isLoggedIn = true;
-
-    localStorage.setItem('user', JSON.stringify(savedUser));
-
-    setLoading(true);
-
-    setTimeout(function () {
-
-        window.location.href = 'index.html';
-
-    }, 1500);
 
 });

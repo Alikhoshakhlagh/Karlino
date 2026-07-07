@@ -1,0 +1,472 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.container-project {
+  height: max-content;
+  width: 80%;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+  margin: 35px auto;
+
+  .project-info {
+    display: grid;
+
+    /* راست | وسط | چپ */
+    grid-template-columns: 160px 2fr auto;
+
+    grid-template-areas: "avatar details actions";
+    gap: 10px;
+
+    direction: rtl;
+    padding: 20px;
+    margin: 10px 40px;
+
+    .project-avatar {
+      grid-area: avatar;
+
+      width: 150px;
+      height: 150px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background: $glass-color;
+      border-radius: $radius-sm;
+
+      i {
+        color: $third-color;
+        font-size: $fs-hero;
+        font-weight: $fw-bold;
+      }
+    }
+
+    .project-details {
+      grid-area: details;
+      justify-self: start;
+      text-align: right;
+
+      .project-title {
+        font-size: $fs-section-title;
+        color: $text-color;
+        margin: 10px 0;
+        font-weight: $fw-medium;
+      }
+
+      .project-owner {
+        display: flex;
+        flex-direction: column;
+
+        .owner-name {
+          font-size: $fs-base;
+
+
+          i {
+            margin-left: 5px;
+            color: $third-color;
+            font-size: $fs-small;
+          }
+        }
+      }
+
+      @include bookmark();
+
+      .project-bookmark {
+        margin-top: 10px;
+        transform: translatex(10px);
+      }
+
+
+    }
+
+    .project-actions {
+      grid-area: actions;
+      align-self: center;
+      justify-self: center;
+
+
+
+      button {
+        @include animated-button($primary-color, $text-color, 200px, 70px);
+        margin: 5px;
+      }
+
+      .project-submit-btn {
+
+        padding: 20px 40px;
+        border-radius: $radius-md;
+        background-color: $primary-color;
+        border: none;
+        font-size: $fs-card-title;
+
+
+      }
+
+      .daysAgo {
+        align-self:center;
+        justify-self: center;
+        margin-top: 20px;
+        text-align: center;
+        font-size: $fs-small;
+        color: $mute-color;
+      }
+    }
+  }
+
+  .project-about {
+    font-size: $fs-base;
+    margin: 20px 60px;
+    line-height: 35px;
+    height: max-content;
+
+  }
+
+  .project-skills {
+    margin: 20px 40px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+
+
+    .title-project-skills {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+
+      .ping {
+        @include ping();
+      }
+
+
+      h3 {
+        font-size: $fs-base;
+        color: $text-color;
+      }
+    }
+
+    .card-project-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-right: 20px;
+      height: max-content;
+      align-self: center;
+
+
+      p {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        //background-color: $success;
+        border: 1.5px solid $forth-color;
+        font-size: 11px;
+        color: $warning;
+        border-radius: $radius-sm;
+        padding: 5px 10px;
+        white-space: nowrap;
+        width: max-content;
+      }
+    }
+  }
+
+  .project-box {
+    margin: 20px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .box {
+
+      transition: 0.3s;
+      background-color: $secondary-color-box;
+      border: 1px solid $border-muted;
+      border-radius: $radius-md;
+      cursor: pointer;
+      display: flex;
+
+      justify-content: space-evenly;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      width: 320px;
+      height: 125px;
+
+      h3 {
+        text-align: center;
+        margin-bottom: 5px;
+        border-bottom: 1px solid $highlight;
+        width: 250px;
+        padding-bottom: 10px;
+        font-size: $fs-card-title;
+        font-weight: $fw-medium;
+      }
+
+      p {
+        margin: 10px 0;
+        font-size: $fs-base;
+
+      }
+    }
+  }
+
+  .project-categories {
+    margin: 20px 40px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+
+    .title-project-categories {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+
+      .ping {
+        @include ping();
+      }
+
+
+      h3 {
+        font-size: $fs-base;
+        color: $text-color;
+      }
+    }
+
+    .card-project-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-right: 20px;
+      height: max-content;
+      align-self: center;
+
+      p {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        //background-color: $success;
+        border: 1.5px solid $forth-color;
+        font-size: 11px;
+        color: $warning;
+        border-radius: $radius-sm;
+        padding: 5px 10px;
+        white-space: nowrap;
+        width: max-content;
+      }
+    }
+  }
+}
+
+// ===== پاپ‌آپ ارسال درخواست همکاری =====
+.apply-modal {
+
+  // در حالت عادی مخفی است؛ با کلاس open باز می‌شود
+  display: none;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  &.open {
+    display: flex;
+  }
+
+  .apply-modal-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .apply-modal-card {
+    position: relative;
+    z-index: 1;
+
+    width: 90%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+
+    background: $secondary-color;
+    border: 1px solid $border-muted;
+    border-radius: $radius-lg;
+
+    padding: 28px;
+
+    animation: applyModalIn 0.25s ease;
+
+    .apply-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 6px;
+
+      .apply-title {
+        @include flex(flex-start, center);
+        gap: 10px;
+
+        font-size: $fs-card-title;
+        font-weight: $fw-bold;
+        color: $text-color;
+
+        .ping {
+          @include ping;
+          --uib-size: 22px;
+        }
+      }
+
+      .apply-close {
+        @include flex();
+
+        width: 36px;
+        height: 36px;
+
+        background: $glass-color;
+        border: 1px solid $glass-border;
+        border-radius: 50%;
+
+        color: $gray-color;
+        font-size: $fs-base;
+
+        cursor: pointer;
+        transition: 0.25s;
+
+        &:hover {
+          color: $danger;
+          border-color: $danger;
+        }
+      }
+    }
+
+    .apply-project-name {
+      font-size: $fs-small;
+      color: $gray-color;
+
+      margin-bottom: 16px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      label {
+        position: relative;
+        width: 100%;
+
+        // حذف فلش‌های بالا/پایین اینپوت‌های عددی (کاربر دستی عدد وارد می‌کند)
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        input[type="number"] {
+          -moz-appearance: textfield;
+          appearance: textfield;
+        }
+
+        .input {
+          background-color: $glass-color;
+          color: $text-color;
+          width: 100%;
+          padding: 20px 10px 5px 5px;
+          outline: 0;
+          border: 1px solid rgba(105, 105, 105, 0.397);
+          border-radius: $radius-sm;
+          text-align: right;
+          font-size: medium;
+          font-family: Vazirmatn;
+
+          & + span {
+            color: $text-color;
+            position: absolute;
+            right: 10px;
+            top: 0;
+            font-size: $fs-small;
+            cursor: text;
+            transition: 0.3s ease;
+          }
+
+          &:placeholder-shown + span {
+            top: 12.5px;
+            font-size: $fs-small;
+          }
+
+          &:focus + span,
+          &:not(:placeholder-shown) + span {
+            padding-top: 6px;
+            color: $primary-color;
+            top: 0;
+            font-size: 0.7em;
+            font-weight: $fw-bold;
+          }
+        }
+      }
+
+      .apply-textarea {
+        min-height: 130px;
+        resize: vertical;
+      }
+
+      .apply-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .apply-success {
+        color: $success;
+        font-size: $fs-small;
+      }
+
+      .submit {
+        align-self: flex-start;
+        border: none;
+        outline: none;
+        padding: 12px 32px;
+        border-radius: $radius-sm;
+        color: $text-color;
+        font-size: $fs-base;
+        font-family: Vazirmatn;
+        cursor: pointer;
+        transition: 0.3s ease;
+        background-color: $primary-color;
+
+        &:hover {
+          transform: scale(1.03);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+
+  @include respond(xs) {
+    .apply-modal-card {
+      .form {
+        .apply-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
+
+@keyframes applyModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

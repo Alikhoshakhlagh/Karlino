@@ -1,0 +1,614 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.dashboard-layout {
+  @include container;
+
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 30px;
+
+  align-items: start;
+
+  margin-top: 40px;
+  margin-bottom: 60px;
+
+  // ===== منوی کناری =====
+  .dashboard-sidebar {
+    position: sticky;
+    top: 100px;
+
+    background: $secondary-color;
+    border: 1px solid $border-muted;
+    border-radius: $radius-lg;
+
+    padding: 20px;
+
+    .sidebar-user {
+      @include flex(flex-start, center);
+      gap: 12px;
+
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid $border-muted;
+
+      .avatar {
+        @include flex();
+
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+
+        background: $glass-color;
+        border: 1px solid $glass-border;
+        border-radius: 50%;
+
+        i {
+          color: $primary-color;
+          font-size: 18px;
+        }
+      }
+
+      .user-info {
+        min-width: 0;
+
+        .user-name {
+          font-size: $fs-base;
+          font-weight: $fw-bold;
+          color: $text-color;
+        }
+
+        .user-email {
+          font-size: 12px;
+          color: $gray-color;
+
+          direction: ltr;
+          text-align: right;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .nav-item {
+        @include flex(flex-start, center);
+        gap: 10px;
+
+        width: 100%;
+        padding: 12px 14px;
+
+        background: transparent;
+        border: none;
+        border-radius: $radius-sm;
+
+        color: $gray-color;
+        font-size: $fs-small;
+        font-weight: $fw-medium;
+        font-family: Vazirmatn;
+
+        cursor: pointer;
+        transition: 0.25s;
+
+        i {
+          width: 18px;
+          text-align: center;
+          font-size: 14px;
+          color: $gray-color;
+          transition: 0.25s;
+        }
+
+        &:hover {
+          background: $glass-color;
+          color: $text-color;
+        }
+
+        &.active {
+          background: $glass-color;
+          color: $primary-color;
+          border-right: 3px solid $primary-color;
+
+          i {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  // ===== محتوای پنل =====
+  .dashboard-content {
+    min-width: 0;
+
+    .dashboard-section {
+
+      &.hidden {
+        display: none;
+      }
+
+      .section-title {
+        @include flex(flex-start, center);
+        gap: 10px;
+
+        font-size: $fs-card-title;
+        font-weight: $fw-bold;
+        color: $text-color;
+
+        margin-bottom: 24px;
+
+        .ping {
+          @include ping;
+          --uib-size: 22px;
+        }
+
+        &.security-title {
+          margin-top: 40px;
+        }
+
+        .verify-badge {
+          @include flex();
+          gap: 6px;
+
+          padding: 4px 12px;
+
+          background: $glass-color;
+          border: 1px solid $success;
+          border-radius: $radius-md;
+
+          font-size: 12px;
+          color: $success;
+
+          i {
+            color: $success;
+          }
+
+          &.hidden {
+            display: none;
+          }
+        }
+      }
+    }
+
+    // متن‌های وضعیت
+    .loading-text,
+    .empty-text {
+      color: $gray-color;
+      font-size: $fs-small;
+    }
+
+    // ===== کارت‌های آمار (خلاصه وضعیت) =====
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+
+      .stat-card {
+        background: $secondary-color-box;
+        border: 1px solid $glass-border;
+        border-radius: $radius-md;
+
+        padding: 20px;
+
+        transition: 0.25s;
+
+        &:hover {
+          transform: translateY(-3px);
+          border-color: $primary-color;
+        }
+
+        .stat-icon {
+          @include flex();
+
+          width: 42px;
+          height: 42px;
+
+          background: $glass-color;
+          border-radius: $radius-sm;
+
+          margin-bottom: 14px;
+
+          i {
+            color: $primary-color;
+            font-size: 16px;
+          }
+        }
+
+        .stat-value {
+          font-size: $fs-section-title;
+          font-weight: $fw-bold;
+          color: $text-color;
+        }
+
+        .stat-label {
+          font-size: $fs-small;
+          color: $gray-color;
+          margin-top: 4px;
+        }
+      }
+    }
+
+    // ===== لیست آیتم‌ها (پروژه‌ها، درخواست‌ها، پیشنهادها و ...) =====
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      .item-card {
+        background: $secondary-color-box;
+        border: 1px solid $glass-border;
+        border-radius: $radius-md;
+
+        padding: 18px 20px;
+
+        transition: 0.25s;
+
+        &:hover {
+          border-color: $highlight;
+        }
+
+        .item-top {
+          @include flex(space-between, center);
+          gap: 10px;
+          flex-wrap: wrap;
+
+          .item-title {
+            font-size: $fs-base;
+            font-weight: $fw-bold;
+            color: $text-color;
+
+            a {
+              color: $text-color;
+              transition: 0.25s;
+
+              &:hover {
+                color: $primary-color;
+              }
+            }
+          }
+        }
+
+        .item-meta {
+          @include flex(flex-start, center);
+          gap: 18px;
+          flex-wrap: wrap;
+
+          margin-top: 12px;
+
+          span {
+            @include flex(flex-start, center);
+            gap: 6px;
+
+            font-size: $fs-small;
+            color: $gray-color;
+
+            i {
+              font-size: 12px;
+              color: $third-color;
+            }
+          }
+        }
+
+        .item-message {
+          margin-top: 12px;
+          padding: 12px;
+
+          background: $glass-color;
+          border-right: 3px solid $primary-color;
+          border-radius: $radius-sm;
+
+          font-size: $fs-small;
+          color: $gray-color;
+          line-height: 1.8;
+        }
+
+        .item-actions {
+          @include flex(flex-end, center);
+          margin-top: 12px;
+
+          .revoke-btn {
+            padding: 8px 18px;
+
+            background: transparent;
+            border: 1px solid $danger;
+            border-radius: $radius-sm;
+
+            color: $danger;
+            font-size: $fs-small;
+            font-family: Vazirmatn;
+
+            cursor: pointer;
+            transition: 0.25s;
+
+            &:hover {
+              background: $danger;
+              color: $text-color;
+            }
+          }
+        }
+      }
+    }
+
+    // ===== نشان وضعیت =====
+    .status-badge {
+      padding: 4px 12px;
+
+      border-radius: $radius-md;
+      border: 1px solid $border;
+
+      font-size: 12px;
+      font-weight: $fw-medium;
+      color: $gray-color;
+
+      white-space: nowrap;
+
+      &.success {
+        color: $success;
+        border-color: $success;
+      }
+
+      &.warning {
+        color: $warning;
+        border-color: $warning;
+      }
+
+      &.danger {
+        color: $danger;
+        border-color: $danger;
+      }
+
+      &.info {
+        color: $info;
+        border-color: $info;
+      }
+    }
+
+    // ===== نمودارها =====
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+
+      .chart-card {
+        background: $secondary-color-box;
+        border: 1px solid $glass-border;
+        border-radius: $radius-md;
+
+        padding: 20px;
+
+        .chart-title {
+          font-size: $fs-base;
+          font-weight: $fw-bold;
+          color: $text-color;
+
+          margin-bottom: 18px;
+        }
+
+        .chart-row {
+          @include flex(flex-start, center);
+          gap: 10px;
+
+          margin-bottom: 12px;
+
+          .chart-label {
+            width: 90px;
+            flex-shrink: 0;
+
+            font-size: 12px;
+            color: $gray-color;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .chart-track {
+            flex: 1;
+            height: 10px;
+
+            background: $glass-color;
+            border-radius: $radius-md;
+
+            overflow: hidden;
+
+            .chart-fill {
+              height: 100%;
+
+              background: $primary-color;
+              border-radius: $radius-md;
+
+              transition: width 0.6s ease;
+            }
+          }
+
+          .chart-value {
+            width: 40px;
+            flex-shrink: 0;
+
+            font-size: 12px;
+            font-weight: $fw-bold;
+            color: $text-color;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    // ===== فرم‌های پنل (پروفایل، شرکت، رمز عبور) =====
+    .dashboard-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      max-width: 560px;
+      padding: 24px;
+
+      background: $secondary-color-box;
+      border: 1px solid $secondary-color;
+      border-radius: $radius-md;
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      label {
+        position: relative;
+        width: 100%;
+
+        .input {
+          background-color: $glass-color;
+          color: $text-color;
+          width: 100%;
+          padding: 20px 10px 5px 5px;
+          outline: 0;
+          border: 1px solid rgba(105, 105, 105, 0.397);
+          border-radius: $radius-sm;
+          text-align: right;
+          font-size: medium;
+          font-family: Vazirmatn;
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
+          & + span {
+            color: $text-color;
+            position: absolute;
+            right: 10px;
+            top: 0;
+            font-size: $fs-small;
+            cursor: text;
+            transition: 0.3s ease;
+          }
+
+          &:placeholder-shown + span {
+            top: 12.5px;
+            font-size: $fs-small;
+          }
+
+          &:focus + span,
+          &:not(:placeholder-shown) + span {
+            padding-top: 6px;
+            color: $primary-color;
+            top: 0;
+            font-size: 0.7em;
+            font-weight: $fw-bold;
+          }
+
+          // برای select و date، لیبل همیشه بالا بماند
+          & + .fixed-span {
+            top: 0;
+            padding-top: 6px;
+            font-size: 0.7em;
+            font-weight: $fw-bold;
+            color: $primary-color;
+          }
+        }
+
+        .textarea {
+          min-height: 110px;
+          resize: vertical;
+        }
+
+        .ltr-input {
+          direction: ltr;
+          text-align: left;
+        }
+      }
+
+      .form-success {
+        display: none;
+        color: $success;
+        font-size: 0.78em;
+        margin-right: 4px;
+
+        &.show {
+          display: block;
+        }
+      }
+
+      .submit-btn {
+        align-self: flex-start;
+
+        margin-top: 10px;
+        padding: 12px 32px;
+
+        background-color: $primary-color;
+        border: none;
+        border-radius: $radius-sm;
+
+        color: $text-color;
+        font-size: $fs-base;
+        font-weight: $fw-bold;
+        font-family: Vazirmatn;
+
+        cursor: pointer;
+        transition: 0.3s ease;
+
+        &:hover {
+          transform: scale(1.03);
+          box-shadow: $primary-color 0px 15px 10px -20px;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+
+  // ===== ریسپانسیو =====
+  @include respond(md) {
+    grid-template-columns: 1fr;
+
+    .dashboard-sidebar {
+      position: static;
+
+      .sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .nav-item {
+          width: auto;
+
+          &.active {
+            border-right: none;
+            border-bottom: 2px solid $primary-color;
+          }
+        }
+      }
+    }
+
+    .dashboard-content {
+      .stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  @include respond(xs) {
+    .dashboard-content {
+      .stat-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-form {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

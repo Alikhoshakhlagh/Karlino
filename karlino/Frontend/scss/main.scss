@@ -9,7 +9,7 @@
 @use './pages/home';
 @use './pages/projects';
 @use './pages/project-detail';
-@use './pages/Categories';
+@use './pages/categories';
 
 
 
@@ -17,3 +17,4 @@
 @use 'pages/auth/register';
 @use 'pages/auth/forgot-password';
 @use 'pages/auth/reset-password';
+@use './pages/dashboard';
