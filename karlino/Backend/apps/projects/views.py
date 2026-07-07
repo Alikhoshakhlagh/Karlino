@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db.models import Q, Count
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from rest_framework import status, viewsets
@@ -10,9 +11,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ..applications.serializers import ApplicationSerializer
-from .models import Project, ProjectReview
+from .models import Project, Milestone, ProjectReview
 from .permissions import IsProjectOwnerOrCompanyOwner
-from .serializers import ProjectSerializer, ExpertProjectSerializer, ProjectReviewSerializer
+from .serializers import ProjectSerializer, MilestoneSerializer, ExpertProjectSerializer, ProjectReviewSerializer
 from ..core.messages import *
 
 from drf_spectacular.utils import (
@@ -96,6 +97,10 @@ class ProjectViewSet(viewsets.ModelViewSet):
         owner_type = self.request.query_params.get('owner_type')
         if owner_type:
             qs = qs.filter(owner_type=owner_type)
+
+        skill_level = self.request.query_params.get('skill_level')
+        if skill_level in Project.SkillLevel.values:
+            qs = qs.filter(skill_level=skill_level)
 
         location = self.request.query_params.get('location')
         if location:
@@ -193,6 +198,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         if status_param:
             qs = qs.filter(status=status_param)
+
+        owner_type = request.query_params.get('owner_type')
+
+        if owner_type in (
+            Project.OwnerType.PERSONAL,
+            Project.OwnerType.COMPANY,
+        ):
+            qs = qs.filter(owner_type=owner_type)
 
         serializer = self.get_serializer(qs, many=True)
 
@@ -399,7 +412,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'detail':
-                        OWN_PROJECT_BID_REVIEWED
+                        SELF_REVIEW_FORBIDDEN
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -495,6 +508,9 @@ class PendingProjectsAPIView(APIView):
                 review_status=Project.ReviewStatus.PENDING,
                 primary_category__in=expert_categories,
             )
+            .exclude(
+                creator=request.user,
+            )
         )
 
         serializer = ExpertProjectSerializer(
@@ -504,3 +520,375 @@ class PendingProjectsAPIView(APIView):
 
         return Response(serializer.data)
 
+
+
+def is_project_owner(project, user):
+
+    if project.creator_id == user.id:
+        return True
+
+    if (
+        project.company
+        and project.company.owner_id == user.id
+    ):
+        return True
+
+    return False
+
+
+def get_project_winner(project):
+
+    from ..bids.models import Bid
+    from ..applications.models import Application
+
+    bid = Bid.objects.filter(
+        project=project,
+        status=Bid.Status.ACCEPTED,
+    ).first()
+
+    if bid is not None:
+        return bid.freelancer
+
+    application = Application.objects.filter(
+        project=project,
+        status=Application.Status.ACCEPTED,
+    ).first()
+
+    if application is not None:
+        return application.applicant
+
+    return None
+
+
+class MilestoneListCreateAPIView(APIView):
+
+    serializer_class = MilestoneSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request, project_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        winner = get_project_winner(project)
+
+        allowed = (
+            is_project_owner(project, request.user)
+            or (
+                winner is not None
+                and winner.id == request.user.id
+            )
+            or request.user.is_superuser
+        )
+
+        if not allowed:
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        milestones = Milestone.objects.filter(
+            project=project,
+        )
+
+        serializer = self.serializer_class(
+            milestones,
+            many=True,
+        )
+
+        return Response(serializer.data)
+
+    def post(self, request, project_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        if not is_project_owner(project, request.user):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        winner = get_project_winner(project)
+
+        if winner is None:
+            return Response(
+                {'detail': MILESTONE_NO_WINNER},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = self.serializer_class(
+            data=request.data,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        serializer.save(
+            project=project,
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class MilestoneDetailAPIView(APIView):
+
+    serializer_class = MilestoneSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get_milestone(self, project_id, milestone_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        milestone = get_object_or_404(
+            Milestone,
+            pk=milestone_id,
+            project=project,
+        )
+
+        return project, milestone
+
+    def patch(self, request, project_id, milestone_id):
+
+        project, milestone = self.get_milestone(
+            project_id,
+            milestone_id,
+        )
+
+        if not is_project_owner(project, request.user):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if milestone.status != Milestone.Status.PENDING:
+            return Response(
+                {'detail': MILESTONE_LOCKED},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = self.serializer_class(
+            milestone,
+            data=request.data,
+            partial=True,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def delete(self, request, project_id, milestone_id):
+
+        project, milestone = self.get_milestone(
+            project_id,
+            milestone_id,
+        )
+
+        if not is_project_owner(project, request.user):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if milestone.status != Milestone.Status.PENDING:
+            return Response(
+                {'detail': MILESTONE_LOCKED},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        milestone.delete()
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
+
+class MilestoneDeliverAPIView(APIView):
+
+    serializer_class = MilestoneSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request, project_id, milestone_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        milestone = get_object_or_404(
+            Milestone,
+            pk=milestone_id,
+            project=project,
+        )
+
+        winner = get_project_winner(project)
+
+        if (
+            winner is None
+            or winner.id != request.user.id
+        ):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if milestone.status != Milestone.Status.PENDING:
+            return Response(
+                {'detail': MILESTONE_NOT_PENDING},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        milestone.status = Milestone.Status.DELIVERED
+        milestone.delivered_at = timezone.now()
+
+        milestone.save(
+            update_fields=[
+                'status',
+                'delivered_at',
+                'updated_at',
+            ]
+        )
+
+        return Response(
+            {'detail': MILESTONE_DELIVERED},
+        )
+
+
+class MilestoneApproveAPIView(APIView):
+
+    serializer_class = MilestoneSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request, project_id, milestone_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        milestone = get_object_or_404(
+            Milestone,
+            pk=milestone_id,
+            project=project,
+        )
+
+        if not is_project_owner(project, request.user):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if milestone.status != Milestone.Status.DELIVERED:
+            return Response(
+                {'detail': MILESTONE_NOT_DELIVERED},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        milestone.status = Milestone.Status.APPROVED
+        milestone.approved_at = timezone.now()
+
+        milestone.save(
+            update_fields=[
+                'status',
+                'approved_at',
+                'updated_at',
+            ]
+        )
+
+        remaining = Milestone.objects.filter(
+            project=project,
+        ).exclude(
+            status=Milestone.Status.APPROVED,
+        ).exists()
+
+        if not remaining:
+
+            project.status = Project.Status.COMPLETED
+
+            project.save(
+                update_fields=['status'],
+            )
+
+            return Response(
+                {'detail': PROJECT_COMPLETED},
+            )
+
+        return Response(
+            {'detail': MILESTONE_APPROVED},
+        )
+
+
+class MilestoneRejectAPIView(APIView):
+
+    serializer_class = MilestoneSerializer
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request, project_id, milestone_id):
+
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+        )
+
+        milestone = get_object_or_404(
+            Milestone,
+            pk=milestone_id,
+            project=project,
+        )
+
+        if not is_project_owner(project, request.user):
+            return Response(
+                {'detail': PERMISSION_DENIED},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if milestone.status != Milestone.Status.DELIVERED:
+            return Response(
+                {'detail': MILESTONE_NOT_DELIVERED},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        milestone.status = Milestone.Status.PENDING
+        milestone.delivered_at = None
+
+        milestone.save(
+            update_fields=[
+                'status',
+                'delivered_at',
+                'updated_at',
+            ]
+        )
+
+        return Response(
+            {'detail': MILESTONE_REJECTED},
+        )

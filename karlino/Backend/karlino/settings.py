@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.favorites',
     'apps.auth_api',
     'apps.bids',
+    'apps.resumes',
 
     'corsheaders',
 

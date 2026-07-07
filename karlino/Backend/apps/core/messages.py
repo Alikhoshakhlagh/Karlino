@@ -114,7 +114,7 @@ COMPANY_ON_PERSONAL = (
 )
 
 COMPANY_EXISTS = (
-    'کمپانی وجود دارد.'
+    'شما قبلاً یک شرکت ثبت کرده‌اید.'
 )
 
 # Validation
@@ -141,4 +141,143 @@ COMMENT_REQUIRED = (
 #Slug
 INVALID_SLUG = (
     'اسلاگ فقط می‌تواند شامل حروف انگلیسی کوچک، اعداد و خط تیره (-) باشد.'
+)
+
+# Account / Sessions
+OLD_PASSWORD_INCORRECT = (
+    'رمز عبور فعلی اشتباه است.'
+)
+
+PASSWORD_CHANGED = (
+    'رمز عبور با موفقیت تغییر کرد.'
+)
+
+SESSION_NOT_FOUND = (
+    'نشست موردنظر یافت نشد.'
+)
+
+SESSION_REVOKED = (
+    'نشست موردنظر با موفقیت خارج شد.'
+)
+
+# Password / Account
+USER_NOT_FOUND = (
+    'کاربری با این ایمیل یافت نشد.'
+)
+
+PASSWORD_RESET_SUCCESS = (
+    'رمز عبور با موفقیت بازنشانی شد.'
+)
+
+PASSWORD_TOO_SHORT = (
+    'رمز عبور باید حداقل ۸ کاراکتر باشد.'
+)
+
+# Bid validation
+BID_AMOUNT_INVALID = (
+    'مبلغ پیشنهاد معتبر نیست.'
+)
+
+BID_DELIVERY_INVALID = (
+    'مدت تحویل باید حداقل ۱ روز باشد.'
+)
+
+COVER_LETTER_REQUIRED = (
+    'وارد کردن متن پیشنهاد الزامی است.'
+)
+
+BID_LOCKED = (
+    'این پیشنهاد دیگر قابل ویرایش نیست.'
+)
+
+# Bid scoring (expert)
+BID_SCORE_SUBMITTED = (
+    'امتیاز پیشنهاد با موفقیت ثبت شد.'
+)
+
+BID_ALREADY_SCORED = (
+    'این پیشنهاد قبلاً امتیازدهی شده است.'
+)
+
+BID_SCORE_INVALID = (
+    'امتیاز باید عددی بین ۱ تا ۵ باشد.'
+)
+
+SELF_SCORE_FORBIDDEN = (
+    'شما نمی‌توانید به پیشنهادهای مرتبط با خودتان امتیاز بدهید.'
+)
+
+# Employer message on bid
+EMPLOYER_MESSAGE_SENT = (
+    'پیام شما برای فریلنسر ارسال شد.'
+)
+
+EMPLOYER_MESSAGE_ALREADY_SENT = (
+    'شما قبلاً برای این پیشنهاد پیام ارسال کرده‌اید.'
+)
+
+EMPLOYER_MESSAGE_EMPTY = (
+    'متن پیام نمی‌تواند خالی باشد.'
+)
+
+BID_NOT_OPEN = (
+    'این پیشنهاد در وضعیتی نیست که بتوان برای آن پیام ارسال کرد.'
+)
+
+PRICE_SCORE_INVALID = (
+    'امتیاز قیمت باید عددی بین ۱ تا ۵ باشد.'
+)
+
+EXPERIENCE_SCORE_INVALID = (
+    'امتیاز سابقه باید عددی بین ۱ تا ۵ باشد.'
+)
+
+# Milestones
+MILESTONE_NO_WINNER = (
+    'برای این پروژه هنوز برنده‌ای انتخاب نشده است.'
+)
+
+MILESTONE_LOCKED = (
+    'این مرحله دیگر قابل ویرایش نیست.'
+)
+
+MILESTONE_NOT_PENDING = (
+    'این مرحله در وضعیت قابل تحویل نیست.'
+)
+
+MILESTONE_NOT_DELIVERED = (
+    'این مرحله هنوز تحویل داده نشده است.'
+)
+
+MILESTONE_DELIVERED = (
+    'مرحله با موفقیت تحویل داده شد.'
+)
+
+MILESTONE_APPROVED = (
+    'مرحله تأیید شد.'
+)
+
+MILESTONE_REJECTED = (
+    'مرحله برای اصلاح به فریلنسر بازگردانده شد.'
+)
+
+PROJECT_COMPLETED = (
+    'همه مراحل تأیید شد و پروژه تکمیل گردید.'
+)
+
+# Resume
+RESUME_EXISTS = (
+    'شما قبلاً رزومه ساخته‌اید.'
+)
+
+RESUME_NOT_FOUND = (
+    'رزومه‌ای برای این کاربر یافت نشد.'
+)
+
+RESUME_PRIVATE = (
+    'رزومه این کاربر خصوصی است.'
+)
+
+EXPERIENCE_NOT_FOUND = (
+    'سابقه کاری موردنظر یافت نشد.'
 )

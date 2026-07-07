@@ -96,6 +96,7 @@
   gap: $gap;
   flex-wrap: $wrap;
 }
+
 @mixin hover-underline(
   $color:$primary-color,
   $height: 2px,
@@ -185,4 +186,53 @@
   max-width: $container-max;
   margin-inline: auto;     // وسط‌چین — تو RTL هم درست کار می‌کنه
   padding-inline: 24px;
+}
+
+@mixin bookmark(
+  $color: $danger,
+  $size: 35px,
+  $radius: 10px
+) {
+  .bookmark {
+    width: $size;
+    height: $size;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    border-radius: $radius;
+
+    input {
+      display: none;
+
+      &:checked + .svgIcon path {
+        fill: $color;
+        animation: bookmark 0.5s linear;
+      }
+    }
+  }
+
+  .svgIcon {
+    path {
+      stroke: $color;
+      fill: transparent;
+      stroke-dasharray: 200 0;
+      stroke-dashoffset: 0;
+      transition: fill 0.5s, stroke-dasharray 0.5s, stroke-dashoffset 0.5s;
+    }
+  }
+
+  @keyframes bookmark {
+    0% {
+      stroke-dasharray: 0 200;
+      stroke-dashoffset: 80;
+    }
+
+    100% {
+      stroke-dasharray: 200 0;
+    }
+  }
 }
