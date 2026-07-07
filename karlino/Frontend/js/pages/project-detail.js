@@ -30,6 +30,9 @@ async function loadProject() {
   }
 
   renderProject(project);
+
+  // وضعیت دکمه‌ی «ارسال درخواست» را بر اساس پاسخ سرور تنظیم کن
+  setupApplyState(project);
 }
 
 
@@ -67,6 +70,26 @@ function renderProject(project) {
 
   // اسم پروژه را داخل پاپ‌آپ درخواست هم نشان بده
   document.getElementById("apply-project-name").textContent = "پروژه: " + project.title;
+}
+
+
+// وضعیت دکمه‌ی «ارسال درخواست»
+// این اطلاعات از خود سرور می‌آید، پس حتی بعد از رفرش یا خروج و برگشت هم درست می‌ماند
+function setupApplyState(project) {
+  const applyButton = document.getElementById("apply-button");
+  const applyButtonText = document.getElementById("apply-button-text");
+
+  // اگر پروژه مال خود کاربر است، دکمه اصلا نشان داده نشود
+  if (project.is_owner) {
+    applyButton.style.display = "none";
+    return;
+  }
+
+  // اگر کاربر قبلاً برای این پروژه درخواست داده، دکمه غیرفعال بماند
+  if (project.has_applied) {
+    applyButton.disabled = true;
+    applyButtonText.textContent = "درخواست ارسال شد";
+  }
 }
 
 
@@ -186,6 +209,11 @@ function setupApplyForm() {
   // --- بازکردن پاپ‌آپ با دکمه‌ی «ارسال درخواست» ---
   applyButton.addEventListener("click", function () {
 
+    // اگر دکمه غیرفعال است (قبلاً درخواست داده)، هیچ کاری نکن
+    if (applyButton.disabled) {
+      return;
+    }
+
     // ارسال درخواست نیاز به لاگین دارد
     const token = localStorage.getItem("access");
     if (!token) {
@@ -261,7 +289,10 @@ function setupApplyForm() {
 
         applyForm.reset();
 
-        // دکمه‌ی اصلی صفحه را هم به حالت «ارسال شد» ببر
+        // دکمه‌ی اصلی صفحه را غیرفعال کن و به حالت «ارسال شد» ببر
+        // سرور هم از این به بعد has_applied را true برمی‌گرداند،
+        // پس حتی بعد از خروج و برگشت هم دکمه غیرفعال می‌ماند
+        applyButton.disabled = true;
         document.getElementById("apply-button-text").textContent = "درخواست ارسال شد";
 
         // بعد از ۲ ثانیه پاپ‌آپ را ببند تا کاربر پیام موفقیت را ببیند

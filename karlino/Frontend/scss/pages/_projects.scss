@@ -549,6 +549,7 @@
     direction: rtl;
     height: fit-content;
     padding: 25px;
+    margin-right: 15px;
     border-radius: $radius-md;
     background-color: $secondary-color-box;
     border: 1px solid $border-muted;
@@ -572,7 +573,7 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
-      border: 1px solid $highlight;
+      border: .5px solid $highlight;
 
 
       h3 {

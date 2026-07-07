@@ -470,3 +470,13 @@
     transform: translateY(0);
   }
 }
+// ===== حالت غیرفعال دکمه‌ی ارسال درخواست (وقتی قبلاً درخواست داده) =====
+.project-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

@@ -14,6 +14,7 @@
 <section class="dashboard-layout">
     
     <!-- ===== منوی کناری پنل ===== -->
+    <!-- ترتیب دکمه‌ها بر اساس اولویت است: از پرکاربردترین به کم‌کاربردترین -->
     <aside class="dashboard-sidebar">
         
         <div class="sidebar-user">
@@ -31,38 +32,27 @@
                 <i class="fa-solid fa-gauge"></i>
                 <span>خلاصه وضعیت</span>
             </button>
+            <button class="nav-item" data-section="section-profile">
+                <i class="fa-solid fa-id-card"></i>
+                <span>پروفایل کاربر</span>
+            </button>
             <button class="nav-item" data-section="section-my-projects">
                 <i class="fa-solid fa-diagram-project"></i>
                 <span>پروژه‌های من</span>
-            </button>
-            <button class="nav-item" data-section="section-my-applications">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span>درخواست‌های من</span>
-            </button>
-            <button class="nav-item" data-section="section-my-bids">
-                <i class="fa-solid fa-hand-holding-dollar"></i>
-                <span>پیشنهادهای من</span>
-            </button>
-            <button class="nav-item" data-section="section-favorites">
-                <i class="fa-solid fa-bookmark"></i>
-                <span>پروژه‌های ذخیره‌شده</span>
             </button>
             <button class="nav-item" data-section="section-incoming-applications">
                 <i class="fa-solid fa-inbox"></i>
                 <span>درخواست‌های دریافتی</span>
             </button>
-            <button class="nav-item" data-section="section-incoming-bids">
-                <i class="fa-solid fa-envelope-open-text"></i>
-                <span>پیشنهادهای دریافتی</span>
+            <button class="nav-item" data-section="section-my-applications">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>درخواست‌های من</span>
             </button>
-            <button class="nav-item" data-section="section-charts">
-                <i class="fa-solid fa-chart-column"></i>
-                <span>نمودارها</span>
+            <button class="nav-item" data-section="section-favorites">
+                <i class="fa-solid fa-bookmark"></i>
+                <span>پروژه‌های ذخیره‌شده</span>
             </button>
-            <button class="nav-item" data-section="section-profile">
-                <i class="fa-solid fa-id-card"></i>
-                <span>پروفایل کاربر</span>
-            </button>
+            
             <button class="nav-item" data-section="section-company">
                 <i class="fa-solid fa-building"></i>
                 <span>پروفایل شرکت</span>
@@ -87,6 +77,14 @@
             <div class="stat-cards" id="summaryCards">
                 <p class="loading-text">در حال بارگذاری...</p>
             </div>
+            
+            <!-- نمودار خطی فعالیت؛ داده‌اش از endpoint نمودارها می‌آید -->
+            <div class="summary-chart-box" id="summaryChartBox">
+                <p class="chart-title">فعالیت شش ماه اخیر</p>
+                <div class="summary-chart">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
         </section>
         
         <!-- پروژه‌های من -->
@@ -98,6 +96,16 @@
             <div class="items-list" id="myProjectsList"></div>
         </section>
         
+        <!-- درخواست‌های دریافتی -->
+        <section class="dashboard-section hidden" id="section-incoming-applications">
+            <h2 class="section-title">
+                <div class="ping"></div>
+                درخواست‌های دریافتی
+            </h2>
+            <span class="field-error" id="error-incoming-actions"></span>
+            <div class="items-list" id="incomingApplicationsList"></div>
+        </section>
+        
         <!-- درخواست‌های من -->
         <section class="dashboard-section hidden" id="section-my-applications">
             <h2 class="section-title">
@@ -107,15 +115,6 @@
             <div class="items-list" id="myApplicationsList"></div>
         </section>
         
-        <!-- پیشنهادهای من -->
-        <section class="dashboard-section hidden" id="section-my-bids">
-            <h2 class="section-title">
-                <div class="ping"></div>
-                پیشنهادهای من
-            </h2>
-            <div class="items-list" id="myBidsList"></div>
-        </section>
-        
         <!-- پروژه‌های ذخیره‌شده -->
         <section class="dashboard-section hidden" id="section-favorites">
             <h2 class="section-title">
@@ -123,33 +122,6 @@
                 پروژه‌های ذخیره‌شده
             </h2>
             <div class="items-list" id="favoritesList"></div>
-        </section>
-        
-        <!-- درخواست‌های دریافتی -->
-        <section class="dashboard-section hidden" id="section-incoming-applications">
-            <h2 class="section-title">
-                <div class="ping"></div>
-                درخواست‌های دریافتی
-            </h2>
-            <div class="items-list" id="incomingApplicationsList"></div>
-        </section>
-        
-        <!-- پیشنهادهای دریافتی -->
-        <section class="dashboard-section hidden" id="section-incoming-bids">
-            <h2 class="section-title">
-                <div class="ping"></div>
-                پیشنهادهای دریافتی
-            </h2>
-            <div class="items-list" id="incomingBidsList"></div>
-        </section>
-        
-        <!-- نمودارها -->
-        <section class="dashboard-section hidden" id="section-charts">
-            <h2 class="section-title">
-                <div class="ping"></div>
-                نمودارها
-            </h2>
-            <div class="charts-grid" id="chartsContainer"></div>
         </section>
         
         <!-- پروفایل کاربر -->
@@ -311,6 +283,8 @@
 
 <div id="footer-placeholder"></div>
 
+<!-- کتابخانه‌ی Chart.js برای نمودار خطی خلاصه وضعیت -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/layout.js"></script>

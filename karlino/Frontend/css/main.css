@@ -219,7 +219,7 @@ img {
   text-align: center;
 }
 #header-placeholder header .navbar ul li .dropdown li a:hover {
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   color: #fd653c;
 }
 #header-placeholder header .navbar ul li:hover .dropdown {
@@ -482,7 +482,7 @@ footer .footer-container .footer-about .card .socialContainer {
   justify-content: center;
   overflow: hidden;
   border-radius: 50%;
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   transition: 0.3s;
 }
 footer .footer-container .footer-about .card .socialContainer:active {
@@ -814,7 +814,7 @@ footer .footer-bottom p {
   min-width: 45px;
   height: 45px;
   border-radius: 12px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   color: hsl(222, 77%, 76%);
   font-size: 20px;
   flex-shrink: 0;
@@ -968,7 +968,7 @@ footer .footer-bottom p {
   margin: 20px auto;
   width: 85px;
   height: 85px;
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border: none;
   border-radius: 12px;
 }
@@ -1034,7 +1034,7 @@ footer .footer-bottom p {
   align-items: center;
   margin-left: 30px;
   font-size: 55px;
-  color: hsl(222, 39%, 10%);
+  color: hsla(221, 37%, 10%, 0.31);
 }
 .post_job .right .text-post h2 {
   font-size: 25px;
@@ -1043,7 +1043,7 @@ footer .footer-bottom p {
 .post_job .right .text-post p {
   margin-top: 5px;
   font-size: 16px;
-  color: hsl(222, 39%, 10%);
+  color: hsla(221, 37%, 10%, 0.31);
 }
 .post_job .right .post {
   display: flex;
@@ -1157,28 +1157,37 @@ footer .footer-bottom p {
   justify-content: space-between;
   align-items: center;
 }
+.popular-projects .projects-cards .card-project .card-top #checkboxInput {
+  display: none;
+}
 .popular-projects .projects-cards .card-project .card-top .bookmark {
+  margin-left: 20px;
+  cursor: pointer;
   width: 35px;
   height: 35px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  cursor: pointer;
+  justify-content: center;
   border-radius: 10px;
+}
+.popular-projects .projects-cards .card-project .card-top .svgIcon path {
+  stroke-dasharray: 200 0;
+  stroke-dashoffset: 0;
+  stroke: hsl(9, 31%, 55%);
+  fill: rgba(221, 221, 221, 0);
+  transition-delay: 0s;
+  transition-duration: 0.5s;
 }
 .popular-projects .projects-cards .card-project .card-top .bookmark input {
   display: none;
 }
-.popular-projects .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path {
+.popular-projects .projects-cards .card-project .card-top .bookmark input:checked + .svgIcon path,
+.popular-projects .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
   fill: hsl(9, 31%, 55%);
   animation: bookmark 0.5s linear;
 }
-.popular-projects .projects-cards .card-project .card-top .svgIcon path {
-  stroke: hsl(9, 31%, 55%);
-  fill: transparent;
-  stroke-dasharray: 200 0;
-  stroke-dashoffset: 0;
-  transition: fill 0.5s, stroke-dasharray 0.5s, stroke-dashoffset 0.5s;
+.popular-projects .projects-cards .card-project .card-top #checkboxInput:checked ~ .svgIcon path {
+  transition-delay: 0.5s;
 }
 @keyframes bookmark {
   0% {
@@ -1214,7 +1223,7 @@ footer .footer-bottom p {
   margin: 20px auto;
   width: 85px;
   height: 85px;
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border: none;
   border-radius: 12px;
 }
@@ -1250,9 +1259,6 @@ footer .footer-bottom p {
   font-weight: 700;
   line-height: 1.5;
   min-height: 3em;
-  min-height: 3em;
-  display: flex;
-  align-items: center;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1482,7 +1488,7 @@ footer .footer-bottom p {
   box-shadow: 0 0 0 1.5px #2b2c37, 0 0 25px -17px #000;
   border-radius: 12px;
   border: 1px solid hsl(223, 41%, 21%);
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   outline: none;
   color: hsl(221, 100%, 99%);
   transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1);
@@ -1513,7 +1519,7 @@ footer .footer-bottom p {
   padding: 0 18px;
   border-radius: 12px;
   border: 1px solid hsl(222, 23%, 43%);
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1665,7 +1671,7 @@ footer .footer-bottom p {
   margin: 20px auto;
   width: 85px;
   height: 85px;
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border: none;
   border-radius: 12px;
 }
@@ -1803,6 +1809,7 @@ footer .footer-bottom p {
   direction: rtl;
   height: fit-content;
   padding: 25px;
+  margin-right: 15px;
   border-radius: 20px;
   background-color: hsla(224, 61%, 6%, 0.44);
   border: 1px solid hsl(223, 41%, 21%);
@@ -1817,13 +1824,13 @@ footer .footer-bottom p {
   color: #fd653c;
 }
 .project-layout .project-sidebar .filter-box {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   padding: 20px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  border: 1px solid hsl(222, 23%, 43%);
+  border: 0.5px solid hsl(222, 23%, 43%);
 }
 .project-layout .project-sidebar .filter-box h3 {
   font-size: 16px;
@@ -1964,7 +1971,7 @@ footer .footer-bottom p {
   justify-content: center;
 }
 .project-pagination .page-btn:hover {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border-color: hsl(222, 23%, 43%);
   color: hsl(222, 77%, 76%);
   transform: translateY(-2px);
@@ -2018,7 +2025,7 @@ footer .footer-bottom p {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border-radius: 12px;
 }
 .container-project .project-info .project-avatar i {
@@ -2377,7 +2384,7 @@ footer .footer-bottom p {
   flex-wrap: nowrap;
   width: 36px;
   height: 36px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border: 1px solid hsla(222, 23%, 43%, 0.3);
   border-radius: 50%;
   color: oklch(76% 0.05 264deg);
@@ -2413,7 +2420,7 @@ footer .footer-bottom p {
   appearance: textfield;
 }
 .apply-modal .apply-modal-card .form label .input {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
   width: 100%;
   padding: 20px 10px 5px 5px;
@@ -2494,6 +2501,15 @@ footer .footer-bottom p {
     transform: translateY(0);
   }
 }
+.project-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.project-submit-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .hero-cat {
   position: relative;
   margin: 0 30px;
@@ -2673,7 +2689,7 @@ footer .footer-bottom p {
   margin: 20px auto;
   width: 85px;
   height: 85px;
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border: none;
   border-radius: 12px;
 }
@@ -2739,7 +2755,7 @@ footer .footer-bottom p {
   justify-content: center;
 }
 .category-pagination .page-btn:hover {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   border-color: hsl(222, 23%, 43%);
   color: hsl(222, 77%, 76%);
   transform: translateY(-2px);
@@ -2842,7 +2858,7 @@ footer .footer-bottom p {
   width: 100%;
 }
 .card-login .form label .input {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
   width: 100%;
   padding: 20px 10px 5px 5px;
@@ -3009,7 +3025,7 @@ footer .footer-bottom p {
   width: 100%;
 }
 .card-reg .form label .input {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
   width: 100%;
   padding: 20px 10px 5px 5px;
@@ -3060,7 +3076,7 @@ footer .footer-bottom p {
   gap: 8px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   transition: 0.3s;
@@ -3193,7 +3209,7 @@ footer .footer-bottom p {
   width: 100%;
 }
 .forgot-password .form label .input {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
   width: 100%;
   padding: 20px 10px 5px 5px;
@@ -3292,7 +3308,7 @@ footer .footer-bottom p {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border: 1px solid hsla(222, 23%, 43%, 0.3);
   border-radius: 50%;
 }
@@ -3350,11 +3366,11 @@ footer .footer-bottom p {
   transition: 0.25s;
 }
 .dashboard-layout .dashboard-sidebar .sidebar-nav .nav-item:hover {
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
 }
 .dashboard-layout .dashboard-sidebar .sidebar-nav .nav-item.active {
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   color: #fd653c;
   border-right: 3px solid #fd653c;
 }
@@ -3416,7 +3432,7 @@ footer .footer-bottom p {
   flex-wrap: nowrap;
   gap: 6px;
   padding: 4px 12px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border: 1px solid hsl(147, 21%, 58%);
   border-radius: 20px;
   font-size: 12px;
@@ -3458,7 +3474,7 @@ footer .footer-bottom p {
   flex-wrap: nowrap;
   width: 42px;
   height: 42px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border-radius: 12px;
   margin-bottom: 14px;
 }
@@ -3542,7 +3558,7 @@ footer .footer-bottom p {
 .dashboard-layout .dashboard-content .items-list .item-card .item-message {
   margin-top: 12px;
   padding: 12px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border-right: 3px solid #fd653c;
   border-radius: 12px;
   font-size: 14px;
@@ -3637,7 +3653,7 @@ footer .footer-bottom p {
 .dashboard-layout .dashboard-content .charts-grid .chart-card .chart-row .chart-track {
   flex: 1;
   height: 10px;
-  background: hsl(222, 39%, 10%);
+  background: hsla(221, 37%, 10%, 0.31);
   border-radius: 20px;
   overflow: hidden;
 }
@@ -3675,7 +3691,7 @@ footer .footer-bottom p {
   width: 100%;
 }
 .dashboard-layout .dashboard-content .dashboard-form label .input {
-  background-color: hsl(222, 39%, 10%);
+  background-color: hsla(221, 37%, 10%, 0.31);
   color: hsl(221, 100%, 99%);
   width: 100%;
   padding: 20px 10px 5px 5px;
@@ -3787,6 +3803,50 @@ footer .footer-bottom p {
   .dashboard-layout .dashboard-content .dashboard-form .form-row {
     grid-template-columns: 1fr;
   }
+}
+
+.dashboard-layout .dashboard-content .summary-chart-box {
+  margin-top: 24px;
+  padding: 20px;
+  background: hsla(224, 61%, 6%, 0.44);
+  border: 1px solid hsla(222, 23%, 43%, 0.3);
+  border-radius: 20px;
+}
+.dashboard-layout .dashboard-content .summary-chart-box.hidden {
+  display: none;
+}
+.dashboard-layout .dashboard-content .summary-chart-box .chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: hsl(221, 100%, 99%);
+  margin-bottom: 18px;
+}
+.dashboard-layout .dashboard-content .summary-chart-box .summary-chart {
+  position: relative;
+  height: 280px;
+}
+
+.dashboard-layout .dashboard-content .item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.dashboard-layout .dashboard-content .approve-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid hsl(147, 21%, 58%);
+  border-radius: 12px;
+  color: hsl(147, 21%, 58%);
+  font-size: 14px;
+  font-family: Vazirmatn;
+  cursor: pointer;
+  transition: 0.25s;
+}
+.dashboard-layout .dashboard-content .approve-btn:hover {
+  background: hsl(147, 21%, 58%);
+  color: hsl(221, 100%, 99%);
 }
 
 /*# sourceMappingURL=main.css.map */

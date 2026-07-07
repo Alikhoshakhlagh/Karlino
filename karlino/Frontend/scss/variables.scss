@@ -5,6 +5,7 @@ $secondary-color: hsl(222 39% 10%);           // آبی — کنش ثانویه
 
 $secondary-color-box: hsl(224 61% 6% / 0.44); // باکس/کارت (هم‌نقشِ قبلی)
 
+
 $third-color:hsl(222 77% 76%);
 $forth-color:oklch(0.76 0.1 84);
 
@@ -12,7 +13,8 @@ $text-color: hsl(221 100% 99%);
 $gray-color: oklch(0.76 0.05 264);
 $mute-color:rgba(255, 255, 255, 0.51);
 
-$glass-color: hsl(222 39% 10%);
+//$glass-color: hsl(222 39% 10%);
+$glass-color: hsla(221, 37%, 10%, 0.31);
 $glass-border: hsl(222 23% 43% / 0.30);
 $glass-highlight: hsl(221 100% 99% / 0.05);
 
