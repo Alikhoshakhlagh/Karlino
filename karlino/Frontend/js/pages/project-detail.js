@@ -18,18 +18,30 @@ if (!projectId) {
 
 // ۳) گرفتن اطلاعات این پروژه‌ی خاص از سرور
 async function loadProject() {
-  // مسیر این پروژه: /api/projects/<id>/
-  // apiRequest خودش BASE_URL را جلوی مسیر می‌گذارد، پس فقط مسیر را می‌دهیم
-  const project = await apiRequest(ENDPOINTS.projects + projectId + "/");
+  try {
+    // مسیر این پروژه: /api/projects/<id>/
+    // apiRequest خودش BASE_URL را جلوی مسیر می‌گذارد، پس فقط مسیر را می‌دهیم
+    const project = await apiRequest(ENDPOINTS.projects + projectId + "/");
 
-  // اگر پروژه پیدا نشد یا پاسخ معتبر نبود
-  if (!project || !project.id) {
+    // اگر پاسخ معتبر نبود
+    if (!project || !project.id) {
+      const container = document.querySelector(".container-project");
+      container.textContent = "پروژه پیدا نشد.";
+      return;
+    }
+
+    renderProject(project);
+
+    // وضعیت دکمه‌ی «ارسال درخواست» را تنظیم کن
+    setupApplyState(project);
+
+  } catch (error) {
+    // اگر سرور خطا داد (مثلاً پروژه بسته شده یا دیگر قابل نمایش نیست)
+    // بدون این catch، صفحه کاملاً خالی می‌ماند و کاربر فکر می‌کند لینک خراب است
+    console.error("خطا در دریافت پروژه:", error);
     const container = document.querySelector(".container-project");
-    container.textContent = "پروژه پیدا نشد.";
-    return;
+    container.textContent = "پروژه پیدا نشد یا دیگر در دسترس نیست.";
   }
-
-  renderProject(project);
 }
 
 
@@ -67,6 +79,91 @@ function renderProject(project) {
 
   // اسم پروژه را داخل پاپ‌آپ درخواست هم نشان بده
   document.getElementById("apply-project-name").textContent = "پروژه: " + project.title;
+}
+
+
+// وضعیت دکمه‌ی «ارسال درخواست»
+// این اطلاعات از خود سرور می‌آید، پس حتی بعد از رفرش یا خروج و برگشت هم درست می‌ماند
+async function setupApplyState(project) {
+  const applyButton = document.getElementById("apply-button");
+  const applyButtonText = document.getElementById("apply-button-text");
+
+  // --- حالت ۱: پروژه مال خود کاربر است ← دکمه اصلا نشان داده نشود ---
+  // اگر سرور is_owner را برگرداند از همان استفاده می‌کنیم؛
+  // وگرنه ایمیل سازنده‌ی پروژه را با ایمیل کاربر لاگین‌شده مقایسه می‌کنیم
+  let isOwner = false;
+
+  if (project.is_owner === true) {
+    isOwner = true;
+  } else {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser && project.creator_email) {
+      const user = JSON.parse(savedUser);
+      if (user.email === project.creator_email) {
+        isOwner = true;
+      }
+    }
+  }
+
+  if (isOwner) {
+    applyButton.style.display = "none";
+    return;
+  }
+
+  // --- حالت ۲: کاربر قبلاً برای این پروژه درخواست داده ---
+  // اگر سرور has_applied را برگرداند، همان کافی است
+  if (project.has_applied === true) {
+    disableApplyButton("درخواست ارسال شد");
+    return;
+  }
+
+  // اگر has_applied در پاسخ نبود، خودمان درخواست‌های کاربر را چک می‌کنیم.
+  // مزیت این روش: وضعیت درخواست را هم داریم و می‌توانیم متن دقیق‌تری نشان دهیم
+  // (مثلاً اگر درخواست رد شده باشد، کاربر بفهمد چرا نمی‌تواند دوباره بفرستد)
+  const token = localStorage.getItem("access");
+  if (!token) {
+    return; // کاربر لاگین نیست؛ با کلیک روی دکمه به صفحه‌ی ورود می‌رود
+  }
+
+  try {
+    const data = await apiRequest(ENDPOINTS.myApplications);
+
+    // پاسخ ممکن است آرایه‌ی ساده باشد یا صفحه‌بندی‌شده (results)
+    const applications = Array.isArray(data) ? data : (data.results || []);
+
+    for (let i = 0; i < applications.length; i++) {
+      const app = applications[i];
+
+      // آیا درخواستی برای همین پروژه ثبت شده است؟
+      if (app.project === projectId) {
+
+        if (app.status === "rejected") {
+          disableApplyButton("درخواست شما رد شد");
+        } else if (app.status === "accepted") {
+          disableApplyButton("درخواست شما پذیرفته شد");
+        } else {
+          disableApplyButton("درخواست ارسال شد");
+        }
+
+        return;
+      }
+    }
+
+  } catch (error) {
+    // اگر نشد درخواست‌ها را بگیریم، دکمه فعال می‌ماند؛
+    // خود سرور هم جلوی درخواست تکراری را می‌گیرد و پیام فارسی می‌دهد
+    console.error("خطا در بررسی درخواست‌های قبلی:", error);
+  }
+}
+
+
+// غیرفعال‌کردن دکمه‌ی ارسال درخواست با متن دلخواه
+function disableApplyButton(text) {
+  const applyButton = document.getElementById("apply-button");
+  const applyButtonText = document.getElementById("apply-button-text");
+
+  applyButton.disabled = true;
+  applyButtonText.textContent = text;
 }
 
 
@@ -156,6 +253,11 @@ function renderCategories(categories) {
 function setupFavorite() {
   const checkbox = document.getElementById("bookmark-checkbox");
 
+  // حالت اولیه: اگر این پروژه قبلاً ذخیره شده، چک‌باکس از اول تیک‌خورده باشد.
+  // بدون این، پروژه‌ی ذخیره‌شده خالی نشان داده می‌شد و کلیک کاربر
+  // به‌جای ذخیره‌کردن، ناخواسته آن را حذف می‌کرد!
+  markFavoriteState(checkbox);
+
   checkbox.addEventListener("change", async function () {
     const token = localStorage.getItem("access");
 
@@ -174,6 +276,34 @@ function setupFavorite() {
 }
 
 
+// چک‌کردن اینکه این پروژه در ذخیره‌شده‌های کاربر هست یا نه
+async function markFavoriteState(checkbox) {
+  const token = localStorage.getItem("access");
+
+  // کاربر لاگین نیست؛ چیزی برای چک‌کردن نداریم
+  if (!token) {
+    return;
+  }
+
+  try {
+    const data = await apiRequest(ENDPOINTS.favorites);
+
+    // پاسخ ممکن است آرایه‌ی ساده باشد یا صفحه‌بندی‌شده (results)
+    const favorites = Array.isArray(data) ? data : (data.results || []);
+
+    for (let i = 0; i < favorites.length; i++) {
+      if (favorites[i].project === projectId) {
+        checkbox.checked = true;
+        return;
+      }
+    }
+
+  } catch (error) {
+    console.error("خطا در بررسی ذخیره‌شده‌ها:", error);
+  }
+}
+
+
 // ===== پاپ‌آپ ارسال درخواست همکاری =====
 function setupApplyForm() {
 
@@ -185,6 +315,11 @@ function setupApplyForm() {
 
   // --- بازکردن پاپ‌آپ با دکمه‌ی «ارسال درخواست» ---
   applyButton.addEventListener("click", function () {
+
+    // اگر دکمه غیرفعال است (قبلاً درخواست داده)، هیچ کاری نکن
+    if (applyButton.disabled) {
+      return;
+    }
 
     // ارسال درخواست نیاز به لاگین دارد
     const token = localStorage.getItem("access");
@@ -261,8 +396,10 @@ function setupApplyForm() {
 
         applyForm.reset();
 
-        // دکمه‌ی اصلی صفحه را هم به حالت «ارسال شد» ببر
-        document.getElementById("apply-button-text").textContent = "درخواست ارسال شد";
+        // دکمه‌ی اصلی صفحه را غیرفعال کن و به حالت «ارسال شد» ببر
+        // سرور هم از این به بعد وجود این درخواست را می‌داند،
+        // پس حتی بعد از خروج و برگشت هم دکمه غیرفعال می‌ماند
+        disableApplyButton("درخواست ارسال شد");
 
         // بعد از ۲ ثانیه پاپ‌آپ را ببند تا کاربر پیام موفقیت را ببیند
         setTimeout(function () {

@@ -612,3 +612,92 @@
     }
   }
 }
+// ===== نمودار فعالیت داخل خلاصه وضعیت =====
+.dashboard-layout .dashboard-content .summary-chart-box {
+  margin-top: 24px;
+  padding: 20px;
+
+  background: $secondary-color-box;
+  border: 1px solid $glass-border;
+  border-radius: $radius-md;
+
+  &.hidden {
+    display: none;
+  }
+
+  .chart-title {
+    font-size: $fs-base;
+    font-weight: $fw-bold;
+    color: $text-color;
+
+    margin-bottom: 18px;
+  }
+
+  .summary-chart {
+    position: relative;
+    height: 280px;
+  }
+}
+
+// ===== ردیف دکمه‌های کارت‌ها (تأیید / رد / حذف) =====
+.dashboard-layout .dashboard-content .item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+// ===== دکمه‌ی تأیید (سبز)؛ دکمه‌ی رد و حذف از همان revoke-btn استفاده می‌کنند =====
+.dashboard-layout .dashboard-content .approve-btn {
+  padding: 8px 18px;
+
+  background: transparent;
+  border: 1px solid $success;
+  border-radius: $radius-sm;
+
+  color: $success;
+  font-size: $fs-small;
+  font-family: Vazirmatn;
+
+  cursor: pointer;
+  transition: 0.25s;
+
+  &:hover {
+    background: $success;
+    color: $text-color;
+  }
+}
+.dashboard-layout {
+  .dashboard-content {
+    .icon-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+
+      background: transparent;
+      border: 1px solid $danger;
+      border-radius: $radius-sm;
+
+      color: $danger;
+      font-size: 14px;
+
+      cursor: pointer;
+      transition: background-color .25s ease, color .25s ease;
+
+      &:hover:not(:disabled) {
+        background: $danger;
+        color: $text-color;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

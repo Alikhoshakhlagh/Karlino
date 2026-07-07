@@ -25,7 +25,7 @@
     h3 {
       position: relative;
       left: 3px;
-      top: -53px;
+      top: -70px;
 
       font-size: $fs-hero;
       font-weight: $fw-bold;
@@ -78,11 +78,14 @@
 
 .project-layout {
   direction: ltr;
-  margin: 0 40px 0 40px;
+  margin: 80px 40px 0 40px;
+
   //margin: 40px;
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 30px;
+  //position: relative;
+  //top: -90px;
 
   .project-main,
   .project-sidebar {
@@ -546,6 +549,7 @@
     direction: rtl;
     height: fit-content;
     padding: 25px;
+    margin-right: 15px;
     border-radius: $radius-md;
     background-color: $secondary-color-box;
     border: 1px solid $border-muted;
@@ -569,7 +573,7 @@
       display: flex;
       flex-direction: column;
       gap: 18px;
-      border: 1px solid $highlight;
+      border: .5px solid $highlight;
 
 
       h3 {
