@@ -3849,4 +3849,28 @@ footer .footer-bottom p {
   color: hsl(221, 100%, 99%);
 }
 
+.dashboard-layout .dashboard-content .icon-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid hsl(9, 31%, 55%);
+  border-radius: 12px;
+  color: hsl(9, 31%, 55%);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.dashboard-layout .dashboard-content .icon-btn:hover:not(:disabled) {
+  background: hsl(9, 31%, 55%);
+  color: hsl(221, 100%, 99%);
+}
+.dashboard-layout .dashboard-content .icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /*# sourceMappingURL=main.css.map */

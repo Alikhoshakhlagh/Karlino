@@ -668,3 +668,36 @@
     color: $text-color;
   }
 }
+.dashboard-layout {
+  .dashboard-content {
+    .icon-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+
+      background: transparent;
+      border: 1px solid $danger;
+      border-radius: $radius-sm;
+
+      color: $danger;
+      font-size: 14px;
+
+      cursor: pointer;
+      transition: background-color .25s ease, color .25s ease;
+
+      &:hover:not(:disabled) {
+        background: $danger;
+        color: $text-color;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

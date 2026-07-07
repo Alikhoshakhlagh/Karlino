@@ -451,7 +451,7 @@ async function loadIncomingApplications() {
         const approveButtons = incomingApplicationsList.querySelectorAll(".approve-btn");
         approveButtons.forEach(function (button) {
             button.addEventListener("click", function () {
-                answerApplication(button.dataset.id, "accept");
+                answerApplication(button, "accept");
             });
         });
 
@@ -459,7 +459,7 @@ async function loadIncomingApplications() {
         const rejectButtons = incomingApplicationsList.querySelectorAll(".revoke-btn");
         rejectButtons.forEach(function (button) {
             button.addEventListener("click", function () {
-                answerApplication(button.dataset.id, "reject");
+                answerApplication(button, "reject");
             });
         });
 
@@ -474,12 +474,23 @@ async function loadIncomingApplications() {
 }
 
 // تأیید یا رد یک درخواست دریافتی
-// action یا "accept" است یا "reject"
-async function answerApplication(applicationId, action) {
+// button همان دکمه‌ای است که کلیک شده؛ action یا "accept" است یا "reject"
+// نکته: به‌جای لود دوباره‌ی کل لیست، فقط همین کارت را سر جایش آپدیت می‌کنیم
+// تا صفحه نپرد و اسکرول تکان نخورد.
+async function answerApplication(button, action) {
+
+    const applicationId = button.dataset.id;
 
     // پاک‌کردن خطای قبلی
     incomingActionsError.textContent = "";
     incomingActionsError.classList.remove("show");
+
+    // تا وقتی جواب سرور نیامده، دکمه‌ها غیرفعال باشند تا دوبار کلیک نشود
+    const card = button.closest(".item-card");
+    const cardButtons = card.querySelectorAll("button");
+    cardButtons.forEach(function (item) {
+        item.disabled = true;
+    });
 
     try {
         const response = await fetch(BASE_URL + ENDPOINTS.applications + applicationId + "/" + action + "/", {
@@ -493,18 +504,42 @@ async function answerApplication(applicationId, action) {
         const data = await response.json();
 
         if (response.ok) {
-            // لیست را دوباره بگیر تا وضعیت جدید دیده شود
-            loadIncomingApplications();
+
+            // ۱) نشان وضعیت همین کارت را عوض کن
+            const badge = card.querySelector(".status-badge");
+
+            if (action === "accept") {
+                badge.textContent = bidStatusFa("accepted");
+                badge.className = "status-badge " + statusClass("accepted");
+            } else {
+                badge.textContent = bidStatusFa("rejected");
+                badge.className = "status-badge " + statusClass("rejected");
+            }
+
+            // ۲) دکمه‌های تأیید و رد را از همین کارت حذف کن
+            const actions = card.querySelector(".item-actions");
+            if (actions) {
+                actions.remove();
+            }
+
             return;
         }
 
-        // پیام خطای فارسی سرور را نشان بده
+        // خطا: دکمه‌ها را دوباره فعال کن و پیام فارسی سرور را نشان بده
+        cardButtons.forEach(function (item) {
+            item.disabled = false;
+        });
+
         if (data.detail) {
             incomingActionsError.textContent = data.detail;
             incomingActionsError.classList.add("show");
         }
 
     } catch (error) {
+        cardButtons.forEach(function (item) {
+            item.disabled = false;
+        });
+
         incomingActionsError.textContent = "ارتباط با سرور برقرار نشد";
         incomingActionsError.classList.add("show");
     }
@@ -592,13 +627,13 @@ async function loadFavorites() {
                         <p class="item-title">
                             <a href="project-detail.html?id=${escapeHtml(fav.project)}">${escapeHtml(fav.project_title)}</a>
                         </p>
+                        <button type="button" class="icon-btn remove-fav-btn" data-id="${escapeHtml(fav.project)}" title="حذف از ذخیره‌شده‌ها">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </div>
                     <div class="item-meta">
                         <span><i class="fa-solid fa-user"></i> کارفرما: ${escapeHtml(fav.project_owner_name)}</span>
                         <span><i class="fa-solid fa-calendar"></i> ذخیره‌شده در: ${formatDate(fav.created_at)}</span>
-                    </div>
-                    <div class="item-actions">
-                        <button type="button" class="revoke-btn" data-id="${escapeHtml(fav.project)}">حذف از ذخیره‌شده‌ها</button>
                     </div>
                 </div>
             `;
@@ -606,11 +641,11 @@ async function loadFavorites() {
 
         favoritesList.innerHTML = html;
 
-        // به دکمه‌های «حذف از ذخیره‌شده‌ها» گوش بده
-        const removeButtons = favoritesList.querySelectorAll(".revoke-btn");
+        // به دکمه‌های حذف (آیکون سطل زباله) گوش بده
+        const removeButtons = favoritesList.querySelectorAll(".remove-fav-btn");
         removeButtons.forEach(function (button) {
             button.addEventListener("click", function () {
-                removeFavorite(button.dataset.id);
+                removeFavorite(button);
             });
         });
 
@@ -626,7 +661,14 @@ async function loadFavorites() {
 
 // حذف یک پروژه از ذخیره‌شده‌ها
 // همان endpoint مربوط به toggle است؛ چون پروژه الان ذخیره است، صدازدنش یعنی حذف
-async function removeFavorite(projectId) {
+// نکته: به‌جای لود دوباره‌ی کل لیست، فقط همین کارت را حذف می‌کنیم تا صفحه نپرد
+async function removeFavorite(button) {
+
+    const projectId = button.dataset.id;
+
+    // تا وقتی جواب سرور نیامده، دکمه غیرفعال باشد تا دوبار کلیک نشود
+    button.disabled = true;
+
     try {
         const response = await fetch(BASE_URL + ENDPOINTS.favorites + projectId + "/toggle/", {
             method: "POST",
@@ -637,13 +679,22 @@ async function removeFavorite(projectId) {
         });
 
         if (response.ok) {
-            // لیست را دوباره بگیر تا پروژه‌ی حذف‌شده دیده نشود
-            loadFavorites();
+            // خود کارت را از صفحه حذف کن
+            const card = button.closest(".item-card");
+            card.remove();
+
+            // اگر دیگر کارتی نمانده بود، پیام خالی‌بودن را نشان بده
+            if (favoritesList.querySelectorAll(".item-card").length === 0) {
+                favoritesList.innerHTML = "<p class='empty-text'>هنوز پروژه‌ای ذخیره نکرده‌اید.</p>";
+            }
+
         } else {
+            button.disabled = false;
             console.error("خطا در حذف پروژه‌ی ذخیره‌شده. وضعیت:", response.status);
         }
 
     } catch (error) {
+        button.disabled = false;
         console.error("خطا:", error);
     }
 }
