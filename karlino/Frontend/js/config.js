@@ -16,10 +16,9 @@ const ENDPOINTS = {
     // projects
     projects: "/api/projects/",
     myPosted: "/api/projects/my_posted/",
-    myBids: "/api/projects/my-bids/",
-    incomingBids: "/api/projects/incoming-bids/",
 
     // applications
+    applications: "/api/applications/",
     myApplications: "/api/applications/me/",
     incomingApplications: "/api/applications/incoming/",
 

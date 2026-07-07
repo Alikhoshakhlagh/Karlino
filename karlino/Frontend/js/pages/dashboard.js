@@ -11,13 +11,12 @@ const sidebarUserName = document.getElementById("sidebarUserName");
 const sidebarUserEmail = document.getElementById("sidebarUserEmail");
 
 const summaryCards = document.getElementById("summaryCards");
+const summaryChartBox = document.getElementById("summaryChartBox");
 const myProjectsList = document.getElementById("myProjectsList");
 const myApplicationsList = document.getElementById("myApplicationsList");
-const myBidsList = document.getElementById("myBidsList");
 const favoritesList = document.getElementById("favoritesList");
 const incomingApplicationsList = document.getElementById("incomingApplicationsList");
-const incomingBidsList = document.getElementById("incomingBidsList");
-const chartsContainer = document.getElementById("chartsContainer");
+const incomingActionsError = document.getElementById("error-incoming-actions");
 const sessionsList = document.getElementById("sessionsList");
 
 // یادمان می‌ماند کدام بخش‌ها قبلاً لود شده‌اند تا دوباره درخواست نزنیم
@@ -62,7 +61,7 @@ function projectStatusFa(status) {
     return status;
 }
 
-// وضعیت درخواست / پیشنهاد به فارسی
+// وضعیت درخواست به فارسی
 function bidStatusFa(status) {
     if (status === "pending") return "در انتظار";
     if (status === "shortlisted") return "منتخب اولیه";
@@ -121,6 +120,48 @@ function showFieldError(id, message) {
     }
 }
 
+// خلاصه‌کردن اسم دستگاه از روی user agent
+// مثلاً: "Chrome - ویندوز" به‌جای رشته‌ی طولانی user agent
+function shortDeviceName(userAgent) {
+    if (!userAgent) {
+        return "دستگاه ناشناخته";
+    }
+
+    // تشخیص مرورگر (ترتیب مهم است، چون Edge و Opera هم کلمه‌ی Chrome را دارند)
+    let browser = "مرورگر ناشناخته";
+    if (userAgent.indexOf("Edg") !== -1) {
+        browser = "Edge";
+    } else if (userAgent.indexOf("OPR") !== -1 || userAgent.indexOf("Opera") !== -1) {
+        browser = "Opera";
+    } else if (userAgent.indexOf("Chrome") !== -1) {
+        browser = "Chrome";
+    } else if (userAgent.indexOf("Firefox") !== -1) {
+        browser = "Firefox";
+    } else if (userAgent.indexOf("Safari") !== -1) {
+        browser = "Safari";
+    }
+
+    // تشخیص سیستم‌عامل
+    let os = "";
+    if (userAgent.indexOf("Windows") !== -1) {
+        os = "ویندوز";
+    } else if (userAgent.indexOf("Android") !== -1) {
+        os = "اندروید";
+    } else if (userAgent.indexOf("iPhone") !== -1 || userAgent.indexOf("iPad") !== -1) {
+        os = "آیفون / آیپد";
+    } else if (userAgent.indexOf("Mac") !== -1) {
+        os = "مک";
+    } else if (userAgent.indexOf("Linux") !== -1) {
+        os = "لینوکس";
+    }
+
+    if (os === "") {
+        return browser;
+    }
+
+    return browser + " - " + os;
+}
+
 // ===== جابه‌جایی بین بخش‌های پنل =====
 navItems.forEach(function (item) {
     item.addEventListener("click", function () {
@@ -156,12 +197,9 @@ function loadSection(sectionId) {
 
     if (sectionId === "section-summary") loadSummary();
     if (sectionId === "section-my-projects") loadMyProjects();
-    if (sectionId === "section-my-applications") loadMyApplications();
-    if (sectionId === "section-my-bids") loadMyBids();
-    if (sectionId === "section-favorites") loadFavorites();
     if (sectionId === "section-incoming-applications") loadIncomingApplications();
-    if (sectionId === "section-incoming-bids") loadIncomingBids();
-    if (sectionId === "section-charts") loadCharts();
+    if (sectionId === "section-my-applications") loadMyApplications();
+    if (sectionId === "section-favorites") loadFavorites();
     if (sectionId === "section-profile") loadProfile();
     if (sectionId === "section-company") loadCompany();
     if (sectionId === "section-security") loadSessions();
@@ -220,6 +258,87 @@ async function loadSummary() {
     }
 }
 
+// ===== نمودار فعالیت (داخل خلاصه وضعیت) =====
+// از endpoint نمودارها فقط بخش «فعالیت ماهانه» را می‌گیریم
+// و با کتابخانه‌ی Chart.js به صورت نمودار خطی نشان می‌دهیم.
+async function loadActivityChart() {
+
+    // اگر کتابخانه‌ی Chart.js لود نشده بود (مثلاً CDN در دسترس نبود)، نمودار را مخفی کن
+    if (typeof Chart === "undefined") {
+        summaryChartBox.classList.add("hidden");
+        return;
+    }
+
+    try {
+        const data = await apiRequest(ENDPOINTS.charts);
+        const activity = data.monthly_activity;
+
+        // اگر ساختار مورد انتظار (labels + datasets) را نداشت، نمودار را مخفی کن
+        if (!activity || !Array.isArray(activity.labels) || !Array.isArray(activity.datasets)) {
+            summaryChartBox.classList.add("hidden");
+            return;
+        }
+
+        // برای هر خط نمودار یک رنگ از پالت سایت
+        const lineColors = ["#fd653c", "#7f9fce", "#7fae95"];
+
+        const datasets = [];
+
+        for (let i = 0; i < activity.datasets.length; i++) {
+            const item = activity.datasets[i];
+
+            datasets.push({
+                label: item.label,
+                data: item.data,
+                borderColor: lineColors[i % lineColors.length],
+                backgroundColor: lineColors[i % lineColors.length],
+                tension: 0.3,
+                pointRadius: 3
+            });
+        }
+
+        const canvas = document.getElementById("activityChart");
+
+        new Chart(canvas, {
+            type: "line",
+            data: {
+                labels: activity.labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        rtl: true,
+                        labels: {
+                            color: "#fdfdff",
+                            font: { family: "Vazirmatn" }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: "#a9b1c7", font: { family: "Vazirmatn" } },
+                        grid: { color: "rgba(255, 255, 255, 0.06)" }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        // precision: 0 یعنی روی محور فقط عدد صحیح نشان بده
+                        ticks: { color: "#a9b1c7", precision: 0, font: { family: "Vazirmatn" } },
+                        grid: { color: "rgba(255, 255, 255, 0.06)" }
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        // اگر endpoint نمودارها روی سرور نبود یا خطا داد، فقط جعبه‌ی نمودار را مخفی می‌کنیم
+        console.error("خطا در دریافت نمودار فعالیت:", error);
+        summaryChartBox.classList.add("hidden");
+    }
+}
+
 // ===== پروژه‌های من =====
 async function loadMyProjects() {
     myProjectsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
@@ -267,6 +386,130 @@ async function loadMyProjects() {
     }
 }
 
+// ===== درخواست‌های دریافتی =====
+async function loadIncomingApplications() {
+    incomingApplicationsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
+
+    try {
+        const data = await apiRequest(ENDPOINTS.incomingApplications);
+        const applications = getItems(data);
+
+        if (applications.length === 0) {
+            incomingApplicationsList.innerHTML = "<p class='empty-text'>درخواستی برای پروژه‌های شما ثبت نشده است.</p>";
+            return;
+        }
+
+        let html = "";
+
+        for (let i = 0; i < applications.length; i++) {
+            const app = applications[i];
+
+            // اگر مدت زمان انجام ثبت شده باشد، آن را هم نشان بده
+            let durationHtml = "";
+            if (app.duration_days) {
+                durationHtml = `<span><i class="fa-solid fa-clock"></i> مدت انجام: ${formatNumber(app.duration_days)} روز</span>`;
+            }
+
+            // عنوان پروژه اگر آیدی پروژه را داشتیم لینک می‌شود
+            let titleHtml = escapeHtml(app.project_title);
+            if (app.project) {
+                titleHtml = `<a href="project-detail.html?id=${escapeHtml(app.project)}">${escapeHtml(app.project_title)}</a>`;
+            }
+
+            // دکمه‌های تأیید و رد فقط برای درخواست‌های «در انتظار»
+            let actionsHtml = "";
+            if (app.status === "pending") {
+                actionsHtml = `
+                    <div class="item-actions">
+                        <button type="button" class="approve-btn" data-id="${escapeHtml(app.id)}">تأیید درخواست</button>
+                        <button type="button" class="revoke-btn" data-id="${escapeHtml(app.id)}">رد درخواست</button>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="item-card">
+                    <div class="item-top">
+                        <p class="item-title">${titleHtml}</p>
+                        <span class="status-badge ${statusClass(app.status)}">${bidStatusFa(app.status)}</span>
+                    </div>
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-user"></i> متقاضی: ${escapeHtml(app.applicant_name)}</span>
+                        <span><i class="fa-solid fa-coins"></i> قیمت پیشنهادی: ${formatNumber(app.proposed_price)}</span>
+                        ${durationHtml}
+                        <span><i class="fa-solid fa-calendar"></i> ${formatDate(app.created_at)}</span>
+                    </div>
+                    <div class="item-message">${escapeHtml(app.cover_letter)}</div>
+                    ${actionsHtml}
+                </div>
+            `;
+        }
+
+        incomingApplicationsList.innerHTML = html;
+
+        // به دکمه‌های «تأیید» گوش بده
+        const approveButtons = incomingApplicationsList.querySelectorAll(".approve-btn");
+        approveButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                answerApplication(button.dataset.id, "accept");
+            });
+        });
+
+        // به دکمه‌های «رد» گوش بده
+        const rejectButtons = incomingApplicationsList.querySelectorAll(".revoke-btn");
+        rejectButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                answerApplication(button.dataset.id, "reject");
+            });
+        });
+
+    } catch (error) {
+        if (isNotFound(error)) {
+            incomingApplicationsList.innerHTML = "<p class='empty-text'>این بخش هنوز روی سرور فعال نشده است.</p>";
+            return;
+        }
+        console.error("خطا در دریافت درخواست‌های دریافتی:", error);
+        incomingApplicationsList.innerHTML = "<p class='field-error show'>خطا در دریافت درخواست‌های دریافتی.</p>";
+    }
+}
+
+// تأیید یا رد یک درخواست دریافتی
+// action یا "accept" است یا "reject"
+async function answerApplication(applicationId, action) {
+
+    // پاک‌کردن خطای قبلی
+    incomingActionsError.textContent = "";
+    incomingActionsError.classList.remove("show");
+
+    try {
+        const response = await fetch(BASE_URL + ENDPOINTS.applications + applicationId + "/" + action + "/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access")
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // لیست را دوباره بگیر تا وضعیت جدید دیده شود
+            loadIncomingApplications();
+            return;
+        }
+
+        // پیام خطای فارسی سرور را نشان بده
+        if (data.detail) {
+            incomingActionsError.textContent = data.detail;
+            incomingActionsError.classList.add("show");
+        }
+
+    } catch (error) {
+        incomingActionsError.textContent = "ارتباط با سرور برقرار نشد";
+        incomingActionsError.classList.add("show");
+    }
+}
+
 // ===== درخواست‌های من =====
 async function loadMyApplications() {
     myApplicationsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
@@ -291,10 +534,16 @@ async function loadMyApplications() {
                 durationHtml = `<span><i class="fa-solid fa-clock"></i> مدت انجام: ${formatNumber(app.duration_days)} روز</span>`;
             }
 
+            // عنوان پروژه اگر آیدی پروژه را داشتیم لینک می‌شود
+            let titleHtml = escapeHtml(app.project_title);
+            if (app.project) {
+                titleHtml = `<a href="project-detail.html?id=${escapeHtml(app.project)}">${escapeHtml(app.project_title)}</a>`;
+            }
+
             html += `
                 <div class="item-card">
                     <div class="item-top">
-                        <p class="item-title">${escapeHtml(app.project_title)}</p>
+                        <p class="item-title">${titleHtml}</p>
                         <span class="status-badge ${statusClass(app.status)}">${bidStatusFa(app.status)}</span>
                     </div>
                     <div class="item-meta">
@@ -316,72 +565,6 @@ async function loadMyApplications() {
         }
         console.error("خطا در دریافت درخواست‌های من:", error);
         myApplicationsList.innerHTML = "<p class='field-error show'>خطا در دریافت درخواست‌ها.</p>";
-    }
-}
-
-// ===== پیشنهادهای من =====
-async function loadMyBids() {
-    myBidsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
-
-    try {
-        const data = await apiRequest(ENDPOINTS.myBids);
-        const bids = getItems(data);
-
-        if (bids.length === 0) {
-            myBidsList.innerHTML = "<p class='empty-text'>هنوز پیشنهادی ثبت نکرده‌اید.</p>";
-            return;
-        }
-
-        let html = "";
-
-        for (let i = 0; i < bids.length; i++) {
-            const bid = bids[i];
-
-            // اگر کارفرما پیامی فرستاده باشد، آن را هم نشان بده
-            let messageHtml = "";
-            if (bid.employer_message) {
-                messageHtml = `
-                    <div class="item-message">
-                        <i class="fa-solid fa-envelope"></i>
-                        پیام کارفرما: ${escapeHtml(bid.employer_message)}
-                    </div>
-                `;
-            }
-
-            // اگر امتیاز کارشناس داده شده باشد
-            let scoreHtml = "";
-            if (bid.expert_score !== null && bid.expert_score !== undefined) {
-                scoreHtml = `<span><i class="fa-solid fa-star"></i> امتیاز کارشناس: ${escapeHtml(bid.expert_score)}</span>`;
-            }
-
-            html += `
-                <div class="item-card">
-                    <div class="item-top">
-                        <p class="item-title">
-                            <a href="project-detail.html?id=${escapeHtml(bid.project_id)}">${escapeHtml(bid.project_title)}</a>
-                        </p>
-                        <span class="status-badge ${statusClass(bid.status)}">${bidStatusFa(bid.status)}</span>
-                    </div>
-                    <div class="item-meta">
-                        <span><i class="fa-solid fa-coins"></i> مبلغ: ${formatNumber(bid.amount)} تومان</span>
-                        <span><i class="fa-solid fa-clock"></i> زمان تحویل: ${formatNumber(bid.delivery_days)} روز</span>
-                        ${scoreHtml}
-                        <span><i class="fa-solid fa-calendar"></i> ${formatDate(bid.created_at)}</span>
-                    </div>
-                    ${messageHtml}
-                </div>
-            `;
-        }
-
-        myBidsList.innerHTML = html;
-
-    } catch (error) {
-        if (isNotFound(error)) {
-            myBidsList.innerHTML = "<p class='empty-text'>این بخش هنوز روی سرور فعال نشده است.</p>";
-            return;
-        }
-        console.error("خطا در دریافت پیشنهادهای من:", error);
-        myBidsList.innerHTML = "<p class='field-error show'>خطا در دریافت پیشنهادها.</p>";
     }
 }
 
@@ -414,11 +597,22 @@ async function loadFavorites() {
                         <span><i class="fa-solid fa-user"></i> کارفرما: ${escapeHtml(fav.project_owner_name)}</span>
                         <span><i class="fa-solid fa-calendar"></i> ذخیره‌شده در: ${formatDate(fav.created_at)}</span>
                     </div>
+                    <div class="item-actions">
+                        <button type="button" class="revoke-btn" data-id="${escapeHtml(fav.project)}">حذف از ذخیره‌شده‌ها</button>
+                    </div>
                 </div>
             `;
         }
 
         favoritesList.innerHTML = html;
+
+        // به دکمه‌های «حذف از ذخیره‌شده‌ها» گوش بده
+        const removeButtons = favoritesList.querySelectorAll(".revoke-btn");
+        removeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                removeFavorite(button.dataset.id);
+            });
+        });
 
     } catch (error) {
         if (isNotFound(error)) {
@@ -430,191 +624,27 @@ async function loadFavorites() {
     }
 }
 
-// ===== درخواست‌های دریافتی =====
-async function loadIncomingApplications() {
-    incomingApplicationsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
-
+// حذف یک پروژه از ذخیره‌شده‌ها
+// همان endpoint مربوط به toggle است؛ چون پروژه الان ذخیره است، صدازدنش یعنی حذف
+async function removeFavorite(projectId) {
     try {
-        const data = await apiRequest(ENDPOINTS.incomingApplications);
-        const applications = getItems(data);
-
-        if (applications.length === 0) {
-            incomingApplicationsList.innerHTML = "<p class='empty-text'>درخواستی برای پروژه‌های شما ثبت نشده است.</p>";
-            return;
-        }
-
-        let html = "";
-
-        for (let i = 0; i < applications.length; i++) {
-            const app = applications[i];
-
-            // اگر مدت زمان انجام ثبت شده باشد، آن را هم نشان بده
-            let durationHtml = "";
-            if (app.duration_days) {
-                durationHtml = `<span><i class="fa-solid fa-clock"></i> مدت انجام: ${formatNumber(app.duration_days)} روز</span>`;
+        const response = await fetch(BASE_URL + ENDPOINTS.favorites + projectId + "/toggle/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("access")
             }
+        });
 
-            html += `
-                <div class="item-card">
-                    <div class="item-top">
-                        <p class="item-title">${escapeHtml(app.project_title)}</p>
-                        <span class="status-badge ${statusClass(app.status)}">${bidStatusFa(app.status)}</span>
-                    </div>
-                    <div class="item-meta">
-                        <span><i class="fa-solid fa-user"></i> متقاضی: ${escapeHtml(app.applicant_name)}</span>
-                        <span><i class="fa-solid fa-coins"></i> قیمت پیشنهادی: ${formatNumber(app.proposed_price)}</span>
-                        ${durationHtml}
-                        <span><i class="fa-solid fa-calendar"></i> ${formatDate(app.created_at)}</span>
-                    </div>
-                    <div class="item-message">${escapeHtml(app.cover_letter)}</div>
-                </div>
-            `;
+        if (response.ok) {
+            // لیست را دوباره بگیر تا پروژه‌ی حذف‌شده دیده نشود
+            loadFavorites();
+        } else {
+            console.error("خطا در حذف پروژه‌ی ذخیره‌شده. وضعیت:", response.status);
         }
-
-        incomingApplicationsList.innerHTML = html;
 
     } catch (error) {
-        if (isNotFound(error)) {
-            incomingApplicationsList.innerHTML = "<p class='empty-text'>این بخش هنوز روی سرور فعال نشده است.</p>";
-            return;
-        }
-        console.error("خطا در دریافت درخواست‌های دریافتی:", error);
-        incomingApplicationsList.innerHTML = "<p class='field-error show'>خطا در دریافت درخواست‌های دریافتی.</p>";
-    }
-}
-
-// ===== پیشنهادهای دریافتی =====
-async function loadIncomingBids() {
-    incomingBidsList.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
-
-    try {
-        const data = await apiRequest(ENDPOINTS.incomingBids);
-        const bids = getItems(data);
-
-        if (bids.length === 0) {
-            incomingBidsList.innerHTML = "<p class='empty-text'>پیشنهادی برای پروژه‌های شما ثبت نشده است.</p>";
-            return;
-        }
-
-        let html = "";
-
-        for (let i = 0; i < bids.length; i++) {
-            const bid = bids[i];
-
-            let scoreHtml = "";
-            if (bid.expert_score !== null && bid.expert_score !== undefined) {
-                scoreHtml = `<span><i class="fa-solid fa-star"></i> امتیاز کارشناس: ${escapeHtml(bid.expert_score)}</span>`;
-            }
-
-            html += `
-                <div class="item-card">
-                    <div class="item-top">
-                        <p class="item-title">
-                            <a href="project-detail.html?id=${escapeHtml(bid.project_id)}">${escapeHtml(bid.project_title)}</a>
-                        </p>
-                        <span class="status-badge ${statusClass(bid.status)}">${bidStatusFa(bid.status)}</span>
-                    </div>
-                    <div class="item-meta">
-                        <span><i class="fa-solid fa-user"></i> فریلنسر: ${escapeHtml(bid.freelancer_name)}</span>
-                        <span><i class="fa-solid fa-coins"></i> مبلغ: ${formatNumber(bid.amount)} تومان</span>
-                        <span><i class="fa-solid fa-clock"></i> زمان تحویل: ${formatNumber(bid.delivery_days)} روز</span>
-                        ${scoreHtml}
-                    </div>
-                    <div class="item-message">${escapeHtml(bid.cover_letter)}</div>
-                </div>
-            `;
-        }
-
-        incomingBidsList.innerHTML = html;
-
-    } catch (error) {
-        if (isNotFound(error)) {
-            incomingBidsList.innerHTML = "<p class='empty-text'>این بخش هنوز روی سرور فعال نشده است.</p>";
-            return;
-        }
-        console.error("خطا در دریافت پیشنهادهای دریافتی:", error);
-        incomingBidsList.innerHTML = "<p class='field-error show'>خطا در دریافت پیشنهادهای دریافتی.</p>";
-    }
-}
-
-// ===== نمودارها =====
-// سرور برای هر نمودار یک شیء با labels و datasets برمی‌گرداند.
-// اینجا به‌جای کتابخانه، با div ساده نمودار میله‌ای می‌سازیم.
-async function loadCharts() {
-    chartsContainer.innerHTML = "<p class='loading-text'>در حال بارگذاری...</p>";
-
-    try {
-        const data = await apiRequest(ENDPOINTS.charts);
-
-        let html = "";
-        const chartNames = Object.keys(data);
-
-        for (let i = 0; i < chartNames.length; i++) {
-            const name = chartNames[i];
-            const chart = data[name];
-
-            // فقط اگر ساختار مورد انتظار (labels + datasets) را داشت
-            if (!chart || !Array.isArray(chart.labels) || !Array.isArray(chart.datasets)) {
-                continue;
-            }
-            if (chart.datasets.length === 0) {
-                continue;
-            }
-
-            const dataset = chart.datasets[0];
-            const values = dataset.data || [];
-
-            // بیشترین مقدار را پیدا می‌کنیم تا عرض میله‌ها را درصدی حساب کنیم
-            let max = 0;
-            for (let j = 0; j < values.length; j++) {
-                if (Number(values[j]) > max) {
-                    max = Number(values[j]);
-                }
-            }
-
-            let rowsHtml = "";
-
-            for (let j = 0; j < chart.labels.length; j++) {
-                const value = Number(values[j] || 0);
-
-                let percent = 0;
-                if (max > 0) {
-                    percent = (value / max) * 100;
-                }
-
-                rowsHtml += `
-                    <div class="chart-row">
-                        <span class="chart-label">${escapeHtml(chart.labels[j])}</span>
-                        <div class="chart-track">
-                            <div class="chart-fill" style="width: ${percent}%"></div>
-                        </div>
-                        <span class="chart-value">${formatNumber(value)}</span>
-                    </div>
-                `;
-            }
-
-            html += `
-                <div class="chart-card">
-                    <p class="chart-title">${escapeHtml(dataset.label || name)}</p>
-                    ${rowsHtml}
-                </div>
-            `;
-        }
-
-        if (html === "") {
-            chartsContainer.innerHTML = "<p class='empty-text'>داده‌ای برای نمایش نمودار وجود ندارد.</p>";
-            return;
-        }
-
-        chartsContainer.innerHTML = html;
-
-    } catch (error) {
-        if (isNotFound(error)) {
-            chartsContainer.innerHTML = "<p class='empty-text'>این بخش هنوز روی سرور فعال نشده است.</p>";
-            return;
-        }
-        console.error("خطا در دریافت نمودارها:", error);
-        chartsContainer.innerHTML = "<p class='field-error show'>خطا در دریافت نمودارها.</p>";
+        console.error("خطا:", error);
     }
 }
 
@@ -786,14 +816,16 @@ async function loadSessions() {
         let html = "";
 
         for (let i = 0; i < userSessions.length; i++) {
+
             const session = userSessions[i];
 
+            // اسم خلاصه‌ی دستگاه؛ user agent کامل در title می‌ماند تا با نگه‌داشتن موس دیده شود
             html += `
                 <div class="item-card">
                     <div class="item-top">
-                        <p class="item-title">
+                        <p class="item-title" title="${escapeHtml(session.user_agent)}">
                             <i class="fa-solid fa-desktop"></i>
-                            ${escapeHtml(session.user_agent)}
+                            ${escapeHtml(shortDeviceName(session.user_agent))}
                         </p>
                     </div>
                     <div class="item-meta">
@@ -894,7 +926,8 @@ passwordForm.addEventListener("submit", async function (event) {
     }
 });
 
-// ===== شروع: خلاصه وضعیت و اطلاعات کاربر برای منوی کناری =====
+// ===== شروع: خلاصه وضعیت، نمودار فعالیت و اطلاعات کاربر برای منوی کناری =====
 loadedSections["section-summary"] = true;
 loadSummary();
+loadActivityChart();
 loadProfile();
