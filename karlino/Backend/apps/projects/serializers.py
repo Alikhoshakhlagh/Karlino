@@ -92,6 +92,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     owner_icon = serializers.SerializerMethodField()
 
+    has_applied = serializers.SerializerMethodField()
+
+    is_owner = serializers.SerializerMethodField()
+
     skill_level_display = serializers.CharField(
         source='get_skill_level_display',
         read_only=True,
@@ -148,6 +152,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             'owner_icon',
 
             'project_age_days',
+            'has_applied',
+            'is_owner',
             'created_at',
             'updated_at',
         )
@@ -256,6 +262,38 @@ class ProjectSerializer(serializers.ModelSerializer):
             return 'fa-building'
 
         return 'fa-user'
+
+    @extend_schema_field(serializers.BooleanField)
+    def get_has_applied(self, obj):
+
+        request = self.context.get('request')
+
+        if request is None or not request.user.is_authenticated:
+            return False
+
+        from ..applications.models import Application
+
+        return Application.objects.filter(
+            project=obj,
+            applicant=request.user,
+        ).exists()
+
+    @extend_schema_field(serializers.BooleanField)
+    def get_is_owner(self, obj):
+
+        request = self.context.get('request')
+
+        if request is None or not request.user.is_authenticated:
+            return False
+
+        if obj.creator_id == request.user.id:
+            return True
+
+        if obj.company and obj.company.owner_id == request.user.id:
+            return True
+
+        return False
+
 
     def validate(self, attrs):
 

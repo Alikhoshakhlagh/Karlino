@@ -11,6 +11,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     project_title = serializers.CharField(source='project.title', read_only=True)
     project_owner_name = serializers.SerializerMethodField()
     project_company_name = serializers.SerializerMethodField()
+    project = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Application
@@ -61,7 +62,22 @@ class ApplicationSerializer(serializers.ModelSerializer):
         if Application.objects.filter(project=project, applicant=request.user).exists():
             raise serializers.ValidationError(ALREADY_APPLIED)
 
+        proposed_price = attrs.get('proposed_price')
+
+        if proposed_price is not None:
+
+            if project.budget_min and proposed_price < project.budget_min:
+                raise serializers.ValidationError({
+                    'proposed_price': PRICE_BELOW_BUDGET
+                })
+
+            if project.budget_max and proposed_price > project.budget_max:
+                raise serializers.ValidationError({
+                    'proposed_price': PRICE_ABOVE_BUDGET
+                })
+
         return attrs
+
 
     def create(self, validated_data):
         validated_data['applicant'] = self.context['request'].user
